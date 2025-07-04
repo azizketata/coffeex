@@ -1,0 +1,12 @@
+<mvc:View
+  controllerName="coffeex.controller.History"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="History">
+    <content>
+      <Text text="Your transaction history."/>
+    </content>
+  </Page>
+
+</mvc:View>

@@ -1,0 +1,13 @@
+<mvc:View
+  controllerName="coffeex.controller.Checkout"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Checkout">
+    <content>
+      <Text text="Confirm your coffee order."/>
+      <Button text="Simulate NFC Checkout" press="onSimulateCheckout"/>
+    </content>
+  </Page>
+
+</mvc:View>

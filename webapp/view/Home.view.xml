@@ -1,0 +1,12 @@
+<mvc:View
+  controllerName="coffeex.controller.Home"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Home">
+    <content>
+      <Text text="Welcome to CoffeeX!"/>
+    </content>
+  </Page>
+
+</mvc:View>

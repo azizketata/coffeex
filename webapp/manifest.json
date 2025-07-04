@@ -1,0 +1,65 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "coffeex",
+    "type": "application",
+    "title": "CoffeeX App",
+    "description": "Your coffee ordering app",
+    "applicationVersion": {
+      "version": "0.0.1"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "coffeex.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "coffeex.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        { "pattern": "", "name": "login", "target": "Login" },
+        { "pattern": "home", "name": "home", "target": "Home" },
+        { "pattern": "checkout", "name": "checkout", "target": "Checkout" },
+        { "pattern": "topup", "name": "topup", "target": "TopUp" },
+        { "pattern": "profile", "name": "profile", "target": "Profile" },
+        { "pattern": "history", "name": "history", "target": "History" }
+      ],
+      "targets": {
+        "Login": { "viewName": "Login" },
+        "Home": { "viewName": "Home" },
+        "Checkout": { "viewName": "Checkout" },
+        "TopUp": { "viewName": "TopUp" },
+        "Profile": { "viewName": "Profile" },
+        "History": { "viewName": "History" }
+      }
+    }
+  }
+}

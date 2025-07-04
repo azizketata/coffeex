@@ -1,0 +1,13 @@
+<mvc:View
+  controllerName="coffeex.controller.Login"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Login">
+    <content>
+      <Text text="Please tap your phone on the NFC tag to log in."/>
+      <Button text="Simulate NFC Tap" press="onSimulateNfcTap"/>
+    </content>
+  </Page>
+
+</mvc:View>

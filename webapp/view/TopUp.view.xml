@@ -1,0 +1,12 @@
+<mvc:View
+  controllerName="coffeex.controller.TopUp"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <Page title="Top Up Balance">
+    <content>
+      <Text text="Choose amount to top up."/>
+    </content>
+  </Page>
+
+</mvc:View>
