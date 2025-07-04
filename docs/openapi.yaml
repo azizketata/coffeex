@@ -1,0 +1,19 @@
+# OpenAPI 3.0 Specification for CoffeeX Backend
+# This file is auto-generated from CDS model
+# Generate with: npx cds compile srv/coffee-service.cds --to openapi > docs/openapi.yaml
+
+openapi: 3.0.0
+info:
+  title: CoffeeX Backend API
+  description: Smart Coffee Dispenser Backend Service
+  version: 1.0.0
+  contact:
+    name: CoffeeX Team
+    
+servers:
+  - url: /odata/v4
+    description: OData V4 endpoint
+    
+# The complete specification will be generated from the CDS model
+# Run the following command to update this file:
+# npx cds compile srv/coffee-service.cds --to openapi > docs/openapi.yaml 
