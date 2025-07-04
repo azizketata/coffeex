@@ -1,1 +1,38 @@
-/node_modules
+# Dependencies
+node_modules/
+
+# Build artifacts
+gen/
+mta_archives/
+*.mtar
+dist/
+
+# Local development
+.cdsrc-private.json
+default-env.json
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# SQLite databases
+*.db
+*.sqlite
