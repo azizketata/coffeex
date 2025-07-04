@@ -1,9 +1,34 @@
+using { Currency, managed } from '@sap/cds/common';
+using { coffeex.jobs } from '../jobs/cron';
+
 namespace coffeex;
 
-entity User        { key userId : UUID; balance : Decimal(9,2); role : String; }
-entity Machine     { key machineId : UUID; location : String; beanLevel : Integer; }
-entity CoffeeTx    { key txId : UUID; userId : Association to User;
-                     machineId : Association to Machine;
-                     price : Decimal(5,2); paymentStatus : String; createdAt : Timestamp; }
-entity RefillEvent { key eventId : UUID; machineId : Association to Machine;
-                     qtyGram : Integer; time : Timestamp; }
+entity User : managed {
+  key userId     : UUID;
+      balance    : Decimal(9,2)  default 0;
+      role       : String(30);
+}
+
+entity Machine : managed {
+  key machineId  : UUID;
+      location   : String(80);
+      beanLevel  : Integer default 1000; // grams
+      forecastDate : Date;               // next-empty prediction
+}
+
+entity CoffeeTx : managed {
+  key txId       : UUID;
+      user       : Association to User  on user.userId = userId;
+      userId     : UUID;
+      machine    : Association to Machine on machine.machineId = machineId;
+      machineId  : UUID;
+      price      : Decimal(5,2);
+      paymentStatus : String(20) enum { OPEN; CAPTURED; FAILED; };
+}
+
+entity RefillEvent : managed {
+  key eventId    : UUID;
+      machine    : Association to Machine on machine.machineId = machineId;
+      machineId  : UUID;
+      qtyGram    : Integer;
+}
