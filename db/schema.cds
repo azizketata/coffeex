@@ -1,4 +1,4 @@
-using { Currency, managed } from '@sap/cds/common';
+using { managed } from '@sap/cds/common';
 using { coffeex.jobs } from '../jobs/cron';
 
 namespace coffeex;

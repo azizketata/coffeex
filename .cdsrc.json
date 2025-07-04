@@ -25,7 +25,7 @@
     "db": {
       "kind": "sqlite",
       "credentials": {
-        "database": ":memory:"
+        "database": "coffeex.db"
       },
       "[production]": {
         "kind": "hana"
@@ -38,12 +38,13 @@
       }
     },
     "messaging": {
-      "kind": "local-messaging",
+      "kind": "file-based-messaging",
       "[production]": {
-        "kind": "event-mesh"
+        "kind": "enterprise-messaging"
       }
     },
     "alerting": {
+      "impl": "./srv/mocks/alerting.js",
       "kind": "null",
       "[production]": {
         "kind": "alert-notification"

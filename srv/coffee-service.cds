@@ -7,7 +7,12 @@ service CoffeeService @(path:'/odata/v4') {
   entity CoffeeTxes             as projection on db.CoffeeTx;
   entity RefillEvents           as projection on db.RefillEvent;
 
-  action Tap(machineId : UUID, userId : UUID) returns db.CoffeeTx @requires:'User';
-  action BatchPay() returns Integer @requires:'Admin';
-  action Forecast() returns Integer @requires:'Admin';
+  @requires:'User'
+  action Tap(machineId : UUID, userId : UUID) returns db.CoffeeTx;
+  
+  @requires:'Admin'
+  action BatchPay() returns Integer;
+  
+  @requires:'Admin'
+  action Forecast() returns Integer;
 } 
