@@ -32,9 +32,12 @@ jobs:
 
       - name: Install CF CLI
         run: |
-          curl -v -L "https://packages.cloudfoundry.org/stable?release=linux64-binary" -o cf-cli.tgz
-          tar -xvzf cf-cli.tgz
-          sudo mv cf /usr/local/bin
+          curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" -o cf-cli.tgz
+          mkdir cf-cli
+          tar -xvzf cf-cli.tgz -C cf-cli
+          sudo mv cf-cli/cf /usr/local/bin/cf
+          cf version
+
 
      # - name: Login to Cloud Foundry
      #   run: |
