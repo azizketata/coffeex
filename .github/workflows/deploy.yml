@@ -24,20 +24,20 @@ jobs:
       - name: Build CAP project
         run: npx cds build
 
-      - name: Install MBT tool
-        run: npm install -g mbt
+      #- name: Install MBT tool
+      #  run: npm install -g mbt
 
-      - name: Build MTA archive
-        run: mbt build -p cf
+      #- name: Build MTA archive
+      #  run: mbt build -p cf
 
       - name: Install CF CLI
         uses: sap-actions/setup-cf-cli@v1
 
-      - name: Login to Cloud Foundry
-        run: |
-          cf api ${{ secrets.CF_API }}
-          cf auth ${{ secrets.CF_USERNAME }} ${{ secrets.CF_PASSWORD }}
-          cf target -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
+     # - name: Login to Cloud Foundry
+     #   run: |
+     #     cf api ${{ secrets.CF_API }}
+     #     cf auth ${{ secrets.CF_USERNAME }} ${{ secrets.CF_PASSWORD }}
+     #     cf target -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
 
       - name: Deploy to BTP
         run: cf deploy mta_archives/*.mtar --no-confirm
