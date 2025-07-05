@@ -48,4 +48,4 @@ jobs:
      #     cf target -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
 
       - name: Deploy to BTP
-        run: cf deploy mta_archives/*.mtar --no-confirm
+        run: cf deploy mta_archives/*.mtar -f
