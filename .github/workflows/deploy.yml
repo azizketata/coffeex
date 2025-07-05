@@ -31,7 +31,10 @@ jobs:
       #  run: mbt build -p cf
 
       - name: Install CF CLI
-        uses: sap-actions/setup-cf-cli@v1
+        run: |
+          curl -v -L "https://packages.cloudfoundry.org/stable?release=linux64-binary" -o cf-cli.tgz
+          tar -xvzf cf-cli.tgz
+          sudo mv cf /usr/local/bin
 
      # - name: Login to Cloud Foundry
      #   run: |
