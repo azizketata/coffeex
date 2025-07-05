@@ -38,6 +38,8 @@ jobs:
           sudo mv cf-cli/cf8 /usr/local/bin/cf
           cf version
 
+      - name: Install MTA Plugin for CF CLI
+        run: cf install-plugin -f https://github.com/cloudfoundry-incubator/multiapps-cli-plugin/releases/latest/download/multiapps-plugin.linux64
 
      # - name: Login to Cloud Foundry
      #   run: |
