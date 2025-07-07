@@ -38,6 +38,12 @@ class JobRunner {
         handler: 'CoffeeService.Forecast',
         intervalMs: 24 * 60 * 60 * 1000, // 24 hours
         nextRun: this.getNext3AMRun()
+      },
+      {
+        job: 'CheckLowBalances',
+        handler: 'CoffeeService.CheckLowBalances',
+        intervalMs: 4 * 60 * 60 * 1000, // 4 hours
+        nextRun: this.getNextHourlyRun()
       }
     ]
     
@@ -144,6 +150,11 @@ class JobRunner {
         case 'Forecast':
           result = await srv.send('Forecast')
           console.log(`Forecast updated ${result} machines`)
+          break
+          
+        case 'CheckLowBalances':
+          result = await srv.send('CheckLowBalances')
+          console.log(`CheckLowBalances notified ${result} users`)
           break
           
         default:
