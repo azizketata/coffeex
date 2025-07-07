@@ -2,6 +2,12 @@ const cds = require('@sap/cds')
 
 module.exports = async () => {
   try {
+    // Check if messaging service is configured
+    if (!cds.env.requires?.messaging) {
+      console.log('Messaging service not configured, skipping refill consumer initialization')
+      return
+    }
+    
     // Connect to SAP Event Mesh
     const messaging = await cds.connect.to('messaging')
     
