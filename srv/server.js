@@ -11,9 +11,8 @@ cds.on('served', async () => {
   try {
     const refillConsumer = require('./handlers/refillConsumer')
     await refillConsumer()
-    console.log('RefillEvent consumer initialized')
   } catch (error) {
-    console.error('Failed to initialize refill consumer:', error)
+    console.error('Failed to initialize refill consumer:', error.message)
   }
   
   // Initialize job scheduler
