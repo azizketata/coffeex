@@ -8,8 +8,8 @@ modules:
     path: gen/srv
     requires:
       - name: coffeex-hana
-      - name: coffeex-uaa
-      - name: coffeex-mesh
+      # - name: coffeex-uaa  # Uncomment when XSUAA is available
+      # - name: coffeex-mesh  # Uncomment when Event Mesh is available
       - name: coffeex-alerts
     provides:
       - name: srv-api
@@ -41,55 +41,57 @@ resources:
     properties:
       hdi-service-name: ${service-name}
       
-  - name: coffeex-uaa
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      config:
-        xsappname: coffeex-cap-${space}
-        tenant-mode: dedicated
-        role-templates:
-          - name: User
-            description: Coffee User
-            scope-references:
-              - $XSAPPNAME.User
-          - name: Admin
-            description: Coffee Admin
-            scope-references:
-              - $XSAPPNAME.Admin
-              - $XSAPPNAME.User
-        role-collections:
-          - name: CoffeeX_User_${space}
-            description: CoffeeX User Role Collection
-            role-template-references:
-              - $XSAPPNAME.User
-          - name: CoffeeX_Admin_${space}
-            description: CoffeeX Admin Role Collection
-            role-template-references:
-              - $XSAPPNAME.Admin
+  # XSUAA Service - uncomment when available
+  # - name: coffeex-uaa
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: xsuaa
+  #     service-plan: application
+  #     config:
+  #       xsappname: coffeex-cap-${space}
+  #       tenant-mode: dedicated
+  #       role-templates:
+  #         - name: User
+  #           description: Coffee User
+  #           scope-references:
+  #             - $XSAPPNAME.User
+  #         - name: Admin
+  #           description: Coffee Admin
+  #           scope-references:
+  #             - $XSAPPNAME.Admin
+  #             - $XSAPPNAME.User
+  #       role-collections:
+  #         - name: CoffeeX_User_${space}
+  #           description: CoffeeX User Role Collection
+  #           role-template-references:
+  #             - $XSAPPNAME.User
+  #         - name: CoffeeX_Admin_${space}
+  #           description: CoffeeX Admin Role Collection
+  #           role-template-references:
+  #             - $XSAPPNAME.Admin
               
-  - name: coffeex-mesh
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: enterprise-messaging
-      service-plan: default
-      config:
-        emname: coffeex-messaging
-        options:
-          management: true
-          messagingrest: true
-        rules:
-          queueRules:
-            publishFilter:
-              - "${namespace}/*"
-            subscribeFilter:
-              - "${namespace}/*"
-          topicRules:
-            publishFilter:
-              - "${namespace}/*"
-            subscribeFilter:
-              - "${namespace}/*"
+  # Event Mesh Service - uncomment when available
+  # - name: coffeex-mesh
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: enterprise-messaging
+  #     service-plan: default
+  #     config:
+  #       emname: coffeex-messaging
+  #       options:
+  #         management: true
+  #         messagingrest: true
+  #       rules:
+  #         queueRules:
+  #           publishFilter:
+  #             - "${namespace}/*"
+  #           subscribeFilter:
+  #             - "${namespace}/*"
+  #         topicRules:
+  #           publishFilter:
+  #             - "${namespace}/*"
+  #           subscribeFilter:
+  #             - "${namespace}/*"
               
   - name: coffeex-alerts
     type: org.cloudfoundry.managed-service
