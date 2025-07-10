@@ -36,8 +36,8 @@ resources:
   - name: coffeex-hana
     type: com.sap.xs.hdi-container
     parameters:
-      service: hana
-      service-plan: hdi-shared
+      service: hana-cloud
+      service-plan: hana-free
     properties:
       hdi-service-name: ${service-name}
       
