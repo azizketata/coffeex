@@ -105,5 +105,5 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-        - npm ci
+        - npm install --legacy-peer-deps
         - npx cds build --profile production 
