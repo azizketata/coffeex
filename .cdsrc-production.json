@@ -1,0 +1,22 @@
+{
+  "build": {
+    "target": "gen"
+  },
+  "requires": {
+    "db": {
+      "kind": "hana-cloud"
+    },
+    "auth": {
+      "kind": "mocked"
+    },
+    "messaging": {
+      "kind": "file-based-messaging"
+    },
+    "alerting": {
+      "kind": "alert-notification"
+    }
+  },
+  "features": {
+    "serve_on_root": true
+  }
+} 
