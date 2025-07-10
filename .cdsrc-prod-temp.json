@@ -1,0 +1,41 @@
+{
+  "build": {
+    "target": "gen",
+    "tasks": [
+      {
+        "for": "hana",
+        "src": "db",
+        "options": {
+          "model": ["db", "srv", "jobs"]
+        }
+      },
+      {
+        "for": "node-cf",
+        "src": "srv",
+        "options": {
+          "model": ["db", "srv", "jobs"]
+        }
+      }
+    ]
+  },
+  "hana": {
+    "deploy-format": "hdbtable"
+  },
+  "requires": {
+    "db": {
+      "kind": "hana"
+    },
+    "auth": {
+      "kind": "mocked"
+    },
+    "messaging": {
+      "kind": "file-based-messaging"
+    },
+    "alerting": {
+      "kind": "alert-notification"
+    }
+  },
+  "features": {
+    "serve_on_root": true
+  }
+} 
