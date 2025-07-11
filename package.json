@@ -15,6 +15,7 @@
     "deploy:hana": "cds deploy --to hana"
   },
   "dependencies": {
+    "@aws-sdk/client-sqs": "^3.844.0",
     "@sap/cds": "^8",
     "@sap/xsenv": "^4",
     "@sap/xssec": "^3",
