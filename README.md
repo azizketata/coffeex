@@ -17,7 +17,7 @@ CoffeeX provides a cashless, tap-to-brew coffee experience with real-time analyt
 - **Runtime**: Node.js 18+
 - **Framework**: SAP CAP (Cloud Application Programming Model)
 - **Database**: SAP HANA Cloud
-- **Messaging**: SAP Event Mesh
+- **Messaging**: Scaleway Queues (SQS-compatible)
 - **Authentication**: SAP XSUAA
 - **Payment**: PayPal REST API
 - **Device Control**: Switch-Bot API
@@ -92,6 +92,13 @@ SWITCHBOT_API_URL=https://api.switch-bot.com/v1.1
 SWITCHBOT_TOKEN=your-token
 SWITCHBOT_SECRET=your-secret
 
+# Scaleway Messaging (Production)
+SCALEWAY_ACCESS_KEY=your-access-key
+SCALEWAY_SECRET_KEY=your-secret-key
+SCALEWAY_QUEUE_URL=https://sqs.mnq.fr-par.scaleway.com/project-id/queue-name
+SCALEWAY_SQS_ENDPOINT=https://sqs.mnq.fr-par.scaleway.com
+USE_SCALEWAY_SQS=true
+
 # Logging
 LOG_LEVEL=info
 ```
@@ -119,16 +126,25 @@ npm run build
 mbt build
 ```
 
-### Deploy to Cloud Foundry
+### Deploy to Cloud Foundry (Windows PowerShell)
+```powershell
+./deploy-to-btp.ps1
+```
+
+### Deploy to Cloud Foundry (Linux/Mac)
 ```bash
-cf deploy mta_archives/coffeex-cap_1.0.0.mtar
+./deploy-to-btp.sh
 ```
 
 ### Required BTP Services
 - HANA Cloud (hana-cloud-free)
-- Event Mesh (default)
 - Alert Notification (standard)
 - XSUAA (application)
+
+### External Services
+- Scaleway Queues - For event messaging (SQS-compatible)
+- PayPal - For payment processing
+- Switch-Bot - For device control
 
 ## Project Structure
 
@@ -146,7 +162,8 @@ coffeex/
 │   │   └── refillConsumer.js
 │   ├── integrations/   # External service integrations
 │   │   ├── switchbot.js
-│   │   └── paypal.js
+│   │   ├── paypal.js
+│   │   └── scaleway-sqs.js
 │   └── server.js       # Server configuration
 ├── jobs/               # Scheduled jobs
 │   ├── cron.cds        # Job definitions
