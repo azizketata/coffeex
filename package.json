@@ -15,7 +15,8 @@
     "deploy:hana": "cds deploy --to hana"
   },
   "dependencies": {
-    "@sap/cds": "^9.1.0",
+    "@aws-sdk/client-sqs": "^3.844.0",
+    "@sap/cds": "^8",
     "@sap/xsenv": "^4",
     "@sap/xssec": "^3",
     "axios": "^1.6.0",
@@ -23,7 +24,6 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1",
     "@sap/cds-dk": "^7",
     "chai": "^4.3.10",
     "mocha": "^10.2.0"
