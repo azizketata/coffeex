@@ -1,9 +1,14 @@
 const axios = require('axios')
 
 // Switch-Bot configuration
-const SWITCHBOT_API_URL = process.env.SWITCHBOT_API_URL || 'https://api.switch-bot.com/v1.1'
-const SWITCHBOT_TOKEN = process.env.SWITCHBOT_TOKEN || 'your-switchbot-token'
-const SWITCHBOT_SECRET = process.env.SWITCHBOT_SECRET || 'your-switchbot-secret'
+const SWITCHBOT_API_URL = process.env.SWITCHBOT_API_URL
+const SWITCHBOT_TOKEN = process.env.SWITCHBOT_TOKEN
+const SWITCHBOT_SECRET = process.env.SWITCHBOT_SECRET
+const SWITCHBOT_DEVICEID = process.env.SWITCHBOT_DEVICEID_COFFEE90
+
+if (!SWITCHBOT_TOKEN || !SWITCHBOT_SECRET) {
+  throw new Error('SwitchBot API credentials are missing.');
+}
 
 /**
  * Trigger coffee brewing on a specific machine
@@ -14,7 +19,7 @@ async function brew(machineId) {
   try {
     // In production, you would map machineId to actual Switch-Bot device ID
     const deviceId = mapMachineToDevice(machineId)
-    
+
     if (!deviceId) {
       console.error(`No Switch-Bot device mapped for machine ${machineId}`)
       return false
@@ -69,11 +74,10 @@ async function brew(machineId) {
 function mapMachineToDevice(machineId) {
   // Mock mapping for development
   const deviceMap = {
-    // Add your actual machine-to-device mappings here
-    'mock-machine-1': 'switchbot-device-1',
-    'mock-machine-2': 'switchbot-device-2'
+    [machineId]: SWITCHBOT_DEVICEID
+    // Add future machines here
   }
-  
+
   return deviceMap[machineId] || null
 }
 
