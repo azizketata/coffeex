@@ -12,7 +12,8 @@
     "start": "cds-serve",
     "watch": "cds watch",
     "build": "cds build --profile production",
-    "deploy:hana": "cds deploy --to hana"
+    "deploy:hana": "cds deploy --to hana",
+    "seed": "node scripts/seed-machines.js"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.844.0",
