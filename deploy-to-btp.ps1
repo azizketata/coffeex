@@ -22,6 +22,12 @@ cf set-env coffeex-srv SCALEWAY_QUEUE_URL "https://sqs.mnq.fr-par.scaleway.com/p
 cf set-env coffeex-srv SCALEWAY_SQS_ENDPOINT "https://sqs.mnq.fr-par.scaleway.com"
 cf set-env coffeex-srv USE_SCALEWAY_SQS "true"
 
+# Set SwitchBot environment variables
+cf set-env coffeex-srv SWITCHBOT_API_URL "https://api.switch-bot.com/v1.1"
+cf set-env coffeex-srv SWITCHBOT_TOKEN  "3a249e1ccd4cce9264f3ace8a8e34f44180c9c7a93023ebbb37997df648908ae37064f00deb08f4bb214465705d50bfe"
+cf set-env coffeex-srv SWITCHBOT_SECRET "e3e905552516e7313cc90319415fe7c0"
+cf set-env coffeex-srv SWITCHBOT_DEVICEID_COFFEE90 "CD3430374B90"
+
 # Create production config
 Write-Host "`n📝 Creating production configuration..." -ForegroundColor Yellow
 @'
