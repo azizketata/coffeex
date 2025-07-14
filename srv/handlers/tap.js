@@ -2,9 +2,17 @@ const cds = require('@sap/cds')
 
 module.exports = srv => {
   srv.on('Tap', async ({ data, req }) => {
+
     const { machineId, userId } = data
     const db = await cds.tx(req)
-    
+
+    // Validate machine exists
+    const [machine] = await db.read('coffeex.Machine').where({machineId});
+    if (!machine) {
+      console.warn(`Attempt with unknown machineId: ${machineId}`);
+      return req.error(404, `Unknown machine: ${machineId}`);
+    }
+
     // Validate user exists
     const [user] = await db.read('coffeex.User').where({ userId })
     if (!user) cds.error('Unknown user')

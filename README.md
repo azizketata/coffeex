@@ -203,6 +203,35 @@ coffeex/
 5. Create pull request
 6. CI/CD pipeline deploys to dev space after merge
 
+
+## Hardware
+
+### SwitchBot
+
+#### SwitchBot Account Details
+- Email: coffeex.tum@gmail.com
+- PW: coffee@tum2025
+
+#### SwitchBot Device Details
+SwitchBot Device ID: CD3430374B90
+SwitchBot Hub ID: Currently not in use.
+
+### Coffee Machine
+Machine UUID [5bd4f91f-d9b4-4573-88df-11b2f14e7c78] is mocked and linked to Switch-Bot device ID [CD3430374B90] during setup.
+
+### NFC Tags
+#### Tag 1
+Routing to https://our-frontend-app.com/tap?machineId=5bd4f91f-d9b4-4573-88df-11b2f14e7c78
+
+#### Tag 2
+Currently not in use.
+
+#### Tag 3
+Currently not in use.
+
+
+
+
 ## License
 
 Copyright (c) 2024 CoffeeX Team. All rights reserved.
