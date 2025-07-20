@@ -1,0 +1,27 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "logout": {
+    "logoutEndpoint": "/do/logout"
+  },
+  "routes": [
+    {
+      "source": "^/view/(.*\\.css)$",
+      "target": "$1",
+      "localDir": "webapp/view",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/coffee-frontend/view/(.*\\.css)$",
+      "target": "$1",
+      "localDir": "webapp/view",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

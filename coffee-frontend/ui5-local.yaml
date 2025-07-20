@@ -1,0 +1,39 @@
+specVersion: "3.1"
+metadata:
+  name: coffee-frontend
+type: application
+framework:
+  name: SAPUI5
+  version: 1.136.2
+  libraries:
+    - name: sap.f
+    - name: sap.m
+    - name: sap.ui.comp
+    - name: sap.ui.core
+    - name: sap.ui.generic.app
+    - name: sap.ui.table
+    - name: sap.ushell
+    - name: themelib_sap_bluecrystal
+    - name: themelib_sap_horizon
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertError: false
+        backend:
+          - path: /sap
+            url: https://6f024529-6219-433b-85e9-4d88d2debd34.abap.us10.hana.ondemand.com
+            scp: true
+            destination: abap-cloud-uccbtp-technische-universit-t-m-nchen-sap-hochschulkompetenzzentrum-lehrstuhl-f-r-wirts_ucc-btp-curriculum-q0bo29rl-dev
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300
+    - name: fiori-tools-preview
+      afterMiddleware: fiori-tools-appreload
+      configuration:
+        component: coffee-frontend
+        ui5Theme: sap_horizon

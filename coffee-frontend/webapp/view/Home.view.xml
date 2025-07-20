@@ -1,0 +1,85 @@
+<mvc:View
+  controllerName="coffee-frontend.controller.Home"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page title="Home">
+    <customHeader>
+      <Bar id="navbarContainer" />
+    </customHeader>
+
+    <content>
+      <VBox
+        class="homePageContainer"
+        justifyContent="Center"
+        alignItems="Center"
+        width="100%">
+
+        <!-- Logo and App Name -->
+        <VBox alignItems="Center" class="logoContainer">
+          <Image src="https://upload.wikimedia.org/wikipedia/commons/3/38/Logo.png" width="50px"/>
+          <Text text="CoffeeX" class="brandTitle"/>
+        </VBox>
+
+        <!-- Greeting -->
+        <Text text="Good Morning, Lisa 😊" class="greetingText"/>
+
+        <!-- Balance and Today -->
+        <HBox class="balanceRow">
+          <items>
+            <VBox alignItems="Center">
+              <ObjectNumber number="9,32" unit="€" emphasized="true" class="objectNumber"/>
+              <Text text="Balance"/>
+            </VBox>
+            <VBox alignItems="Center">
+              <ObjectNumber number="1" unit="Single" emphasized="true" class="objectNumber"/>
+              <Text text="Today"/>
+            </VBox>
+          </items>
+        </HBox>
+
+        <!-- Status icons -->
+        <HBox class="iconRow" alignItems="Center" justifyContent="Center">
+          <items>
+            <HBox alignItems="Center">
+              <items>
+                <core:Icon src="sap-icon://sys-monitor" size="1.5rem"/>
+                <Text text="Machine"/>
+              </items>
+            </HBox>
+            <HBox alignItems="Center">
+              <items>
+                <core:Icon src="sap-icon://employee" size="1.5rem"/>
+                <Text text="Beans"/>
+              </items>
+            </HBox>
+          </items>
+        </HBox>
+
+        <!-- Size selector -->
+        <VBox alignItems="Center" class="chooseSize">
+          <Text text="Choose your size"/>
+          <SegmentedButton>
+            <Button text="Single" type="Default" press=".onSelectSingle"/>
+            <Button text="Double" type="Default" press=".onSelectDouble"/>
+          </SegmentedButton>
+        </VBox>
+
+        <!-- Pay button -->
+        <Button text="Pay" type="Emphasized" class="payButton" press=".onOpenCheckoutDialog"/>
+
+        <!-- Top-up -->
+        <Link text="Top up Balance" class="topupLink" press=".onTopUpBalance"/>
+
+        <!-- Footer -->
+        <VBox alignItems="Center" class="footer">
+          <Image src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg" width="60px"/>
+          <Link text="View our Terms of Service" href="#" />
+        </VBox>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

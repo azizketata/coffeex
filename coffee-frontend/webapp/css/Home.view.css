@@ -1,0 +1,104 @@
+.homePageContainer {
+    padding: 2rem;
+    gap: 2rem;
+    align-items: center;
+  }
+  
+  .logoContainer {
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .brandTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .greetingText {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+  
+  .balanceRow {
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+    gap: 2rem;
+  }
+  
+  .objectNumber {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .iconRow {
+    gap: 2rem;
+    margin-top: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .iconRow .sapMIcon {
+    margin-right: 0.5rem;
+  }
+  
+  .chooseSize {
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .payButton {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+  
+  .topupLink {
+    margin-top: 1rem;
+  }
+  
+  .footer {
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 3rem;
+  }
+  .checkoutDialogBottomSheet {
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    width: 100%;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+  }
+  .topUpDialog {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    padding: 1rem;
+  }
+  
+  .topUpBody {
+    padding: 1rem;
+  }
+  
+  .topUpHeader {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  .topUpButtons Button {
+    margin: 0.5rem 0.5rem;
+    width: 5rem;
+  }
+  
+  .topUpPayBtn {
+    margin-top: 1rem;
+    width: 80%;
+  }
+  

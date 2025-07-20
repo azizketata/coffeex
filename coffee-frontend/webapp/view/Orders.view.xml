@@ -1,0 +1,13 @@
+<mvc:View
+  controllerName="coffee-frontend.controller.Orders"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+
+  <Page title="Orders">
+    <content>
+      <Text text="Orders Page Coming Soon..." />
+    </content>
+  </Page>
+
+</mvc:View>
