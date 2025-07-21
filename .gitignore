@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Dependencies
 node_modules/
 
@@ -36,9 +35,6 @@ coverage/
 
 # SQLite databases
 *.db
-*.sqlite
-=======
-/mta_archives/
+*.sqlite/mta_archives/
 /node_modules/
 /resources/
->>>>>>> frontend
