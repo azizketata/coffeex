@@ -41,13 +41,14 @@ modules:
       commands:
         - npm install
         - npm run build
+      build-result: dist
       supported-platforms: []
     requires:
       - name: coffeex-srv
         group: destinations
         properties:
           name: srv-api
-          url: ~{srv-api/srv-url}
+          url: ${srv-api-url}
       # - name: coffeex-uaa  # Uncomment if using authentication
 
 resources:
