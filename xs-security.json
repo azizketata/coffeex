@@ -1,0 +1,27 @@
+{
+  "xsappname": "coffeex",
+  "tenant-mode": "dedicated",
+  "description": "Security profile for CoffeeX application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.User",
+      "description": "CoffeeX application user"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "User",
+      "description": "General CoffeeX user",
+      "scope-references": [
+        "$XSAPPNAME.User"
+      ]
+    },
+    {
+      "name": "Token_Exchange",
+      "description": "Exchange token with other apps",
+      "scope-references": [
+        "uaa.user"
+      ]
+    }
+  ]
+}

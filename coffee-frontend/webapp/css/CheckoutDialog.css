@@ -1,0 +1,59 @@
+.checkoutDialogBottomSheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 50vh;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background-color: white;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  animation: slideUp 0.3s ease-out;
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.checkoutDialogTitle {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.checkoutItemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+  font-size: 1rem;
+}
+
+.checkoutButtonBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+}
+
+.checkoutBtn {
+  flex: 0 0 48%;
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.checkoutPrice {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #2e7d32; /* SAP green */
+}

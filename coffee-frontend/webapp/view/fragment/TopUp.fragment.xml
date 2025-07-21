@@ -1,0 +1,32 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <Dialog
+    id="topUpDialog"
+    class="topUpDialog"
+    stretch="{= ${device>/system/phone} }"
+    verticalScrolling="false"
+    horizontalScrolling="false"
+    showHeader="false"
+    draggable="false"
+    resizable="false"
+    contentHeight="40%"
+    contentWidth="100%"
+  >
+
+    <VBox class="topUpBody" justifyContent="Center" alignItems="Center" width="100%">
+      <HBox class="topUpHeader" justifyContent="SpaceBetween" width="100%">
+        <Button text="Cancel" type="Transparent" press=".onCloseTopUpDialog"/>
+        <Text text="Add Credit" class="topUpTitle"/>
+        <Text text="" /> <!-- Filler -->
+      </HBox>
+
+      <HBox class="topUpButtons" justifyContent="Center" wrap="Wrap">
+        <Button text="€ 5" class="topUpAmount"/>
+        <Button text="€ 10" class="topUpAmount"/>
+        <Button text="€ 25" class="topUpAmount"/>
+        <Button text="€ 50" class="topUpAmount"/>
+      </HBox>
+
+      <Button text="⏩ Pay" class="topUpPayBtn" type="Emphasized" />
+    </VBox>
+  </Dialog>
+</core:FragmentDefinition>

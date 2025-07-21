@@ -1,0 +1,43 @@
+<mvc:View
+  controllerName="coffee-frontend.controller.History"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true"
+  xmlns:core="sap.ui.core">
+
+  <Page title="Transaction History">
+    <customHeader>
+      <Bar id="navbarContainer3"/>
+    </customHeader>
+
+    <content>
+      <VBox class="historyContainer" width="100%">
+
+        <List id="transactionList" items="{/transactions}">
+          <CustomListItem>
+            <HBox alignItems="Center" justifyContent="SpaceBetween" class="transactionItem">
+              <HBox alignItems="Start" width="60%">
+                <VBox>
+                  <Text text="{date}" class="transactionDate" />
+                  <Text text="{amount}" class="transactionAmount" />
+                  <Text text="{method}" class="transactionMethod" />
+                </VBox>
+              </HBox>
+              <HBox alignItems="Center" width="35%" justifyContent="End" class="transactionActions">
+                <Link text="Receipt" press=".onReceiptPress" />
+                <Button icon="sap-icon://pdf-attachment" press=".onPdfPress" type="Transparent"/>
+              </HBox>
+            </HBox>
+          </CustomListItem>
+        </List>
+
+        <!-- Pagination Buttons -->
+        <HBox justifyContent="Center" class="paginationButtons">
+          <Button text="Previous" press=".onPreviousPage" enabled="{= ${/currentPage} > 1 }"/>
+          <Button text="Next" press=".onNextPage"/>
+        </HBox>
+
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

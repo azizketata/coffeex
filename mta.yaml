@@ -2,6 +2,7 @@ _schema-version: '3.1'
 ID: coffeex-cap
 description: CoffeeX Smart Coffee Dispenser Backend
 version: 1.0.0
+
 modules:
   - name: coffeex-srv
     type: nodejs
@@ -21,7 +22,7 @@ modules:
       disk-quota: 1024M
     build-parameters:
       builder: npm
-      
+
   - name: coffeex-db-deployer
     type: hdb
     path: gen/db
@@ -31,7 +32,24 @@ modules:
       buildpack: nodejs_buildpack
       memory: 256M
       disk-quota: 512M
-      
+
+  - name: coffeex-ui
+    type: html5
+    path: app/coffee-frontend
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - npm run build
+      supported-platforms: []
+    requires:
+      - name: coffeex-srv
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-api/srv-url}
+      # - name: coffeex-uaa  # Uncomment if using authentication
+
 resources:
   - name: coffeex-hana
     type: com.sap.xs.hdi-container
@@ -40,7 +58,7 @@ resources:
       service-plan: hana-free
     properties:
       hdi-service-name: ${service-name}
-      
+
   # XSUAA Service - uncomment when available
   # - name: coffeex-uaa
   #   type: org.cloudfoundry.managed-service
@@ -69,7 +87,7 @@ resources:
   #           description: CoffeeX Admin Role Collection
   #           role-template-references:
   #             - $XSAPPNAME.Admin
-              
+
   # Event Mesh Service - uncomment when available
   # - name: coffeex-mesh
   #   type: org.cloudfoundry.managed-service
@@ -92,20 +110,20 @@ resources:
   #             - "${namespace}/*"
   #           subscribeFilter:
   #             - "${namespace}/*"
-              
+
   - name: coffeex-alerts
     type: org.cloudfoundry.managed-service
     parameters:
       service: alert-notification
       service-plan: standard
-      
+
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
-  
+
 build-parameters:
   before-all:
     - builder: custom
       commands:
         - npm install --legacy-peer-deps
-        - npx cds build --profile production 
+        - npx cds build --profile production
