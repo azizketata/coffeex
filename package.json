@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "cds test",
-    "start": "cds-serve",
+    "start": "cds-run",
     "watch": "cds watch",
     "build": "cds build --profile production",
     "deploy:hana": "cds deploy --to hana",

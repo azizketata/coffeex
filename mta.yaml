@@ -10,7 +10,7 @@ modules:
     requires:
       - name: coffeex-hana
       - name: coffeex-alerts
-      - name: coffeex-Authentication  # ✅ XSUAA auth binding added
+      - name: coffeex  # ✅ XSUAA auth binding added
     provides:
       - name: srv-api
         properties:
@@ -48,7 +48,7 @@ modules:
         properties:
           name: srv-api
           url: ${srv-api-url}
-      - name: coffeex-Authentication  # ✅ XSUAA auth binding added
+      - name: coffeex  # ✅ XSUAA auth binding added
 
 resources:
   - name: coffeex-hana
@@ -59,7 +59,7 @@ resources:
     properties:
       hdi-service-name: ${service-name}
 
-  - name: coffeex-Authentication  # ✅ XSUAA service definition
+  - name: coffeex  # ✅ XSUAA service definition
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
