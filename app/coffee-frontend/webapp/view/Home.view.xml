@@ -27,36 +27,42 @@
         <Text text="Good Morning, Lisa 😊" class="greetingText"/>
 
         <!-- Balance and Today -->
-        <HBox class="balanceRow">
+        <HBox class="balanceRow" alignItems="Center" justifyContent="SpaceAround">
           <items>
-            <VBox alignItems="Center">
-              <ObjectNumber number="9,32" unit="€" emphasized="true" class="objectNumber"/>
-              <Text text="Balance"/>
+            <VBox alignItems="Center" class="balanceItem">
+              <!-- ✅ Dynamic binding of balance -->
+              <Text
+                text="{= ${balanceModel>/balance} >= 0 ? ${balanceModel>/balance} : '--'}"
+                class="objectNumber"/>
+              <Text
+                text="€"
+                class="objectUnit"/>
+
+              <Text text="Balance" class="objectLabel"/>
             </VBox>
-            <VBox alignItems="Center">
-              <ObjectNumber number="1" unit="Single" emphasized="true" class="objectNumber"/>
-              <Text text="Today"/>
+            <VBox alignItems="Center" class="balanceItem">
+              <Text text="1" class="objectNumber"/>
+<Text text="Single" class="objectUnit"/>
+
+              <Text text="Today" class="objectLabel"/>
             </VBox>
           </items>
         </HBox>
 
         <!-- Status icons -->
-        <HBox class="iconRow" alignItems="Center" justifyContent="Center">
+       <HBox class="iconRow" alignItems="Center" justifyContent="Center">
           <items>
-            <HBox alignItems="Center">
-              <items>
-                <core:Icon src="sap-icon://sys-monitor" size="1.5rem"/>
-                <Text text="Machine"/>
-              </items>
-            </HBox>
-            <HBox alignItems="Center">
-              <items>
-                <core:Icon src="sap-icon://employee" size="1.5rem"/>
-                <Text text="Beans"/>
-              </items>
-            </HBox>
+            <VBox alignItems="Center">
+              <core:Icon src="sap-icon://sys-monitor" size="1.5rem"/>
+              <Text text="Machine"/>
+            </VBox>
+            <VBox alignItems="Center">
+              <core:Icon src="sap-icon://employee" size="1.5rem"/>
+              <Text text="Beans"/>
+            </VBox>
           </items>
         </HBox>
+
 
         <!-- Size selector -->
         <VBox alignItems="Center" class="chooseSize">

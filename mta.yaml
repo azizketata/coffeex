@@ -9,9 +9,8 @@ modules:
     path: gen/srv
     requires:
       - name: coffeex-hana
-      # - name: coffeex-uaa  # Uncomment when XSUAA is available
-      # - name: coffeex-mesh  # Uncomment when Event Mesh is available
       - name: coffeex-alerts
+      - name: coffeex-Authentication  # ✅ XSUAA auth binding added
     provides:
       - name: srv-api
         properties:
@@ -49,7 +48,7 @@ modules:
         properties:
           name: srv-api
           url: ${srv-api-url}
-      # - name: coffeex-uaa  # Uncomment if using authentication
+      - name: coffeex-Authentication  # ✅ XSUAA auth binding added
 
 resources:
   - name: coffeex-hana
@@ -60,34 +59,12 @@ resources:
     properties:
       hdi-service-name: ${service-name}
 
-  # XSUAA Service - uncomment when available
-  # - name: coffeex-uaa
-  #   type: org.cloudfoundry.managed-service
-  #   parameters:
-  #     service: xsuaa
-  #     service-plan: application
-  #     config:
-  #       xsappname: coffeex-cap-${space}
-  #       tenant-mode: dedicated
-  #       role-templates:
-  #         - name: User
-  #           description: Coffee User
-  #           scope-references:
-  #             - $XSAPPNAME.User
-  #         - name: Admin
-  #           description: Coffee Admin
-  #           scope-references:
-  #             - $XSAPPNAME.Admin
-  #             - $XSAPPNAME.User
-  #       role-collections:
-  #         - name: CoffeeX_User_${space}
-  #           description: CoffeeX User Role Collection
-  #           role-template-references:
-  #             - $XSAPPNAME.User
-  #         - name: CoffeeX_Admin_${space}
-  #           description: CoffeeX Admin Role Collection
-  #           role-template-references:
-  #             - $XSAPPNAME.Admin
+  - name: coffeex-Authentication  # ✅ XSUAA service definition
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
 
   # Event Mesh Service - uncomment when available
   # - name: coffeex-mesh
@@ -116,7 +93,7 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       service: alert-notification
-      service-plan: standard
+      service-plan: free     
 
 parameters:
   deploy_mode: html5-repo

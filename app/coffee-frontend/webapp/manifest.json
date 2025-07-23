@@ -12,6 +12,15 @@
       "id": "@sap/ux-app-migrator:freestyle",
       "version": "1.18.1"
     },
+    "dataSources": {
+      "coffeeService": {
+        "uri": "/odata/v4/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
     "crossNavigation": {
       "inbounds": {
         "coffee-display": {
@@ -61,7 +70,7 @@
           "pattern": "order-success",
           "name": "orderSuccess",
           "target": "orderSuccess"
-        },      
+        },
         {
           "pattern": "privacy",
           "name": "privacy",
@@ -100,17 +109,15 @@
           "viewLevel": 1
         },
         "orderSuccess": {
-        "viewName": "OrderSuccess",
-        "viewId": "orderSuccess",
-        "viewLevel": 5
+          "viewName": "OrderSuccess",
+          "viewId": "orderSuccess",
+          "viewLevel": 5
         },
-
         "privacy": {
-        "viewName": "Privacy",
-        "viewId": "privacy",
-        "viewLevel": 5
+          "viewName": "Privacy",
+          "viewId": "privacy",
+          "viewLevel": 5
         },
-
         "orders": {
           "viewName": "Orders",
           "viewId": "orders",
@@ -134,33 +141,43 @@
       }
     },
     "resources": {
-  "css": [
-    {
-      "uri": "css/Home.view.css"     
+      "css": [
+        {
+          "uri": "css/Home.view.css"
+        },
+        {
+          "uri": "css/History.view.css"
+        },
+        {
+          "uri": "css/Profile.view.css"
+        },
+        {
+          "uri": "css/OrderSuccess.view.css"
+        },
+        {
+          "uri": "css/Privacy.view.css"
+        },
+        {
+          "uri": "css/CheckoutDialog.css"
+        },
+        {
+          "uri": "css/TopUpDialog.css"
+        }
+      ]
     },
-    {
-      "uri": "css/History.view.css"
-    },
-    {
-      "uri": "css/Profile.view.css"
-    },
-    {
-      "uri": "css/OrderSuccess.view.css"
-    },
-    {
-      "uri": "css/Privacy.view.css"
-    },
-    {
-      "uri": "css/CheckoutDialog.css"
-    },
-    {
-      "uri": "css/TopUpDialog.css"
+    "models": {
+      "": {
+        "dataSource": "coffeeService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true
+        },
+        "type": "sap.ui.model.odata.v4.ODataModel"
+      }
     }
-  ]
-}
   },
-  
-
   "sap.cloud": {
     "service": "coffee"
   }

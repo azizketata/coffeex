@@ -22,6 +22,15 @@
       "scope-references": [
         "uaa.user"
       ]
+    },
+
+    {
+      "name": "Admin",
+      "description": "CoffeeX admin role",
+      "scope-references": [
+        "$XSAPPNAME.User"
+      ]
     }
+    
   ]
 }
