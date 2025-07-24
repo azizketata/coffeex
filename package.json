@@ -16,30 +16,20 @@
   },
   "dependencies": {
     "@sap/cds": "^7",
-    "express": "^4",
-    "@sap/xssec": "^3",
     "@sap/xsenv": "^4",
+    "@sap/xssec": "^3",
+    "dotenv": "^17.2.0",
+    "express": "^4",
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@sap/cds-dk": "^7",
     "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7",
     "axios": "^1.6.0",
     "chai": "^4.3.10",
     "mocha": "^10.2.0"
   },
   "cds": {
-    "requires": {
-      "db": {
-        "kind": "hana"
-      },
-      "auth": {
-        "kind": "xsuaa"
-      },
-      "messaging": {
-        "kind": "event-mesh"
-      }
-    },
     "hana": {
       "deploy-format": "hdbtable"
     }
