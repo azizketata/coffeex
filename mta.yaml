@@ -51,6 +51,16 @@ modules:
           name: srv-api
           url: ${srv-api-url}
       - name: coffeex  # ✅ XSUAA auth binding added
+      
+  - name: coffeex-approuter
+    type: approuter.nodejs
+    path: approuter
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: coffeex  # this is your XSUAA service instance
+      - name: coffeex-srv-api  # destination to your CAP service (we'll define this below)
 
 resources:
   - name: coffeex-hdi
@@ -60,6 +70,11 @@ resources:
       service-plan: hdi-shared
     properties:
       hdi-service-name: ${service-name}
+
+  - name: coffeex-srv-api
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: coffeex-srv
 
   - name: coffeex  # ✅ XSUAA service definition
     type: org.cloudfoundry.managed-service
