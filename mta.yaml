@@ -8,7 +8,7 @@ modules:
     type: nodejs
     path: gen/srv
     requires:
-      - name: coffeex-hana
+      - name: coffeex-hdi
       - name: coffeex-alerts
       - name: coffeex  # ✅ XSUAA auth binding added
     provides:
@@ -20,13 +20,15 @@ modules:
       memory: 512M
       disk-quota: 1024M
     build-parameters:
-      builder: npm
+      builder: custom
+      commands:
+        - npm install --legacy-peer-deps
 
   - name: coffeex-db-deployer
     type: hdb
     path: gen/db
     requires:
-      - name: coffeex-hana
+      - name: coffeex-hdi
     parameters:
       buildpack: nodejs_buildpack
       memory: 256M
@@ -51,11 +53,11 @@ modules:
       - name: coffeex  # ✅ XSUAA auth binding added
 
 resources:
-  - name: coffeex-hana
+  - name: coffeex-hdi
     type: com.sap.xs.hdi-container
     parameters:
-      service: hana-cloud
-      service-plan: hana-free
+      service: hana
+      service-plan: hdi-shared
     properties:
       hdi-service-name: ${service-name}
 
@@ -93,7 +95,7 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       service: alert-notification
-      service-plan: free     
+      service-plan: free
 
 parameters:
   deploy_mode: html5-repo
