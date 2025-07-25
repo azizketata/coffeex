@@ -32,3 +32,12 @@ entity RefillEvent : managed {
       machineId  : UUID;
       qtyGram    : Integer;
 }
+
+entity TopUpTransaction {
+  key txId       : UUID;
+      userId     : UUID;
+      amount     : Decimal(10,2);
+      status     : String(20) enum { PENDING; COMPLETED; FAILED; };
+      paypalOrderId : String;
+      createdAt  : Timestamp @default: current_timestamp;
+}
