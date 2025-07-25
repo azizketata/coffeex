@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "cds test",
-    "start": "cds-run",
+    "start": "cds-serve",
     "watch": "cds watch",
     "build": "cds build --profile production",
     "deploy:hana": "cds deploy --to hana",
@@ -28,6 +28,7 @@
     "@sap/cds": "^8",
     "@sap/xsenv": "^4",
     "@sap/xssec": "^3",
+    "@sap/hana-client": "^2.17.20",
     "axios": "^1.6.0",
     "express": "^4",
     "winston": "^3.11.0"
