@@ -8,13 +8,13 @@ service CoffeeService @(path:'/odata/v4') {
   entity Users        as projection on db.User;
   
   @readonly entity Machines     as projection on db.Machine;
-  entity CoffeeTxes             as projection on db.CoffeeTx;
+  entity CoffeeTx             as projection on db.CoffeeTx;
   entity RefillEvents           as projection on db.RefillEvent;
   
   @readonly entity LowBalanceUsers as projection on views.LowBalanceUsers;
 
   @requires:'User'
-  action Tap(machineId : UUID, userId : UUID) returns CoffeeTxes;
+  action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
   
   @requires:'Admin'
   action BatchPay() returns Integer;
@@ -24,4 +24,8 @@ service CoffeeService @(path:'/odata/v4') {
   
   @requires:'Admin'
   action CheckLowBalances() returns Integer;
+
+  @requires: 'User'
+  action TopUp(amount: Decimal(10,2)) returns String;
+
 } 
