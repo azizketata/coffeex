@@ -13,7 +13,7 @@ module.exports = srv => {
         INSERT.into('coffeex.TopUpTransaction').entries({
           txId,
           userId: user.id,
-          amount,
+          amount: amount.value,
           status: 'PENDING',
           paypalOrderId: orderId,
           createdAt: new Date()

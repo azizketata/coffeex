@@ -33,7 +33,7 @@ entity RefillEvent : managed {
       qtyGram    : Integer;
 }
 
-entity TopUpTransaction {
+entity TopUpTransaction : managed {
   key txId       : UUID;
       userId     : UUID;
       amount     : Decimal(10,2);
