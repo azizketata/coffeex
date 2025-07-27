@@ -5,6 +5,10 @@
     <contentLeft>
       <Button text="🏠 Home" press=".onNavHome"/>
       <Button text="👤 Profile" press=".onNavProfile"/>
+      <Button text="🛠 Admin" press=".onNavAdmin"/>
     </contentLeft>
   </Bar>
 </core:FragmentDefinition>
+
+ <!-- This code will be used for the admin button to make it visible only for admins -->
+ <!-- visible="{= ${userModel>/role} === 'Admin' }" -->

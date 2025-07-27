@@ -9,10 +9,12 @@ sap.ui.define([
   "use strict";
 
   return Controller.extend("coffee-frontend.controller.Home", {
+
+    // 🔵 Runs when the view is loaded
     onInit: function () {
       const oView = this.getView();
 
-      // Load the NavigationBar fragment into the customHeader
+      // ✅ Load the NavigationBar fragment dynamically into the header
       Fragment.load({
         id: oView.getId(),
         name: "coffee-frontend.view.fragment.NavigationBar",
@@ -22,33 +24,37 @@ sap.ui.define([
         oView.byId("navbarContainer").addContentLeft(oFragment);
       });
 
-      // 🔔 Check balance on load
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user && user.userId) {
-        const oModel = this.getView().getModel();
-
-        // Request user data from backend
-        oModel.read(`/User('${user.userId}')`, {
-          success: (oData) => {
-            // Show warning if balance is low
-            if (oData.balance < 5) {
-              MessageToast.show(`⚠️ Your balance is low (€${oData.balance}). Please top up.`);
-            }
-
-            // Bind balance to a local JSON model for UI
-            const balanceModel = new JSONModel({
-              balance: oData.balance
-            });
-            this.getView().setModel(balanceModel, "balanceModel");
-          },
-          error: () => {
-            console.warn("Could not fetch user data for balance check.");
-          }
-        });
-      }
+      // ✅ Check and load user balance on startup
+      this.refreshBalance();
     },
 
-    // Navigation handlers
+    // ✅ Function to re-fetch the balance from backend and update the UI
+    refreshBalance: function () {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user || !user.userId) {
+        console.warn("No user logged in, cannot refresh balance.");
+        return;
+      }
+
+      const oModel = this.getView().getModel();
+
+      oModel.read(`/User('${user.userId}')`, {
+        success: (oData) => {
+          // ✅ Update balance model with latest value
+          const balanceModel = this.getView().getModel("balanceModel") || new JSONModel();
+          balanceModel.setData({ balance: oData.balance });
+          this.getView().setModel(balanceModel, "balanceModel");
+
+          console.log(`Balance refreshed: €${oData.balance}`);
+        },
+        error: (err) => {
+          console.error("Failed to refresh balance:", err);
+          MessageToast.show("Could not refresh balance.");
+        }
+      });
+    },
+
+    // 🔵 Navigation handlers
     onNavHome: function () {
       this.getOwnerComponent().getRouter().navTo("home");
     },
@@ -57,7 +63,12 @@ sap.ui.define([
       this.getOwnerComponent().getRouter().navTo("profile");
     },
 
-    // Coffee size selection
+    // ✅ NEW: Navigation for Admin Dashboard
+    onNavAdmin: function () {
+      this.getOwnerComponent().getRouter().navTo("admin");
+    },
+
+    // 🔵 Coffee size selection
     onSelectSingle: function () {
       MessageToast.show("Single selected");
     },
@@ -66,7 +77,7 @@ sap.ui.define([
       MessageToast.show("Double selected");
     },
 
-    // Top-Up Dialog Logic
+    // 🔵 Top-Up Dialog Logic
     onTopUpBalance: function () {
       this.onOpenTopUpDialog();
     },
@@ -99,7 +110,7 @@ sap.ui.define([
       }
     },
 
-    // Checkout Dialog Logic
+    // 🔵 Checkout Dialog Logic
     onOpenCheckoutDialog: function () {
       const oView = this.getView();
 
@@ -128,7 +139,7 @@ sap.ui.define([
       }
     },
 
-    // 🟢 Pay for coffee (tap button) → call CAP action 'Tap'
+    // 🟢 Pay for coffee button (deduct balance and send coffee order)
     onUseBalance: function () {
       const oView = this.getView();
       const oModel = oView.getModel();
@@ -139,7 +150,7 @@ sap.ui.define([
         return;
       }
 
-      // Step 1: Get the one machine from backend
+      // Step 1: Get coffee machine info
       oModel.read("/Machine", {
         success: (oData) => {
           if (!oData.results.length) {
@@ -149,7 +160,7 @@ sap.ui.define([
 
           const machineId = oData.results[0].machineId;
 
-          // Step 2: Trigger CAP function 'Tap' with userId + machineId
+          // Step 2: Trigger CAP action 'Tap'
           oModel.callFunction("/Tap", {
             method: "POST",
             urlParameters: {
@@ -159,6 +170,7 @@ sap.ui.define([
             success: () => {
               MessageToast.show("Coffee ordered successfully!");
               this.onCloseCheckoutDialog();
+              this.refreshBalance();  // ✅ refresh balance after ordering coffee
             },
             error: (oError) => {
               const sMessage = oError?.responseText || "Payment failed.";
@@ -171,6 +183,72 @@ sap.ui.define([
           MessageBox.error("Failed to fetch machine.");
         }
       });
+    },
+
+    // ------------------ ☕ TOP UP (PayPal) HANDLERS ------------------
+
+    // ✅ Step 1: User clicks an amount (€5, €10, etc.)
+    onSelectTopUpAmount: function (oEvent) {
+      // remove selected style from all buttons
+      const oParent = oEvent.getSource().getParent();
+      oParent.getItems().forEach(btn => btn.removeStyleClass("selected"));
+
+      // highlight the clicked button
+      oEvent.getSource().addStyleClass("selected");
+
+      // store amount
+      const sAmount = oEvent.getSource().getText().replace("€", "").trim();
+      this._selectedAmount = parseFloat(sAmount);
+
+      MessageToast.show(`Selected €${this._selectedAmount}`);
+    },
+
+    // ✅ Step 2: User clicks “⏩ Pay”
+    onPayTopUp: function () {
+      const oView = this.getView();
+      const oModel = oView.getModel();
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user || !user.userId) {
+        MessageBox.error("User not logged in.");
+        return;
+      }
+
+      if (!this._selectedAmount) {
+        MessageBox.error("Please select an amount first.");
+        return;
+      }
+
+      sap.ui.core.BusyIndicator.show(0);
+
+      // Call CAP OData action TopUp
+      oModel.callFunction("/TopUp", {
+        method: "POST",
+        urlParameters: {
+          userId: user.userId,
+          amount: this._selectedAmount
+        },
+        success: (oData) => {
+          sap.ui.core.BusyIndicator.hide();
+
+          if (oData && typeof oData === "string") {
+            // ✅ open PayPal checkout page
+            window.open(oData, "_blank");
+            MessageToast.show("Redirecting to PayPal...");
+
+            // ✅ refresh balance in UI after initiating top-up
+            this.refreshBalance();
+          } else {
+            MessageBox.warning("No PayPal URL returned.");
+          }
+        },
+        error: (oError) => {
+          sap.ui.core.BusyIndicator.hide();
+          console.error(oError);
+          MessageBox.error("Top-up failed.");
+        }
+      });
     }
+
   });
 });
