@@ -23,13 +23,7 @@
   },
   "requires": {
     "db": {
-      "kind": "sqlite",
-      "credentials": {
-        "database": "coffeex.db"
-      },
-      "[production]": {
-        "kind": "hana"
-      }
+      "kind": "hana"
     },
     "auth": {
       "kind": "mocked",
@@ -55,4 +49,4 @@
   "features": {
     "serve_on_root": true
   }
-} 
+}

@@ -1,3 +1,5 @@
+require('@sap/xsenv').loadEnv('./default-env.json')
+
 const cds = require('@sap/cds')
 
 // Standard CAP server that auto-loads handlers
