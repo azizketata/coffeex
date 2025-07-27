@@ -23,7 +23,8 @@ modules:
       builder: custom
       commands:
         - npm install --legacy-peer-deps
-
+      env:
+        NODE_ENV: production  # ✅ Activate production profile
   - name: coffeex-db-deployer
     type: hdb
     path: gen/db
@@ -100,6 +101,7 @@ resources:
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
+  service-name: coffeex-hdi
 
 build-parameters:
   before-all:
