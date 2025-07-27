@@ -5,7 +5,7 @@ require('dotenv').config();
 const PAYPAL_API_URL = process.env.PAYPAL_API_URL || 'https://api-m.sandbox.paypal.com'
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID 
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET
-const FRONTPORT = 3003 //idk yet
+const FRONTPORT = 8080 //idk yet
 
 // Cache for access token
 let accessToken = null
@@ -170,7 +170,7 @@ async function createOrder(amount, referenceId) {
         description: `Top-up ${referenceId}`
       }],
       application_context: {
-        return_url: `http://localhost:4004/paypal/success?txId=${referenceId}`,
+        return_url: `https://technische-universit-t-m-nchen-sap-hochschulkompetenzze3525cbaf.cfapps.us10-001.hana.ondemand.com/paypal/success?txId=${referenceId}`,
         cancel_url: `https://localhost:${FRONTPORT}/topup/cancel`,
         user_action: 'PAY_NOW'
       }

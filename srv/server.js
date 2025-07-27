@@ -76,8 +76,7 @@ cds.on('bootstrap', (app) => {
 
   app.get('/paypal/success', async (req, res) => {
   const { token: orderId, txId } = req.query
-
-  try {
+    try {
     const success = await paypal.captureOrder(orderId)
     if (success) {
       const tx = await cds.run(SELECT.one.from('coffeex.TopUpTransaction').where({ txId }))
@@ -90,10 +89,11 @@ cds.on('bootstrap', (app) => {
       await cds.run(UPDATE('coffeex.TopUpTransaction').set({ status: 'FAILED' }).where({ txId }))
       return res.redirect('https://localhost:3003/topup/fail') //need to change port later
     }
-  } catch (e) {
+  }
+  catch(e) {
     console.error('Capture failed:', e)
     return res.status(500).send('Error capturing PayPal payment')
-  }
+  } 
 })
 
 }) 
