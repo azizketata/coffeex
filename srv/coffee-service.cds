@@ -21,6 +21,9 @@ service CoffeeService @(path:'/odata/v4') {
   
   @requires:'Admin'
   action Forecast() returns Integer;
+
+  @requires: 'User'
+  entity TopUpTransactions as projection on db.TopUpTransaction;
   
   @requires:'Admin'
   action CheckLowBalances() returns Integer;
