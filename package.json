@@ -26,7 +26,7 @@
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.844.0",
     "@sap/cds": "^8",
-    "@sap/hana-client": "^2.17.20",
+    "@sap/hana-client": "^2.25.29",
     "@sap/xsenv": "^4",
     "@sap/xssec": "^3",
     "axios": "^1.6.0",
@@ -45,6 +45,19 @@
     "rimraf": "3.0.2"
   },
   "cds": {
+    "profile": "production",
+    "requires": {
+      "db": {
+        "kind": "hana",
+        "vcap": {
+          "label": "hana",
+          "name": "coffeex-hdi"
+        }
+      },
+      "auth": {
+        "kind": "mocked"
+      }
+    },
     "hana": {
       "deploy-format": "hdbtable"
     },

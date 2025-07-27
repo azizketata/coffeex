@@ -1,3 +1,5 @@
+require('@sap/xsenv').loadEnv('./default-env.json')
+
 const cds = require('@sap/cds')
 const paypal = require('./integrations/paypal')
 
