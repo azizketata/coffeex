@@ -97,6 +97,12 @@
           "target": "history"
         },
         {
+          "pattern": "admin",
+          "name": "admin",
+          "target": "admin"
+        },
+        
+        {
           "pattern": ":all*:",
           "name": "notFound",
           "target": "notFound"
@@ -133,6 +139,12 @@
           "viewId": "history",
           "viewLevel": 4
         },
+        "admin": {
+          "viewName": "Admin",
+          "viewId": "admin",
+          "viewLevel": 6
+        },
+
         "notFound": {
           "viewName": "NotFound",
           "viewId": "notFound",

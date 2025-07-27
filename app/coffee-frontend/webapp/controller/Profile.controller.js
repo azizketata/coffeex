@@ -42,6 +42,9 @@ sap.ui.define([
 
     onNavProfile: function () {
       this.getOwnerComponent().getRouter().navTo("profile");
-    }
+    },
+    onNavAdmin: function () {
+      this.getOwnerComponent().getRouter().navTo("admin");
+    },
   });
 });
