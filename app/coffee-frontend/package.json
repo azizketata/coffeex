@@ -2,9 +2,9 @@
   "name": "coffee-frontend",
   "version": "0.0.1",
   "devDependencies": {
-    "bestzip": "2.1.4",
+    "@sap/ux-ui5-tooling": "^1.18.3",
     "@ui5/cli": "^3.0.0",
-    "@sap/ux-ui5-tooling": "1",
+    "bestzip": "2.1.4",
     "rimraf": "3.0.2"
   },
   "dependencies": {

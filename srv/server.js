@@ -76,26 +76,53 @@ cds.on('bootstrap', (app) => {
     }
   })
 
-  app.get('/paypal/success', async (req, res) => {
-  const { token: orderId, txId } = req.query
-    try {
-    const success = await paypal.captureOrder(orderId)
-    if (success) {
-      const tx = await cds.run(SELECT.one.from('coffeex.TopUpTransaction').where({ txId }))
-      await cds.run([
-        UPDATE('coffeex.TopUpTransaction').set({ status: 'COMPLETED' }).where({ txId }),
-        UPDATE('coffeex.User').set`balance = balance + ${tx.amount}`.where({ userId: tx.userId })
-      ])
-      return res.redirect('https://localhost:3003/topup/success') //need to change ports later
-    } else {
-      await cds.run(UPDATE('coffeex.TopUpTransaction').set({ status: 'FAILED' }).where({ txId }))
-      return res.redirect('https://localhost:3003/topup/fail') //need to change port later
+  app.post('/topup', async (req, res) => {
+    const { amount } = req.body;
+    const userId = req.user.id;
+  
+    if (!amount || amount <= 0) {
+      return res.status(400).send('Invalid amount');
     }
-  }
-  catch(e) {
-    console.error('Capture failed:', e)
-    return res.status(500).send('Error capturing PayPal payment')
-  } 
-})
+  
+    const txId = cds.utils.uuid()
+    const orderId = await paypal.createOrder({ amount, txId });
+  
+    await cds.run(INSERT.into('coffeex.TopUpTransaction').entries({
+      txId,
+      userId,
+      amount,
+      status: 'PENDING',
+      paypalOrderId: orderId,
+      createdAt: new Date()
+    }));
+  
+    res.status(200).send({ url: orderId, txId });
+  });
+  
+
+  app.get('/paypal/success', async (req, res) => {
+    const { token: orderId, txId } = req.query;
+  
+    try {
+      const success = await paypal.captureOrder(orderId);
+  
+      if (success) {
+        let tx = await cds.run(SELECT.one.from('coffeex.TopUpTransaction').where({ txId }));
+  
+        await cds.run([
+          UPDATE('coffeex.TopUpTransaction').set({ status: 'COMPLETED' }).where({ txId }),
+          UPDATE('coffeex.User').set`balance = balance + ${tx.amount}`.where({ userId: tx.userId })
+        ]);
+  
+        return res.redirect('https://localhost:3003/topup/success');
+      } else {
+        await cds.run(UPDATE('coffeex.TopUpTransaction').set({ status: 'FAILED' }).where({ txId }));
+        return res.redirect('https://localhost:3003/topup/fail');
+      }
+    } catch (e) {
+      console.error('Capture failed:', e);
+      return res.status(500).send('Error capturing PayPal payment');
+    }
+  });  
 
 }) 
