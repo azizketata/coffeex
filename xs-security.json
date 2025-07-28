@@ -11,6 +11,10 @@
     {
       "name": "$XSAPPNAME.User",
       "description": "CoffeeX application user"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "CoffeeX administrator with elevated rights"
     }
   ],
   "role-templates": [
@@ -22,17 +26,34 @@
       ]
     },
     {
+      "name": "Admin",
+      "description": "CoffeeX admin role",
+      "scope-references": [
+        "$XSAPPNAME.Admin",
+        "$XSAPPNAME.User"
+      ]
+    },
+    {
       "name": "Token_Exchange",
       "description": "Exchange token with other apps",
       "scope-references": [
         "uaa.user"
       ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "CoffeeX_Users",
+      "description": "Role collection for all CoffeeX users",
+      "role-template-references": [
+        "$XSAPPNAME.User"
+      ]
     },
     {
-      "name": "Admin",
-      "description": "CoffeeX admin role",
-      "scope-references": [
-        "$XSAPPNAME.User"
+      "name": "CoffeeX_Admins",
+      "description": "Role collection for CoffeeX admins",
+      "role-template-references": [
+        "$XSAPPNAME.Admin"
       ]
     }
   ]

@@ -5,6 +5,7 @@ namespace coffeex;
 
 entity User : managed {
   key userId     : UUID;
+      email      : String(100);
       balance    : Decimal(9,2)  default 0;
       role       : String(30);
 }

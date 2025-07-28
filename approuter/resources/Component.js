@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/UIComponent","sap/ui/Device","coffee-frontend/model/models"],function(e,t,n){"use strict";return e.extend("coffee-frontend.Component",{metadata:{manifest:"json"},init:function(){e.prototype.init.apply(this,arguments);this.getRouter().initialize()}})});
+//# sourceMappingURL=Component.js.map

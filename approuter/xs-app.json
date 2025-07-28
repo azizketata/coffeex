@@ -1,18 +1,30 @@
 {
-    "authenticationMethod": "route",
-    "routes": [
-      {
-        "source": "^/odata/(.*)$",
-        "target": "/odata/$1",
-        "destination": "coffeex-srv-api",
-        "authenticationType": "xsuaa"
-      },
-      {
-        "source": "^(.*)$",
-        "target": "$1",
-        "destination": "coffeex-srv-api",
-        "authenticationType": "xsuaa"
-      }
-    ]
-  }
-  
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/odata/(.*)$",
+      "target": "/odata/$1",
+      "destination": "coffeex-srv-api",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/api/(.*)$",
+      "target": "/api/$1",
+      "destination": "coffeex-srv-api",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/srv/(.*)$",
+      "target": "/srv/$1",
+      "destination": "coffeex-srv-api",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "localDir": "resources",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

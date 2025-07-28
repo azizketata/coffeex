@@ -1,0 +1,13 @@
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  controllerName="coffee-frontend.controller.NotFound"
+  displayBlock="true">
+
+  <Page title="404 - Not Found">
+    <content>
+      <Text text="The page you're looking for doesn't exist." />
+    </content>
+  </Page>
+
+</mvc:View>

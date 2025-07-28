@@ -1,0 +1,144 @@
+.homePageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.logoContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.brandTitle {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.greetingText {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.balanceRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 1.5rem;
+}
+
+.balanceItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.objectNumber {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.objectLabel {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.iconRow {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconRow .sapMIcon {
+  margin-right: 0.5rem;
+}
+
+.chooseSize {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.payButton {
+  width: 100%;
+  max-width: 300px;
+  height: 3rem;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.topupLink {
+  font-size: 0.9rem;
+  color: #0a6ed1;
+  margin-bottom: 2rem;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 3rem;
+}
+
+.checkoutDialogBottomSheet {
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  width: 100%;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.topUpDialog {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  padding: 1rem;
+}
+
+.topUpBody {
+  padding: 1rem;
+}
+
+.topUpHeader {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.topUpButtons Button {
+  margin: 0.5rem 0.5rem;
+  width: 5rem;
+}
+
+.topUpPayBtn {
+  margin-top: 1rem;
+  width: 80%;
+}
+.objectUnit {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-top: -0.25rem;
+  color: #444;
+}

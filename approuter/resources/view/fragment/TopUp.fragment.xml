@@ -1,0 +1,40 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+
+  <!-- ✅ Top-Up Dialog -->
+  <Dialog
+    id="topUpDialog"
+    class="topUpDialog"
+    stretch="{= ${device>/system/phone} }"
+    verticalScrolling="false"
+    horizontalScrolling="false"
+    showHeader="false"
+    draggable="false"
+    resizable="false"
+    contentHeight="40%"
+    contentWidth="100%">
+    
+    <VBox class="topUpBody" justifyContent="Center" alignItems="Center" width="100%">
+
+      <!-- 🔵 Header row (Cancel button + Title) -->
+      <HBox class="topUpHeader" justifyContent="SpaceBetween" width="100%">
+        <Button text="Cancel" type="Transparent" press=".onCloseTopUpDialog"/>
+        <Text text="Add Credit" class="topUpTitle"/>
+        <Text text="" /> <!-- filler to center title -->
+      </HBox>
+
+      <!-- 💶 Top-Up amount selection buttons -->
+      <!-- 📝 Each button triggers onSelectTopUpAmount in the controller -->
+      <HBox class="topUpButtons" justifyContent="Center" wrap="Wrap">
+        <Button text="€ 5" class="topUpAmount" press=".onSelectTopUpAmount"/>
+        <Button text="€ 10" class="topUpAmount" press=".onSelectTopUpAmount"/>
+        <Button text="€ 25" class="topUpAmount" press=".onSelectTopUpAmount"/>
+        <Button text="€ 50" class="topUpAmount" press=".onSelectTopUpAmount"/>
+      </HBox>
+
+      <!-- 🟦 Pay button -->
+      <!-- 📝 Calls onPayTopUp in the controller to start PayPal flow -->
+      <Button text="⏩ Pay" class="topUpPayBtn" type="Emphasized" press=".onPayTopUp"/>
+
+    </VBox>
+  </Dialog>
+</core:FragmentDefinition>

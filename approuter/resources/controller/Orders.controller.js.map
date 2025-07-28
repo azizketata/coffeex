@@ -1,0 +1,1 @@
+{"version":3,"file":"Orders.controller.js","names":["sap","ui","define","Controller","extend","onInit"],"sources":["Orders-dbg.controller.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CACV,8BACC,SAASC,GACV,aAEA,OAAOA,EAAWC,OAAO,oCAAqC,CAC5DC,OAAQ,WAER,GAEJ","ignoreList":[]}

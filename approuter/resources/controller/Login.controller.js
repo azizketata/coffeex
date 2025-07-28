@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/Controller"],function(e){"use strict";return e.extend("coffee-frontend.controller.Login",{onInit:function(){console.log("Login view initialized");jQuery.sap.includeStyleSheet("view/Login.view.css")},onSignIn:function(){this.getOwnerComponent().getRouter().navTo("home")}})});
+//# sourceMappingURL=Login.controller.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"Privacy.controller.js","names":["sap","ui","define","Controller","extend","onInit","onCancel","this","getOwnerComponent","getRouter","navTo"],"sources":["Privacy-dbg.controller.js"],"mappings":"AAAAA,IAAIC,GAAGC,OAAO,CACV,8BACC,SAAUC,GACX,aAEA,OAAOA,EAAWC,OAAO,qCAAsC,CAC7DC,OAAQ,WAAa,EAErBC,SAAU,WACRC,KAAKC,oBAAoBC,YAAYC,MAAM,UAC7C,GAEJ","ignoreList":[]}
