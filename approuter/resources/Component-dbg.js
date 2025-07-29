@@ -3,8 +3,9 @@ sap.ui.define([
   "sap/ui/Device",
   "coffee-frontend/model/models",
   "coffee-frontend/util/UserService",
-  "sap/ui/model/json/JSONModel"
-], function (UIComponent, Device, models, UserService, JSONModel) {
+  "sap/ui/model/json/JSONModel",
+  "sap/m/MessageToast"
+], function (UIComponent, Device, models, UserService, JSONModel, MessageToast) {
   "use strict";
 
   return UIComponent.extend("coffee-frontend.Component", {
@@ -29,22 +30,45 @@ sap.ui.define([
     _initializeUser: function() {
       const that = this;
       
+      // Set a temporary empty user model to prevent errors
+      const emptyUserModel = new JSONModel({
+        userId: null,
+        email: null,
+        displayName: "Loading...",
+        firstName: "",
+        lastName: ""
+      });
+      this.setModel(emptyUserModel, "user");
+      
       // Get authenticated user data
       this._userService.getCurrentUser()
         .then(function(userData) {
           console.log("User initialized:", userData);
           
-          // Create a global user model
-          const userModel = new JSONModel(userData);
-          that.setModel(userModel, "user");
+          // Update the user model with real data
+          const userModel = that.getModel("user");
+          userModel.setData(userData);
           
-          // Navigate to home
-          that.getRouter().navTo("home");
+          // Refresh the model to trigger bindings
+          userModel.refresh();
         })
         .catch(function(error) {
           console.error("Failed to initialize user:", error);
-          // If not authenticated, the approuter should handle this
-          // But we can show an error or redirect to login
+          
+          // Check if we're authenticated at all
+          // If not, the approuter should redirect to login automatically
+          // But we can show a message
+          MessageToast.show("Authentication required. Please refresh the page.");
+          
+          // Set a default user for demo purposes
+          const userModel = that.getModel("user");
+          userModel.setData({
+            userId: "demo@example.com",
+            email: "demo@example.com", 
+            displayName: "Demo User",
+            firstName: "Demo",
+            lastName: "User"
+          });
         });
     },
     
