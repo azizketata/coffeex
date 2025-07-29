@@ -78,8 +78,7 @@ modules:
     requires:
       - name: coffeex  # this is your XSUAA service instance
       - name: coffeex-Destination  # ✅ destination service bound to approuter
-      # - name: coffeex-html5-repo-host   # ❌ NO LONGER USED
-      # - name: coffeex-html5-repo-rt     # ❌ NO LONGER USED
+      
 
 resources:
   - name: coffeex-hdi

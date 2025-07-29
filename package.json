@@ -55,7 +55,7 @@
         }
       },
       "auth": {
-        "kind": "mocked"
+        "kind": "xsuaa"
       }
     },
     "hana": {

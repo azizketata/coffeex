@@ -2,7 +2,6 @@ const cds = require('@sap/cds')
 
 module.exports = class CoffeeService extends cds.ApplicationService {
   async init() {
-
     // 1️⃣ Hook into "before" all READ/WRITE events on the service
     //    This will run before ANY request (READ, CREATE, ACTION) on CoffeeService
     this.before('*', async (req) => {

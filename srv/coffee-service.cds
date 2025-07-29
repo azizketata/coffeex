@@ -16,7 +16,7 @@ service CoffeeService @(path:'/odata/v4') {
   @requires:'User'
   action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
   
-  @requires:'Admin'
+  @requires:'authenticated-user'
   action BatchPay() returns Integer;
   
   @requires:'Admin'
@@ -28,7 +28,7 @@ service CoffeeService @(path:'/odata/v4') {
   @requires:'Admin'
   action CheckLowBalances() returns Integer;
 
-  @requires: 'User'
+  @requires: 'authenticated-user'
   action TopUp(amount: Decimal(10,2)) returns String;
 
 } 

@@ -3,6 +3,9 @@ const paypal = require('../integrations/paypal')
 
 module.exports = srv => {
   srv.on('TopUp', async ({ data, user, req }) => {
+    //Added for debugging purpose
+    console.log("🔑 Logged in user:", req.user);
+    
     const { amount } = data
     const txId = cds.utils.uuid()
 
