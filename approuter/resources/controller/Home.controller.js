@@ -24,8 +24,36 @@ sap.ui.define([
         oView.byId("navbarContainer").addContentLeft(oFragment);
       });
 
-      // ✅ Check and load user balance on startup
-      this.refreshBalance();
+      // ✅ Listen for user model changes
+      const oComponent = this.getOwnerComponent();
+      const userModel = oComponent.getModel("user");
+      
+      if (userModel) {
+        // If user model already exists, refresh balance
+        this.refreshBalance();
+        
+        // Also listen for future changes
+        userModel.attachPropertyChange(() => {
+          this.refreshBalance();
+        });
+      } else {
+        // Wait for user model to be created
+        const checkUserModel = setInterval(() => {
+          const userModel = oComponent.getModel("user");
+          if (userModel) {
+            clearInterval(checkUserModel);
+            this.refreshBalance();
+            
+            // Listen for future changes
+            userModel.attachPropertyChange(() => {
+              this.refreshBalance();
+            });
+          }
+        }, 100); // Check every 100ms
+        
+        // Stop checking after 5 seconds
+        setTimeout(() => clearInterval(checkUserModel), 5000);
+      }
     },
 
     // ✅ Function to re-fetch the balance from backend and update the UI
