@@ -6,7 +6,7 @@ echo -e "\033[32m============================================\033[0m"
 
 # Build the project
 echo -e "\n\033[33mStep 1: Building the project...\033[0m"
-npm run build:cf
+npm run build
 
 if [ $? -ne 0 ]; then
     echo -e "\033[31mBuild failed! Please check the errors above.\033[0m"
