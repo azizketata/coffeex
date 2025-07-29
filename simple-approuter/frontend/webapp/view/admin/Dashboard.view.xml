@@ -1,0 +1,15 @@
+<mvc:View
+    controllerName="coffeex.controller.admin.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <Page title="Admin Dashboard" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox alignItems="Center" class="sapUiLargeMarginTop">
+                <Title text="Analytics Dashboard" level="H2"/>
+                <Text text="Coming soon..." class="sapUiMediumMarginTop"/>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View> 

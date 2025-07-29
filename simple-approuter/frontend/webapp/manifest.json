@@ -1,0 +1,105 @@
+{
+    "_version": "1.12.0",
+    "sap.app": {
+        "id": "coffeex",
+        "type": "application",
+        "title": "CoffeeX",
+        "description": "Smart Coffee Dispenser",
+        "applicationVersion": {
+            "version": "1.0.0"
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "coffeex.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "coffeex.view",
+                "controlId": "app",
+                "controlAggregation": "pages",
+                "async": true
+            },
+            "routes": [
+                {
+                    "name": "userHome",
+                    "pattern": "user/home",
+                    "target": "userHome"
+                },
+                {
+                    "name": "userProfile",
+                    "pattern": "user/profile",
+                    "target": "userProfile"
+                },
+                {
+                    "name": "adminHome",
+                    "pattern": "admin/home",
+                    "target": "adminHome"
+                },
+                {
+                    "name": "adminDashboard",
+                    "pattern": "admin/dashboard",
+                    "target": "adminDashboard"
+                }
+            ],
+            "targets": {
+                "userHome": {
+                    "viewName": "user.Home",
+                    "viewLevel": 1
+                },
+                "userProfile": {
+                    "viewName": "user.Profile",
+                    "viewLevel": 2
+                },
+                "adminHome": {
+                    "viewName": "admin.Home",
+                    "viewLevel": 1
+                },
+                "adminDashboard": {
+                    "viewName": "admin.Dashboard",
+                    "viewLevel": 2
+                }
+            }
+        },
+        "models": {
+            "": {
+                "dataSource": "mainService",
+                "type": "sap.ui.model.odata.v4.ODataModel",
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true
+                }
+            }
+        }
+    },
+    "sap.app/dataSources": {
+        "mainService": {
+            "uri": "/backend/odata/v4/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "4.0"
+            }
+        }
+    }
+} 
