@@ -1,5 +1,5 @@
 {
-  "welcomeFile": "/frontend/index.html",
+  "welcomeFile": "/frontend/webapp/index.html",
   "authenticationMethod": "route",
   "logout": {
     "logoutEndpoint": "/logout",
@@ -8,7 +8,7 @@
   "routes": [
     {
       "source": "^/login$",
-      "target": "/index.html",
+      "target": "/webapp/index.html",
       "localDir": "frontend",
       "authenticationType": "xsuaa"
     },
@@ -26,8 +26,8 @@
     },
     {
       "source": "^/$",
-      "target": "/frontend/index.html",
-      "localDir": ".",
+      "target": "/webapp/index.html",
+      "localDir": "frontend",
       "authenticationType": "none"
     }
   ]
