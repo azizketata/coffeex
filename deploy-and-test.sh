@@ -13,9 +13,19 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Build MTA
+echo -e "\n\033[33mStep 2: Building MTA archive...\033[0m"
+mbt build -t ./
+
+if [ $? -ne 0 ]; then
+    echo -e "\033[31mMTA build failed! Make sure you have mbt installed:\033[0m"
+    echo -e "\033[33mnpm install -g mbt\033[0m"
+    exit 1
+fi
+
 # Deploy to BTP
-echo -e "\n\033[33mStep 2: Deploying to BTP...\033[0m"
-cf deploy
+echo -e "\n\033[33mStep 3: Deploying to BTP...\033[0m"
+cf deploy mta_archives/coffeex-cap_1.0.0.mtar
 
 if [ $? -ne 0 ]; then
     echo -e "\033[31mDeployment failed! Please check the errors above.\033[0m"
@@ -25,7 +35,7 @@ fi
 echo -e "\n\033[32m✅ Deployment completed successfully!\033[0m"
 
 # Get app status
-echo -e "\n\033[33mStep 3: Checking app status...\033[0m"
+echo -e "\n\033[33mStep 4: Checking app status...\033[0m"
 cf apps
 
 # Instructions for testing
@@ -45,6 +55,7 @@ echo "5. The app should show the welcome screen with your user info"
 echo ""
 echo -e "\033[33m⚠️  If you still get an error, check the logs:\033[0m"
 echo -e "   \033[37mcf logs coffeex-srv --recent\033[0m"
+echo -e "   \033[37mcf logs coffeex-simple-approuter --recent\033[0m"
 echo ""
 echo -e "\033[33m📊 The enhanced logging will show:\033[0m"
 echo "   - All incoming requests with timestamps"
