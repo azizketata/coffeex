@@ -7,28 +7,23 @@
   },
   "routes": [
     {
-      "source": "^/login$",
-      "target": "/webapp/index.html",
-      "localDir": "frontend",
-      "authenticationType": "xsuaa"
-    },
-    {
       "source": "^/backend/(.*)$",
       "target": "/$1",
-      "destination": "srv-api",
-      "authenticationType": "xsuaa"
+      "destination": "coffeex-srv",
+      "authenticationType": "xsuaa",
+      "forwardAuthToken": true
     },
     {
       "source": "^/frontend/(.*)$",
       "target": "/$1",
       "localDir": "frontend",
-      "authenticationType": "none"
+      "authenticationType": "xsuaa"
     },
     {
       "source": "^/$",
       "target": "/webapp/index.html",
       "localDir": "frontend",
-      "authenticationType": "none"
+      "authenticationType": "xsuaa"
     }
   ]
 } 
