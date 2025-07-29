@@ -77,8 +77,13 @@ modules:
       memory: 256M
     requires:
       - name: coffeex  # this is your XSUAA service instance
-      - name: coffeex-Destination  # ✅ destination service bound to approuter
-      
+      - name: coffeex-srv-api  # ✅ Changed from coffeex-Destination to coffeex-srv-api
+      - name: srv-api
+        group: destinations
+        properties:
+          name: coffeex-srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
 
 resources:
   - name: coffeex-hdi
@@ -93,19 +98,25 @@ resources:
   - name: coffeex-Destination
     type: org.cloudfoundry.existing-service
 
-#Destination service that we created
- # - name: coffeex-srv-api
- #   type: org.cloudfoundry.managed-service
- #   requires:        #  NEW: explicitly link to srv-api
-  #    - name: srv-api
-   # parameters:
-    #  service: destination
-     # service-plan: lite
-      #config:
-       # destinations:
-        #  - name: coffeex-srv
-         #   url: ~{srv-api/srv-url}   # now this link will resolve correctly
-          #  forwardAuthToken: true
+# Destination service with actual configuration
+  - name: coffeex-srv-api
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        init_data:
+          subaccount:
+            existing_destinations_policy: update
+            destinations:
+              - Name: coffeex-srv-api
+                URL: ~{srv-api/srv-url}
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: NoAuthentication
+                forwardAuthToken: true
 
   - name: coffeex  # ✅ XSUAA service definition
     type: org.cloudfoundry.managed-service
