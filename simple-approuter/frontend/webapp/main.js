@@ -163,7 +163,7 @@ sap.ui.define([
                             onClose: function(oAction) {
                                 if (oAction === MessageBox.Action.OK) {
                                     // Force re-authentication by going to a protected resource
-                                    window.location.href = "/backend/odata/v4/Users";
+                                    window.location.href = "/backend/odata/v4";
                                 }
                             }
                         }
