@@ -9,22 +9,22 @@ module.exports = class CoffeeService extends cds.ApplicationService {
       // ✅ Check if user is authenticated
       if (!req.user || !req.user.attr || !req.user.attr.email) {
         console.log('⚠️ No email found on user (user might not be authenticated)');
-        return; // We don’t stop execution, just don’t auto-create a user
+        return; // We don't stop execution, just don't auto-create a user
       }
 
       const email = req.user.attr.email;
 
       // ✅ Access the Users table from our CDS model
-      const { User } = this.entities;
+      const { Users } = this.entities;
 
       // ✅ Look for an existing user by email
-      const existingUser = await SELECT.one.from(User).where({ email });
+      const existingUser = await SELECT.one.from(Users).where({ email });
 
-      // ✅ If user doesn’t exist yet, create them
+      // ✅ If user doesn't exist yet, create them
       if (!existingUser) {
         console.log(`ℹ️ First login detected. Creating new user for email: ${email}`);
 
-        await INSERT.into(User).entries({
+        await INSERT.into(Users).entries({
           userId: cds.utils.uuid(),   // generate UUID for internal use
           email: email,               // store SAP email for identification
           balance: 0,                 // default balance
@@ -56,10 +56,10 @@ module.exports = class CoffeeService extends cds.ApplicationService {
       }
 
       const email = req.user.attr.email || req.user.id;
-      const { User } = this.entities;
+      const { Users } = this.entities;
       
       // Get user from database
-      const dbUser = await SELECT.one.from(User).where({ email });
+      const dbUser = await SELECT.one.from(Users).where({ email });
       
       if (!dbUser) {
         // This shouldn't happen because of the before handler, but just in case
