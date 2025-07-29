@@ -10,8 +10,7 @@
       "source": "^/backend/(.*)$",
       "target": "/$1",
       "destination": "coffeex-srv",
-      "authenticationType": "xsuaa",
-      "forwardAuthToken": true
+      "authenticationType": "xsuaa"
     },
     {
       "source": "^/frontend/(.*)$",
