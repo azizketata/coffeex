@@ -40,6 +40,43 @@ cds.on('served', async () => {
 
 // Add health endpoint
 cds.on('bootstrap', (app) => {
+  
+  // Add comprehensive error logging middleware
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    console.log('Headers:', JSON.stringify(req.headers, null, 2));
+    
+    // Log authentication info if available
+    if (req.authInfo) {
+      console.log('Auth Info:', JSON.stringify(req.authInfo, null, 2));
+    }
+    if (req.user) {
+      console.log('User:', JSON.stringify(req.user, null, 2));
+    }
+    
+    // Continue to next middleware
+    next();
+  });
+  
+  // Error handling middleware
+  app.use((err, req, res, next) => {
+    console.error(`[ERROR] ${new Date().toISOString()} ${req.method} ${req.url}`);
+    console.error('Error details:', err);
+    console.error('Stack trace:', err.stack);
+    
+    // Send appropriate error response
+    if (!res.headersSent) {
+      res.status(err.status || 500).json({
+        error: {
+          message: err.message || 'Internal Server Error',
+          status: err.status || 500,
+          timestamp: new Date().toISOString(),
+          path: req.url
+        }
+      });
+    }
+  });
+  
   // Health check endpoint
   app.get('/health', async (req, res) => {
     try {

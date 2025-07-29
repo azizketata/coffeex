@@ -162,8 +162,10 @@ sap.ui.define([
                         {
                             onClose: function(oAction) {
                                 if (oAction === MessageBox.Action.OK) {
-                                    // Force re-authentication by going to a protected resource
-                                    window.location.href = "/backend/odata/v4";
+                                    // Store the current location to return after auth
+                                    sessionStorage.setItem('returnUrl', window.location.href);
+                                    // Force re-authentication by going to a protected metadata endpoint
+                                    window.location.href = "/login";
                                 }
                             }
                         }
