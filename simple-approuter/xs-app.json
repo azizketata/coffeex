@@ -1,0 +1,28 @@
+{
+  "welcomeFile": "/frontend/index.html",
+  "authenticationMethod": "route",
+  "logout": {
+    "logoutEndpoint": "/logout",
+    "logoutPage": "/"
+  },
+  "routes": [
+    {
+      "source": "^/backend/(.*)$",
+      "target": "/$1",
+      "destination": "coffeex-backend",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/frontend/(.*)$",
+      "target": "/$1",
+      "localDir": "frontend",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/$",
+      "target": "/frontend/index.html",
+      "localDir": ".",
+      "authenticationType": "none"
+    }
+  ]
+} 

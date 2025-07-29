@@ -4,6 +4,20 @@ description: CoffeeX Smart Coffee Dispenser Backend
 version: 1.0.0
 
 modules:
+  - name: coffeex-simple-approuter
+    type: approuter.nodejs
+    path: simple-approuter
+    parameters:
+      memory: 128M
+      disk-quota: 256M
+    requires:
+      - name: coffeex
+      - name: coffeex-backend-destination
+    provides:
+      - name: approuter-url
+        properties:
+          url: ${default-url}
+          
   - name: coffeex-srv
     type: nodejs
     path: gen/srv
@@ -86,6 +100,25 @@ modules:
           forwardAuthToken: true
 
 resources:
+  - name: coffeex-backend-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        init_data:
+          subaccount:
+            existing_destinations_policy: update
+            destinations:
+              - Name: coffeex-backend
+                URL: ~{srv-api/srv-url}
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: NoAuthentication
+                forwardAuthToken: true
+    requires:
+      - name: srv-api
+      
   - name: coffeex-hdi
     type: com.sap.xs.hdi-container
     parameters:

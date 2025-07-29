@@ -1,2 +1,0 @@
-sap.ui.define(["sap/ui/core/mvc/Controller"],function(e){"use strict";return e.extend("coffee-frontend.controller.OrderSuccess",{onInit:function(){},onNavHome:function(){this.getOwnerComponent().getRouter().navTo("home")}})});
-//# sourceMappingURL=OrderSuccess.controller.js.map
