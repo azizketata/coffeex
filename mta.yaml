@@ -39,7 +39,7 @@ modules:
         - npm install --legacy-peer-deps
       env:
         NODE_ENV: production  # ✅ Activate production profile
-
+      
   - name: coffeex-db-deployer
     type: hdb
     path: gen/db
@@ -49,7 +49,7 @@ modules:
       buildpack: nodejs_buildpack
       memory: 256M
       disk-quota: 512M
-
+      
   # ❌ FRONTEND MODULE DISABLED — we will serve UI from approuter/resources instead
   # - name: coffeex-ui
   #   type: html5
@@ -126,7 +126,7 @@ resources:
       service-plan: hdi-shared
     properties:
       hdi-service-name: ${service-name}
-
+      
 #Destination Service created by tutors
   - name: coffeex-Destination
     type: org.cloudfoundry.existing-service
@@ -193,21 +193,21 @@ resources:
   #             - "${namespace}/*"
   #           subscribeFilter:
   #             - "${namespace}/*"
-
+              
   - name: coffeex-alerts
     type: org.cloudfoundry.managed-service
     parameters:
       service: alert-notification
       service-plan: free
-
+      
 parameters:
   # deploy_mode: html5-repo   ❌ REMOVE HTML5 REPO MODE
   enable-parallel-deployments: true
   service-name: coffeex-hdi
-
+  
 build-parameters:
   before-all:
     - builder: custom
       commands:
         - npm install --legacy-peer-deps
-        - npx cds build --profile production
+        - npx cds build --profile production 

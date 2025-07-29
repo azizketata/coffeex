@@ -9,7 +9,7 @@
     {
       "source": "^/backend/(.*)$",
       "target": "/$1",
-      "destination": "coffeex-backend",
+      "destination": "srv-api",
       "authenticationType": "xsuaa"
     },
     {

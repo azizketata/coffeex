@@ -11,7 +11,7 @@ sap.ui.define([
     "sap/m/MessageBox"
 ], function (App, Page, VBox, Button, Title, Text, Input, MessageToast, Icon, MessageBox) {
     "use strict";
-
+    
     let currentUser = null;
     let welcomeText = null;
     let loginForm = null;
@@ -221,7 +221,7 @@ sap.ui.define([
             error: function(xhr) {
                 // Not authenticated - show login form
                 console.log("User not authenticated");
-            }
+        }
         });
     }
 
