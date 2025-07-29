@@ -49,6 +49,33 @@ module.exports = class CoffeeService extends cds.ApplicationService {
     lowBalanceHandler(this);
     topUpHandler(this);
 
+    // 4️⃣ Handler for getCurrentUser function
+    this.on('getCurrentUser', async (req) => {
+      if (!req.user || !req.user.attr) {
+        req.reject(401, 'Not authenticated');
+      }
+
+      const email = req.user.attr.email || req.user.id;
+      const { User } = this.entities;
+      
+      // Get user from database
+      const dbUser = await SELECT.one.from(User).where({ email });
+      
+      if (!dbUser) {
+        // This shouldn't happen because of the before handler, but just in case
+        req.reject(404, 'User not found in database');
+      }
+      
+      // Return user info in the format the frontend expects
+      return {
+        userId: dbUser.userId,
+        email: dbUser.email,
+        firstName: req.user.attr.givenName || '',
+        lastName: req.user.attr.familyName || '',
+        displayName: req.user.attr.name || dbUser.email
+      };
+    });
+
     // 4️⃣ Continue with default initialization
     return super.init();
   }

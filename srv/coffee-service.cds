@@ -31,4 +31,13 @@ service CoffeeService @(path:'/odata/v4') {
   @requires: 'authenticated-user'
   action TopUp(amount: Decimal(10,2)) returns String;
 
+  @requires: 'authenticated-user'
+  function getCurrentUser() returns {
+    userId: String;
+    email: String;
+    firstName: String;
+    lastName: String;
+    displayName: String;
+  };
+
 } 

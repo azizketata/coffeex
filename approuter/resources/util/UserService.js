@@ -7,7 +7,7 @@ sap.ui.define([
     
     _userData: null,
     
-    // Get current user from XSUAA
+    // Get current user from backend
     getCurrentUser: function() {
       const that = this;
       
@@ -17,21 +17,29 @@ sap.ui.define([
           return resolve(this._userData);
         }
         
-        // Fetch from userapi
-        jQuery.ajax({
-          url: "/user-api/currentUser",
-          type: "GET",
-          success: function(data) {
-            console.log("User data received:", data);
+        // Get the OData model from the component
+        const oModel = sap.ui.getCore().getComponent("container-coffee-frontend").getModel();
+        
+        if (!oModel) {
+          // Try localStorage as fallback
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const userData = JSON.parse(storedUser);
+            that._userData = userData;
+            resolve(userData);
+          } else {
+            reject(new Error("No model available"));
+          }
+          return;
+        }
+        
+        // Call the backend function
+        oModel.callFunction("/getCurrentUser", {
+          method: "GET",
+          success: function(oData) {
+            console.log("User data received from backend:", oData);
             
-            // Map XSUAA user data to our format
-            const userData = {
-              userId: data.email || data.name, // Use email as userId
-              email: data.email,
-              firstName: data.firstname || data.givenName || "",
-              lastName: data.lastname || data.familyName || "",
-              displayName: data.name || data.firstname || "User"
-            };
+            const userData = oData.getCurrentUser;
             
             // Store in memory and localStorage
             that._userData = userData;
@@ -39,8 +47,8 @@ sap.ui.define([
             
             resolve(userData);
           },
-          error: function(xhr, status, error) {
-            console.error("Failed to get user info:", error);
+          error: function(oError) {
+            console.error("Failed to get user info from backend:", oError);
             
             // Try to get from localStorage as fallback
             const storedUser = localStorage.getItem("user");
@@ -49,7 +57,7 @@ sap.ui.define([
               that._userData = userData;
               resolve(userData);
             } else {
-              reject(new Error("Not authenticated"));
+              reject(new Error("Failed to get user data"));
             }
           }
         });
