@@ -24,7 +24,7 @@
         </VBox>
 
         <!-- Greeting -->
-        <Text text="Good Morning, Lisa 😊" class="greetingText"/>
+        <Text text="{= 'Good Morning, ' + ${user>/displayName} + ' 😊'}" class="greetingText"/>
 
         <!-- Balance and Today -->
         <HBox class="balanceRow" alignItems="Center" justifyContent="SpaceAround">

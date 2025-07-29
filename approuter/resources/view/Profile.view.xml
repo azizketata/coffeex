@@ -17,9 +17,9 @@
         <!-- Profile Image + Name -->
         <VBox alignItems="Center" class="profileHeader">
           <f:Avatar displaySize="L" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
-          <Text text="Lisa" class="profileName" />
-          <Text text="SAP LABS 03, MUE" class="profileSubtitle" />
-          <Text text="PHD Candidate" class="profileSubtitle2" />
+          <Text text="{user>/displayName}" class="profileName" />
+          <Text text="{user>/email}" class="profileSubtitle" />
+          <Text text="Coffee Enthusiast" class="profileSubtitle2" />
         </VBox>
 
         <!-- Info List -->

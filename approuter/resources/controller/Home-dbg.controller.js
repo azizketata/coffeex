@@ -30,15 +30,21 @@ sap.ui.define([
 
     // ✅ Function to re-fetch the balance from backend and update the UI
     refreshBalance: function () {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user.userId) {
+      const userModel = this.getOwnerComponent().getModel("user");
+      if (!userModel) {
+        console.warn("User model not initialized yet.");
+        return;
+      }
+      
+      const userData = userModel.getData();
+      if (!userData || !userData.userId) {
         console.warn("No user logged in, cannot refresh balance.");
         return;
       }
 
       const oModel = this.getView().getModel();
 
-      oModel.read(`/User('${user.userId}')`, {
+      oModel.read(`/User('${userData.userId}')`, {
         success: (oData) => {
           // ✅ Update balance model with latest value
           const balanceModel = this.getView().getModel("balanceModel") || new JSONModel();
