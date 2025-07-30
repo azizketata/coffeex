@@ -34,6 +34,7 @@ module.exports = srv => {
       coffeeType,
       beansUsed
     };
+
     await db.run(INSERT.into('coffeex.CoffeeTx').entries(tx));
     
     // Update machine bean level
