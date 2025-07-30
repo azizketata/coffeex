@@ -49,13 +49,24 @@ sap.ui.define([
             
             if (!userId) return;
 
-            // Get today's coffee count
-            const today = new Date().toISOString().split('T')[0];
+            // Get today's coffee count - using timestamp range for today
+            const today = new Date();
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+            
+            const startISO = startOfDay.toISOString();
+            const endISO = endOfDay.toISOString();
+            
             jQuery.ajax({
-                url: `/backend/odata/v4/CoffeeTx?$filter=userId eq '${userId}' and date(timestamp) eq '${today}'&$count=true`,
+                url: `/backend/odata/v4/CoffeeTx?$filter=userId eq '${userId}' and timestamp ge ${startISO} and timestamp lt ${endISO}&$count=true`,
                 method: "GET",
                 success: (data) => {
                     this.getView().getModel().setProperty("/todayCount", data["@odata.count"] || 0);
+                },
+                error: (xhr) => {
+                    console.error("Failed to load today's count:", xhr);
+                    // Set to 0 if error
+                    this.getView().getModel().setProperty("/todayCount", 0);
                 }
             });
         },
