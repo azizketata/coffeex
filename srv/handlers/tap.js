@@ -6,11 +6,11 @@ module.exports = srv => {
     const db = await cds.tx(req);
 
     // Validate machine exists
-    const [machine] = await db.read('coffeex.Machine').where({ machineId });
+    const [machine] = await db.read('CoffeeService.Machines').where({ machineId });
     if (!machine) return req.error(404, `Unknown machine: ${machineId}`);
 
     // Validate user exists
-    const [user] = await db.read('coffeex.User').where({ userId });
+    const [user] = await db.read('CoffeeService.Users').where({ userId });
     if (!user) return req.error(404, 'Unknown user');
 
     // Determine price and beans based on coffee type
@@ -35,10 +35,10 @@ module.exports = srv => {
       beansUsed
     };
 
-    await db.run(INSERT.into('coffeex.CoffeeTx').entries(tx));
+    await db.run(INSERT.into('CoffeeService.CoffeeTx').entries(tx));
     
     // Update machine bean level
-    await db.run(UPDATE('coffeex.Machine')
+    await db.run(UPDATE('CoffeeService.Machines')
       .set({ beanLevel: machine.beanLevel - beansUsed })
       .where({ machineId }));
 

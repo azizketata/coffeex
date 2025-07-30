@@ -5,7 +5,7 @@ APP_BASE_URL="https://technische-universit-t-m-nchen-sap-hochschulkompetenzze106
 TAP_ENDPOINT="$APP_BASE_URL/backend/odata/v4/Tap"
 MACHINE_ID="5bd4f91f-d9b4-4573-88df-11b2f14e7c78"
 USER_ID="27b8c76f-942e-4011-b1f3-23a42d293e4f"
-SESSION_COOKIE='JSESSIONID=s%3AdcEWcQoVgCxLvG9yjqptjD7FPZAv-Wor.wmi6YUJxiuKP%2Fp7P%2FQsqEQc92%2BP5SiiqejPWMU1osHE; __VCAP_ID__=aabfcc31-72d0-4d36-6c06-4173'
+SESSION_COOKIE='JSESSIONID=s%3AYKUvLQrmKp1lbWaLTVKT0ByUlbkVXMAv.kbGeIBrX6O5R6LJbxM7%2FV5wvvlPz8AF7CGm6f2t0NGo; __VCAP_ID__=16d461b4-bfe3-48e5-6a0c-3bf9'
 
 # --- STEP 1: Fetch CSRF Token ---
 echo "🔐 Fetching CSRF token..."
@@ -17,10 +17,6 @@ csrf_response=$(curl -s -D - "${APP_BASE_URL}/backend/odata/v4/" \
 # Extract CSRF token from headers
 CSRF_TOKEN=$(echo "$csrf_response" | grep -i "x-csrf-token:" | awk '{print $2}' | tr -d '\r')
 echo "✅ CSRF Token: $CSRF_TOKEN"
-
-# --- WAIT BUFFER ---
-echo "⏳ Waiting 20 seconds before sending brew request..."
-sleep 20
 
 # --- SEND TAP REQUEST ---
 echo "☕ Triggering Tap action..."
