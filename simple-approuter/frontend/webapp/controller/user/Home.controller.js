@@ -8,13 +8,19 @@ sap.ui.define([
 
     return Controller.extend("coffeex.controller.user.Home", {
         onInit: function() {
+
+            // Get machine id
+            const urlParams = new URLSearchParams(window.location.search);
+            const machineId = urlParams.get("machineId") || "unknown";
+
             // Initialize view model
             const viewModel = new JSONModel({
                 hours: new Date().getHours(),
                 todayCount: 0,
                 machineStatus: "online",
                 beansLevel: 75,
-                selectedSize: "single"
+                selectedSize: "single",
+                machineId
             });
             this.getView().setModel(viewModel);
 

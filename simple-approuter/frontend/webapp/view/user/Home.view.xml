@@ -58,8 +58,12 @@
                 <!-- Status icons -->
                 <HBox class="iconRow sapUiMediumMarginTopBottom" alignItems="Center" justifyContent="Center">
                     <VBox alignItems="Center" class="sapUiSmallMarginEnd">
-                        <core:Icon src="sap-icon://sys-monitor" size="1.5rem" color="{= ${/machineStatus} === 'online' ? 'green' : 'red'}"/>
+                        <core:Icon
+                                src="sap-icon://sys-monitor"
+                                size="1.5rem"
+                                color="{= ${/machineStatus} === 'online' ? 'green' : 'red'}"/>
                         <Text text="Machine {/machineStatus}"/>
+                        <Text text="ID: {/machineId}" class="sapUiTinyMarginTop"/>
                     </VBox>
                     <VBox alignItems="Center" class="sapUiSmallMarginBegin">
                         <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} &gt; 20 ? 'green' : 'orange'}"/>

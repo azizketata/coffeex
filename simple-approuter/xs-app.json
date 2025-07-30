@@ -16,7 +16,8 @@
       "source": "^/frontend/(.*)$",
       "target": "/$1",
       "localDir": "frontend",
-      "authenticationType": "xsuaa"
+      "authenticationType": "xsuaa",
+      "replace": true
     },
     {
       "source": "^/$",
