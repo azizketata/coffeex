@@ -19,6 +19,14 @@
         </customHeader>
 
         <content>
+            <!-- Low Balance Notification -->
+            <MessageStrip
+                text="Low balance alert! Your balance is below €5. Please top up to continue enjoying coffee."
+                type="Warning"
+                showIcon="true"
+                visible="{= ${user>/balance} &lt;= 5}"
+                class="sapUiSmallMargin"/>
+                
             <VBox
                 class="homePageContainer"
                 justifyContent="Center"

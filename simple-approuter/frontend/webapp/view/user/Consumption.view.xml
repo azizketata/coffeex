@@ -1,0 +1,86 @@
+<mvc:View
+    controllerName="coffeex.controller.user.Consumption"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
+    displayBlock="true">
+
+    <Page title="Personal Coffee Consumption" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                <!-- Summary Cards -->
+                <HBox justifyContent="SpaceAround" class="sapUiMediumMarginBottom">
+                    <VBox alignItems="Center">
+                        <ObjectNumber
+                            number="{/totalCoffees}"
+                            unit="Total Coffees"
+                            state="Information"
+                            class="sapUiSmallMarginBottom"/>
+                        <Text text="All Time" class="objectLabel"/>
+                    </VBox>
+                    <VBox alignItems="Center">
+                        <ObjectNumber
+                            number="{/monthlyAverage}"
+                            unit="Avg/Month"
+                            state="Success"
+                            class="sapUiSmallMarginBottom"/>
+                        <Text text="Monthly Average" class="objectLabel"/>
+                    </VBox>
+                    <VBox alignItems="Center">
+                        <ObjectNumber
+                            number="{/totalSpent}"
+                            unit="€"
+                            state="Warning"
+                            class="sapUiSmallMarginBottom"/>
+                        <Text text="Total Spent" class="objectLabel"/>
+                    </VBox>
+                </HBox>
+                
+                <!-- Monthly Chart -->
+                <viz:VizFrame 
+                    id="idVizFrame" 
+                    height="400px" 
+                    width="100%"
+                    vizType="column"
+                    uiConfig="{applicationSet:'fiori'}">
+                    <viz:dataset>
+                        <viz.data:FlattenedDataset data="{/monthlyData}">
+                            <viz.data:dimensions>
+                                <viz.data:DimensionDefinition name="Month" value="{month}"/>
+                            </viz.data:dimensions>
+                            <viz.data:measures>
+                                <viz.data:MeasureDefinition name="Orders" value="{orders}"/>
+                            </viz.data:measures>
+                        </viz.data:FlattenedDataset>
+                    </viz:dataset>
+                    
+                    <viz:feeds>
+                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Orders"/>
+                        <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month"/>
+                    </viz:feeds>
+                </viz:VizFrame>
+                
+                <!-- Coffee Type Distribution -->
+                <Title text="Coffee Type Preference" level="H3" class="sapUiMediumMarginTop"/>
+                <HBox justifyContent="Center" class="sapUiMediumMarginBottom">
+                    <VBox alignItems="Center" class="sapUiLargeMarginEnd">
+                        <Text text="Normal" class="sapUiSmallMarginBottom"/>
+                        <ObjectNumber
+                            number="{/normalCount}"
+                            unit="cups"
+                            state="Information"/>
+                    </VBox>
+                    <VBox alignItems="Center">
+                        <Text text="Double" class="sapUiSmallMarginBottom"/>
+                        <ObjectNumber
+                            number="{/doubleCount}"
+                            unit="cups"
+                            state="Success"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

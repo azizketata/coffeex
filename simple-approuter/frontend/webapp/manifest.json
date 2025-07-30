@@ -80,6 +80,11 @@
                     "name": "userHistory",
                     "pattern": "user/history",
                     "target": "userHistory"
+                },
+                {
+                    "name": "userConsumption",
+                    "pattern": "user/consumption",
+                    "target": "userConsumption"
                 }
             ],
             "targets": {
@@ -101,6 +106,10 @@
                 },
                 "userHistory": {
                     "viewName": "user.History",
+                    "viewLevel": 3
+                },
+                "userConsumption": {
+                    "viewName": "user.Consumption",
                     "viewLevel": 3
                 }
             }

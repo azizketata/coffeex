@@ -16,8 +16,13 @@ sap.ui.define([
             });
             this.getView().setModel(viewModel);
 
-            // Load stats
+            // Initialize machines model
+            const machinesModel = new JSONModel({ machines: [] });
+            this.getView().setModel(machinesModel, "machines");
+
+            // Load stats and machines
             this.loadStats();
+            this.loadMachines();
         },
 
         loadStats: function() {
@@ -68,66 +73,125 @@ sap.ui.define([
             });
         },
 
-        onCheckLowBalances: function() {
-            sap.ui.core.BusyIndicator.show(0);
-            
+        loadMachines: function() {
             jQuery.ajax({
-                url: "/backend/odata/v4/CheckLowBalances",
-                method: "POST",
-                contentType: "application/json",
+                url: "/backend/odata/v4/Machines",
+                method: "GET",
                 success: (data) => {
-                    sap.ui.core.BusyIndicator.hide();
-                    const count = data.value || 0;
-                    MessageBox.success(`Found ${count} users with low balance. Notifications sent.`);
+                    const machines = data.value || [];
+                    // Add newBeanLevel property to each machine for input binding
+                    machines.forEach(machine => {
+                        machine.newBeanLevel = null;
+                    });
+                    this.getView().getModel("machines").setData({ machines: machines });
                 },
                 error: (xhr) => {
-                    sap.ui.core.BusyIndicator.hide();
-                    MessageBox.error("Failed to check low balances.");
+                    console.error("Failed to load machines:", xhr);
+                    MessageToast.show("Failed to load machines");
                 }
             });
         },
 
-        onRunForecast: function() {
-            sap.ui.core.BusyIndicator.show(0);
+        onRefreshMachines: function() {
+            this.loadMachines();
+            MessageToast.show("Machines refreshed");
+        },
+
+        onUpdateBeanLevel: function(oEvent) {
+            const oSource = oEvent.getSource();
+            const oContext = oSource.getBindingContext("machines");
+            const machine = oContext.getObject();
             
+            const newLevel = parseInt(machine.newBeanLevel);
+            
+            if (isNaN(newLevel) || newLevel < 0) {
+                MessageBox.error("Please enter a valid bean level (non-negative number)");
+                return;
+            }
+
+            // First fetch CSRF token
             jQuery.ajax({
-                url: "/backend/odata/v4/Forecast",
-                method: "POST",
-                contentType: "application/json",
-                success: (data) => {
-                    sap.ui.core.BusyIndicator.hide();
-                    const days = data.value || 0;
-                    MessageBox.information(`Forecast: Coffee supply will last approximately ${days} days.`);
+                url: "/backend/odata/v4/",
+                method: "GET",
+                headers: {
+                    "X-CSRF-Token": "Fetch"
+                },
+                success: (data, textStatus, xhr) => {
+                    const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+                    
+                    // Update the machine
+                    jQuery.ajax({
+                        url: `/backend/odata/v4/Machines('${machine.machineId}')`,
+                        method: "PATCH",
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        },
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            beanLevel: newLevel
+                        }),
+                        success: () => {
+                            MessageToast.show(`Bean level updated for ${machine.location}`);
+                            // Clear the input
+                            machine.newBeanLevel = null;
+                            // Reload machines to get fresh data
+                            this.loadMachines();
+                        },
+                        error: (xhr) => {
+                            console.error("Failed to update bean level:", xhr);
+                            MessageBox.error("Failed to update bean level");
+                        }
+                    });
                 },
                 error: (xhr) => {
-                    sap.ui.core.BusyIndicator.hide();
-                    MessageBox.error("Failed to run forecast.");
+                    console.error("Failed to fetch CSRF token:", xhr);
+                    MessageBox.error("Failed to fetch security token");
                 }
             });
         },
 
-        onBatchPayment: function() {
-            MessageBox.confirm("Process batch payment for all pending transactions?", {
-                onClose: (action) => {
-                    if (action === MessageBox.Action.OK) {
-                        sap.ui.core.BusyIndicator.show(0);
-                        
-                        jQuery.ajax({
-                            url: "/backend/odata/v4/BatchPay",
-                            method: "POST",
-                            contentType: "application/json",
-                            success: (data) => {
-                                sap.ui.core.BusyIndicator.hide();
-                                const processed = data.value || 0;
-                                MessageBox.success(`Successfully processed ${processed} transactions.`);
-                                this.loadStats(); // Refresh stats
-                            },
-                            error: (xhr) => {
-                                sap.ui.core.BusyIndicator.hide();
-                                MessageBox.error("Failed to process batch payment.");
-                            }
-                        });
-                    }
+        onRefill1kg: function(oEvent) {
+            const oSource = oEvent.getSource();
+            const oContext = oSource.getBindingContext("machines");
+            const machine = oContext.getObject();
+            
+            const newLevel = machine.beanLevel + 1000; // Add 1kg (1000g)
+
+            // First fetch CSRF token
+            jQuery.ajax({
+                url: "/backend/odata/v4/",
+                method: "GET",
+                headers: {
+                    "X-CSRF-Token": "Fetch"
+                },
+                success: (data, textStatus, xhr) => {
+                    const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+                    
+                    // Update the machine
+                    jQuery.ajax({
+                        url: `/backend/odata/v4/Machines('${machine.machineId}')`,
+                        method: "PATCH",
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        },
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            beanLevel: newLevel
+                        }),
+                        success: () => {
+                            MessageToast.show(`Added 1kg beans to ${machine.location}`);
+                            // Reload machines to get fresh data
+                            this.loadMachines();
+                        },
+                        error: (xhr) => {
+                            console.error("Failed to refill beans:", xhr);
+                            MessageBox.error("Failed to refill beans");
+                        }
+                    });
+                },
+                error: (xhr) => {
+                    console.error("Failed to fetch CSRF token:", xhr);
+                    MessageBox.error("Failed to fetch security token");
                 }
             });
         }
