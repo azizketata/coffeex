@@ -15,6 +15,9 @@ service CoffeeService @(path:'/odata/v4') {
 
   @requires:'authenticated-user'
   action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
+
+  @requires:'authenticated-user'
+  action TopUp(amount: Decimal(10,2)) returns String;
   
   @requires:'authenticated-user'
   action BatchPay() returns Integer;
@@ -28,8 +31,6 @@ service CoffeeService @(path:'/odata/v4') {
   @requires:'Admin'
   action CheckLowBalances() returns Integer;
 
-  @requires: 'authenticated-user'
-  action TopUp(amount: Decimal(10,2)) returns String;
 
   @requires: 'authenticated-user'
   function getCurrentUser() returns {

@@ -24,6 +24,7 @@ module.exports = srv => {
       price: 1.5,
       paymentStatus: 'OPEN',
     };
+
     await db.run(INSERT.into('coffeex.CoffeeTx').entries(tx));
 
     // Fire-and-forget: trigger SwitchBot
