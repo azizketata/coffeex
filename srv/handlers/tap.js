@@ -2,7 +2,7 @@ const cds = require('@sap/cds');
 
 module.exports = srv => {
   srv.on('Tap', async ({ data, req }) => {
-    const { machineId, userId } = data;
+    const { machineId, userId, coffeeType = 'NORMAL' } = data;
     const db = await cds.tx(req);
 
     // Validate machine exists
@@ -13,18 +13,33 @@ module.exports = srv => {
     const [user] = await db.read('coffeex.User').where({ userId });
     if (!user) return req.error(404, 'Unknown user');
 
+    // Determine price and beans based on coffee type
+    const isDouble = coffeeType === 'DOUBLE';
+    const price = isDouble ? 3.0 : 1.5;
+    const beansUsed = isDouble ? 14 : 7; // grams
+
     // Check balance
-    if (user.balance < 1.5) return req.error(403, 'Insufficient balance');
+    if (user.balance < price) return req.error(403, 'Insufficient balance');
+
+    // Check if machine has enough beans
+    if (machine.beanLevel < beansUsed) return req.error(409, 'Machine needs refill');
 
     // Create transaction
     const tx = {
       txId: cds.utils.uuid(),
       userId,
       machineId,
-      price: 1.5,
+      price,
       paymentStatus: 'OPEN',
+      coffeeType,
+      beansUsed
     };
     await db.run(INSERT.into('coffeex.CoffeeTx').entries(tx));
+    
+    // Update machine bean level
+    await db.run(UPDATE('coffeex.Machine')
+      .set({ beanLevel: machine.beanLevel - beansUsed })
+      .where({ machineId }));
 
     // Fire-and-forget: trigger SwitchBot
     cds.spawn(require('../integrations/switchbot').brew(machineId));

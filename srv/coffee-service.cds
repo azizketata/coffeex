@@ -14,13 +14,24 @@ service CoffeeService @(path:'/odata/v4') {
   @readonly entity LowBalanceUsers as projection on views.LowBalanceUsers;
 
   @requires:'authenticated-user'
-  action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
+  action Tap(machineId : UUID, userId : UUID, coffeeType : String default 'NORMAL') returns CoffeeTx;
   
   @requires:'authenticated-user'
   action BatchPay() returns Integer;
   
   @requires:'Admin'
   action Forecast() returns Integer;
+  
+  @requires:'Admin'
+  action ForecastBeans() returns array of {
+    machineId: UUID;
+    location: String;
+    currentBeanLevel: Integer;
+    estimatedBeansNextMonth: Integer;
+    estimatedRefillsNeeded: Integer;
+    normalCoffees: Integer;
+    doubleCoffees: Integer;
+  };
 
   @requires: 'authenticated-user'
   entity TopUpTransactions as projection on db.TopUpTransaction;
