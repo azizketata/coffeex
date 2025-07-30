@@ -1,0 +1,56 @@
+<mvc:View
+    controllerName="coffeex.controller.user.History"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <Page title="Transaction History" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <List
+                id="transactionList"
+                items="{/transactions}"
+                growing="true"
+                growingThreshold="20"
+                noDataText="No transactions found">
+                
+                <headerToolbar>
+                    <Toolbar>
+                        <Title text="Your Coffee Orders" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Text text="Total: {/totalAmount} €"/>
+                    </Toolbar>
+                </headerToolbar>
+                
+                <items>
+                    <StandardListItem
+                        title="{
+                            parts: [
+                                {path: 'coffeeType'},
+                                {path: 'createdAt'}
+                            ],
+                            formatter: '.formatTitle'
+                        }"
+                        description="Machine: {
+                            path: 'machine/location',
+                            formatter: '.formatLocation'
+                        }"
+                        info="{
+                            path: 'price',
+                            formatter: '.formatPrice'
+                        }"
+                        infoState="{
+                            path: 'paymentStatus',
+                            formatter: '.formatPaymentState'
+                        }"
+                        type="Navigation"
+                        press=".onTransactionPress">
+                        <customData>
+                            <core:CustomData key="txId" value="{txId}"/>
+                        </customData>
+                    </StandardListItem>
+                </items>
+            </List>
+        </content>
+    </Page>
+</mvc:View>

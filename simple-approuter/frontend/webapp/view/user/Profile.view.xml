@@ -2,13 +2,37 @@
     controllerName="coffeex.controller.user.Profile"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core"
     displayBlock="true">
 
-    <Page title="My Profile" showNavButton="true" navButtonPress=".onNavBack">
+    <Page title="Profile" showNavButton="true" navButtonPress=".onNavBack">
         <content>
-            <VBox alignItems="Center" class="sapUiLargeMarginTop">
-                <Title text="Profile Page" level="H2"/>
-                <Text text="Coming soon..." class="sapUiMediumMarginTop"/>
+            <VBox class="profileContainer" alignItems="Center" width="100%">
+                <!-- Profile Image + Name -->
+                <VBox alignItems="Center" class="profileHeader">
+                    <f:Avatar displaySize="L" src="https://cdn-icons-png.flaticon.com/512/847/847969.png"/>
+                    <Text text="{/displayName}" class="profileName"/>
+                    <Text text="{/email}" class="profileSubtitle"/>
+                    <Text text="Balance: €{
+                        path: '/balance',
+                        formatter: '.formatCurrency'
+                    }" class="profileSubtitle2 balanceText"/>
+                </VBox>
+                
+                <!-- Info List -->
+                <List inset="true" class="profileList" itemPress=".onListItemPress">
+                    <StandardListItem 
+                        title="Transaction History" 
+                        type="Navigation" 
+                        info="{/transactionCount}"/>
+                    <StandardListItem 
+                        title="Personal Coffee Consumption" 
+                        type="Navigation"/>
+                </List>
+                
+                <!-- Footer -->
+                <Text text="Coffeex, version 1.0.1, All rights reserved" class="footerText"/>
             </VBox>
         </content>
     </Page>
