@@ -75,6 +75,11 @@
                     "name": "adminDashboard",
                     "pattern": "admin/dashboard",
                     "target": "adminDashboard"
+                },
+                {
+                    "name": "userHistory",
+                    "pattern": "user/history",
+                    "target": "userHistory"
                 }
             ],
             "targets": {
@@ -93,6 +98,10 @@
                 "adminDashboard": {
                     "viewName": "admin.Dashboard",
                     "viewLevel": 2
+                },
+                "userHistory": {
+                    "viewName": "user.History",
+                    "viewLevel": 3
                 }
             }
         },

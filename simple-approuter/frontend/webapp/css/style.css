@@ -179,10 +179,52 @@
   }
 
   /* ─────────────────────────────────────────────────────────
-     Responsive
-     ───────────────────────────────────────────────────────── */
-  @media (max-width: 360px) {
-    .balanceRow { flex-direction: column; gap: 8px; }
-    .iconRow  { gap: 24px; }
-  }
+   Responsive
+   ───────────────────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .balanceRow { flex-direction: column; gap: 8px; }
+  .iconRow  { gap: 24px; }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Profile Page Styles
+   ───────────────────────────────────────────────────────── */
+.profileContainer {
+    margin-top: 1rem;
+}
+
+.profileHeader {
+    margin-bottom: 1rem;
+}
+
+.profileName {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.profileSubtitle,
+.profileSubtitle2 {
+    font-size: 0.875rem;
+    color: gray;
+}
+
+.balanceText {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.profileList {
+    width: 90%;
+    margin-top: 1rem;
+}
+
+
+
+.footerText {
+    font-size: 0.7rem;
+    color: gray;
+    margin-top: 2rem;
+    text-align: center;
+}
   
