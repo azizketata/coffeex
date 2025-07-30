@@ -243,4 +243,19 @@
 .sapMListTblCell .sapMBtn {
     margin: 0 2px;
 }
+
+/* ─────────────────────────────────────────────────────────
+   Consumption Page Styles
+   ───────────────────────────────────────────────────────── */
+.objectLabel {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Low Balance Notification
+   ───────────────────────────────────────────────────────── */
+.sapMMessageStrip {
+    margin-bottom: 0 !important;
+}
      
