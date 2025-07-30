@@ -111,9 +111,14 @@ sap.ui.define([
             const userModel = this.getOwnerComponent().getModel("user");
             const userId = userModel.getProperty("/userId");
             const balance = userModel.getProperty("/balance");
+            const selectedSize = this.getView().getModel().getProperty("/selectedSize");
+            
+            // Check if double shot selected
+            const isDouble = selectedSize === "double";
+            const price = isDouble ? 3.0 : 1.5;
 
-            if (balance < 1) {
-                MessageBox.error("Insufficient balance. Please top up first.");
+            if (balance < price) {
+                MessageBox.error(`Insufficient balance. You need €${price.toFixed(2)} for a ${selectedSize} shot. Please top up first.`);
                 return;
             }
 
@@ -132,18 +137,19 @@ sap.ui.define([
 
                     const machineId = data.value[0].machineId;
 
-                    // Call Tap action
+                    // Call Tap action with coffeeType
                     jQuery.ajax({
                         url: "/backend/odata/v4/Tap",
                         method: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
                             machineId: machineId,
-                            userId: userId
+                            userId: userId,
+                            coffeeType: isDouble ? "DOUBLE" : "NORMAL"
                         }),
                         success: () => {
                             sap.ui.core.BusyIndicator.hide();
-                            MessageToast.show("☕ Coffee ordered successfully!");
+                            MessageToast.show(`☕ ${selectedSize} shot ordered successfully!`);
                             this.refreshBalance();
                             
                             // Update today count manually
@@ -193,8 +199,6 @@ sap.ui.define([
         },
 
         _topUp: function(amount) {
-            const userId = this.getOwnerComponent().getModel("user").getProperty("/userId");
-            
             sap.ui.core.BusyIndicator.show(0);
             
             jQuery.ajax({
@@ -208,18 +212,29 @@ sap.ui.define([
                     sap.ui.core.BusyIndicator.hide();
                     this._topUpDialog.close();
                     
-                    if (data.value) {
+                    // The backend returns a string (PayPal URL) directly
+                    const paypalUrl = data.value || data;
+                    if (paypalUrl) {
                         // Redirect to PayPal
-                        window.open(data.value, "_blank");
+                        window.open(paypalUrl, "_blank");
                         MessageToast.show("Redirecting to PayPal...");
                         
-                        // Refresh balance after a delay
-                        setTimeout(() => this.refreshBalance(), 5000);
+                        // Show message about checking balance
+                        MessageBox.information("Please complete the payment in PayPal. Your balance will be updated once the payment is confirmed.");
+                        
+                        // Refresh balance periodically
+                        const refreshInterval = setInterval(() => {
+                            this.refreshBalance();
+                        }, 3000);
+                        
+                        // Stop refreshing after 30 seconds
+                        setTimeout(() => clearInterval(refreshInterval), 30000);
                     }
                 },
                 error: (xhr) => {
                     sap.ui.core.BusyIndicator.hide();
-                    MessageBox.error("Top-up failed. Please try again.");
+                    const error = xhr.responseJSON?.error?.message || "Top-up failed. Please try again.";
+                    MessageBox.error(error);
                 }
             });
         },

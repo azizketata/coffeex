@@ -14,7 +14,7 @@ service CoffeeService @(path:'/odata/v4') {
   @readonly entity LowBalanceUsers as projection on views.LowBalanceUsers;
 
   @requires:'authenticated-user'
-  action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
+  action Tap(machineId : UUID, userId : UUID, coffeeType : String(20) enum { NORMAL; DOUBLE; } default 'NORMAL') returns CoffeeTx;
 
   @requires:'authenticated-user'
   action TopUp(amount: Decimal(10,2)) returns String;
