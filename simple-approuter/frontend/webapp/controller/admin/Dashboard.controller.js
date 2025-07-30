@@ -180,18 +180,38 @@ sap.ui.define([
         },
         
         loadBeanForecast: function() {
+            // First fetch CSRF token
             jQuery.ajax({
-                url: "/backend/odata/v4/ForecastBeans",
-                method: "POST",
-                contentType: "application/json",
-                success: (data) => {
-                    const forecasts = data.value || data || [];
-                    this.forecastData = forecasts; // Store for later use
-                    this._updateForecastDisplay(forecasts);
+                url: "/backend/odata/v4/",
+                method: "GET",
+                headers: {
+                    "X-CSRF-Token": "Fetch"
+                },
+                success: (data, textStatus, xhr) => {
+                    const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+                    
+                    // Now make the actual request with CSRF token
+                    jQuery.ajax({
+                        url: "/backend/odata/v4/ForecastBeans",
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        },
+                        contentType: "application/json",
+                        success: (data) => {
+                            const forecasts = data.value || data || [];
+                            this.forecastData = forecasts; // Store for later use
+                            this._updateForecastDisplay(forecasts);
+                        },
+                        error: (xhr) => {
+                            console.error("Failed to load bean forecast:", xhr);
+                            MessageToast.show("Failed to load bean forecast data");
+                        }
+                    });
                 },
                 error: (xhr) => {
-                    console.error("Failed to load bean forecast:", xhr);
-                    MessageToast.show("Failed to load bean forecast data");
+                    console.error("Failed to fetch CSRF token:", xhr);
+                    MessageToast.show("Failed to fetch security token");
                 }
             });
         },
