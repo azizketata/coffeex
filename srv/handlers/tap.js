@@ -4,13 +4,16 @@ module.exports = srv => {
   srv.on('Tap', async ({ data, req }) => {
     const { machineId, userId, coffeeType = 'NORMAL' } = data;
     const db = await cds.tx(req);
+    
+    // Get service entities
+    const { Machines, Users, CoffeeTx } = srv.entities;
 
     // Validate machine exists
-    const [machine] = await db.read('Machines').where({ machineId });
+    const [machine] = await db.read(Machines).where({ machineId });
     if (!machine) return req.error(404, `Unknown machine: ${machineId}`);
 
     // Validate user exists
-    const [user] = await db.read('Users').where({ userId });
+    const [user] = await db.read(Users).where({ userId });
     if (!user) return req.error(404, 'Unknown user');
 
     // Determine price and beans based on coffee type
@@ -35,10 +38,10 @@ module.exports = srv => {
       beansUsed
     };
 
-    await db.run(INSERT.into('CoffeeTx').entries(tx));
+    await db.run(INSERT.into(CoffeeTx).entries(tx));
     
     // Update machine bean level
-    await db.run(UPDATE('Machines')
+    await db.run(UPDATE(Machines)
       .set({ beanLevel: machine.beanLevel - beansUsed })
       .where({ machineId }));
 
