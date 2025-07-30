@@ -32,7 +32,7 @@
                 </VBox>
 
                 <!-- Greeting -->
-                <Text text="{= 'Good ' + (${/hours} < 12 ? 'Morning' : ${/hours} < 18 ? 'Afternoon' : 'Evening') + ', ' + ${user>/displayName} + ' ☕'}" 
+                <Text text="{= 'Good ' + (${/hours} &lt; 12 ? 'Morning' : ${/hours} &lt; 18 ? 'Afternoon' : 'Evening') + ', ' + ${user>/displayName} + ' ☕'}" 
                       class="greetingText sapUiMediumMarginBottom"/>
 
                 <!-- Balance and Today's Count -->
@@ -41,7 +41,7 @@
                         <ObjectNumber 
                             number="{user>/balance}" 
                             unit="€"
-                            state="{= ${user>/balance} > 5 ? 'Success' : ${user>/balance} > 2 ? 'Warning' : 'Error'}"
+                            state="{= ${user>/balance} &gt; 5 ? 'Success' : ${user>/balance} &gt; 2 ? 'Warning' : 'Error'}"
                             class="sapUiSmallMarginBottom"/>
                         <Text text="Balance" class="objectLabel"/>
                     </VBox>
@@ -62,7 +62,7 @@
                         <Text text="Machine {/machineStatus}"/>
                     </VBox>
                     <VBox alignItems="Center" class="sapUiSmallMarginBegin">
-                        <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} > 20 ? 'green' : 'orange'}"/>
+                        <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} &gt; 20 ? 'green' : 'orange'}"/>
                         <Text text="Beans {/beansLevel}%"/>
                     </VBox>
                 </HBox>
