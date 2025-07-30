@@ -6,33 +6,41 @@ sap.ui.define([
     "use strict";
 
     return Controller.extend("coffeex.controller.admin.Dashboard", {
-        onInit: function() {
-            // Initialize the view model
-            const viewModel = new JSONModel({
-                monthlyOrders: [],
-                totalOrders: 0,
-                avgOrdersPerMonth: 0,
-                totalRevenue: 0,
-                selectedMachine: "all",
-                forecast: {
-                    currentBeanLevel: 0,
-                    estimatedBeansNextMonth: 0,
-                    estimatedRefillsNeeded: 0,
-                    normalCoffees: 0,
-                    doubleCoffees: 0
-                }
-            });
-            this.getView().setModel(viewModel);
-            
-            // Initialize machines model
-            const machinesModel = new JSONModel({ machines: [] });
-            this.getView().setModel(machinesModel, "machines");
-            
-            // Load the data
-            this.loadMachines();
-            this.loadMonthlyOrders();
-            this.loadBeanForecast();
-        },
+            onInit: function() {
+        // Initialize the view model
+        const viewModel = new JSONModel({
+            monthlyOrders: [],
+            totalOrders: 0,
+            avgOrdersPerMonth: 0,
+            totalRevenue: 0,
+            selectedMachine: "all",
+            forecast: {
+                currentBeanLevel: 0,
+                estimatedBeansNextMonth: 0,
+                estimatedRefillsNeeded: 0,
+                normalCoffees: 0,
+                doubleCoffees: 0
+            }
+        });
+        this.getView().setModel(viewModel);
+        
+        // Initialize machines model
+        const machinesModel = new JSONModel({ machines: [] });
+        this.getView().setModel(machinesModel, "machines");
+        
+        // Debug: Check user role
+        const userModel = this.getOwnerComponent().getModel("user");
+        if (userModel) {
+            const userData = userModel.getData();
+            console.log("Current user data:", userData);
+            console.log("User role:", userData.role);
+        }
+        
+        // Load the data
+        this.loadMachines();
+        this.loadMonthlyOrders();
+        this.loadBeanForecast();
+    },
         
         loadMonthlyOrders: function() {
             const selectedMachine = this.getView().getModel().getProperty("/selectedMachine");
@@ -189,6 +197,7 @@ sap.ui.define([
                 },
                 success: (data, textStatus, xhr) => {
                     const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+                    console.log("CSRF Token retrieved:", csrfToken); // Debug log
                     
                     // Now make the actual request with CSRF token
                     jQuery.ajax({
@@ -205,7 +214,15 @@ sap.ui.define([
                         },
                         error: (xhr) => {
                             console.error("Failed to load bean forecast:", xhr);
-                            MessageToast.show("Failed to load bean forecast data");
+                            console.error("Response:", xhr.responseText);
+                            console.error("Status:", xhr.status);
+                            
+                            // Check if it's an authorization issue
+                            if (xhr.status === 403) {
+                                MessageToast.show("Authorization error: Admin role required for forecasting");
+                            } else {
+                                MessageToast.show("Failed to load bean forecast data");
+                            }
                         }
                     });
                 },
