@@ -13,7 +13,7 @@ service CoffeeService @(path:'/odata/v4') {
   
   @readonly entity LowBalanceUsers as projection on views.LowBalanceUsers;
 
-  @requires:'User'
+  @requires:'authenticated-user'
   action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
   
   @requires:'authenticated-user'
@@ -22,7 +22,7 @@ service CoffeeService @(path:'/odata/v4') {
   @requires:'Admin'
   action Forecast() returns Integer;
 
-  @requires: 'User'
+  @requires: 'authenticated-user'
   entity TopUpTransactions as projection on db.TopUpTransaction;
   
   @requires:'Admin'
@@ -39,5 +39,4 @@ service CoffeeService @(path:'/odata/v4') {
     lastName: String;
     displayName: String;
   };
-
 } 
