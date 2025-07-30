@@ -10,14 +10,41 @@ sap.ui.define([
             manifest: "json"
         },
 
-        init: function() {
+        init: function () {
+
+            // Extract machineId from URL (e.g. ?machineId=...)
+            const urlParams = new URLSearchParams(window.location.search);
+            const machineId = urlParams.get("machineId");
+
+            if (machineId) {
+                // Set machine model globally
+                const machineModel = new sap.ui.model.json.JSONModel({ machineId });
+                this.setModel(machineModel, "machine");
+
+                // Store machine ID locally for fallback/reference
+                localStorage.setItem("machineId", machineId);
+
+                console.log("Machine ID extracted and stored:", machineId);
+
+            } else {
+                // Optional fallback: try loading from localStorage
+                const storedId = localStorage.getItem("machineId");
+                if (storedId) {
+                    const fallbackModel = new sap.ui.model.json.JSONModel({ machineId: storedId });
+                    this.setModel(fallbackModel, "machine");
+                    console.log("Machine ID loaded from localStorage:", storedId);
+                } else {
+                    console.warn("⚠️ No machineId found in URL or localStorage.");
+                }
+            }
+
             // Call parent init
             UIComponent.prototype.init.apply(this, arguments);
 
             // Initialize router
             this.getRouter().initialize();
 
-            // Check user authentication and role
+            // Check user authentication and route
             this._checkUserAndRoute();
         },
 

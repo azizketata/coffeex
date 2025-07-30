@@ -63,7 +63,7 @@
                                 size="1.5rem"
                                 color="{= ${/machineStatus} === 'online' ? 'green' : 'red'}"/>
                         <Text text="Machine {/machineStatus}"/>
-                        <Text text="ID: {/machineId}" class="sapUiTinyMarginTop"/>
+                        <Text text="Id {/machineId}"/>
                     </VBox>
                     <VBox alignItems="Center" class="sapUiSmallMarginBegin">
                         <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} &gt; 20 ? 'green' : 'orange'}"/>
