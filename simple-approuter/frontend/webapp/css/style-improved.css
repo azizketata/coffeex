@@ -429,3 +429,85 @@
     --text-secondary: #b0b0b0;
   }
 }
+
+/* ─────────────────────────────────────────────────────────
+   SVG Icon Styling
+   ───────────────────────────────────────────────────────── */
+
+/* Machine Status Icons */
+.machineOnline {
+  filter: brightness(0) saturate(100%) invert(39%) sepia(83%) saturate(542%) hue-rotate(83deg) brightness(94%) contrast(87%);
+  animation: pulse 2s infinite;
+}
+
+.machineOffline {
+  filter: brightness(0) saturate(100%) invert(23%) sepia(97%) saturate(2401%) hue-rotate(350deg) brightness(95%) contrast(87%);
+  opacity: 0.7;
+}
+
+/* Bean Level Icons */
+.beansGood {
+  filter: brightness(0) saturate(100%) invert(39%) sepia(83%) saturate(542%) hue-rotate(83deg) brightness(94%) contrast(87%);
+}
+
+.beansLow {
+  filter: brightness(0) saturate(100%) invert(56%) sepia(100%) saturate(1201%) hue-rotate(360deg) brightness(101%) contrast(101%);
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+/* Coffee and Admin Icons */
+.coffeeIcon {
+  filter: brightness(0) saturate(100%) invert(21%) sepia(26%) saturate(5874%) hue-rotate(23deg) brightness(92%) contrast(101%);
+  transition: transform 0.3s ease;
+}
+
+.coffeeIcon:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.adminIcon {
+  filter: brightness(0) saturate(100%) invert(51%) sepia(70%) saturate(406%) hue-rotate(6deg) brightness(93%) contrast(87%);
+}
+
+/* Wallet Icon Animation */
+.balanceItem img[src*="wallet"] {
+  transition: transform 0.3s ease;
+}
+
+.balanceItem:hover img[src*="wallet"] {
+  transform: translateY(-3px);
+}
+
+/* Button Icon Styling */
+.sapMBtn[icon*=".svg"] .sapMBtnIcon::before {
+  content: '';
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.sapMBtn[icon*="user-circle.svg"] .sapMBtnIcon::before {
+  background-image: url('../assets/icons/user-circle.svg');
+}
+
+.sapMBtn[icon*="nfc-chip.svg"] .sapMBtnIcon::before {
+  background-image: url('../assets/icons/nfc-chip.svg.svg');
+}
+
+/* NFC Icon for Buttons */
+button img[src*="nfc-chip"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Shake Animation for Low Resources */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}

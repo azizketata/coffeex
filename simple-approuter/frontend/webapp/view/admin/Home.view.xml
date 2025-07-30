@@ -23,7 +23,7 @@
 
         <content>
             <VBox alignItems="Center" class="sapUiLargeMarginTop">
-                <core:Icon src="sap-icon://nutrition-activity" size="5rem" color="#6b3d00" class="sapUiLargeMarginBottom"/>
+                <Image src="./assets/icons/admin-badge.svg" width="80px" height="80px" class="sapUiLargeMarginBottom adminIcon"/>
                 <Title text="Welcome to CoffeeX Admin Portal" level="H1" class="sapUiMediumMarginBottom"/>
                 <Text text="{= 'Hello, ' + ${user>/displayName} + '!'}" class="sapUiLargeText sapUiMediumMarginBottom"/>
                 

@@ -10,7 +10,7 @@
             <Bar>
                 <contentLeft>
                     <Button icon="sap-icon://home" text="Home" press=".onNavHome" type="Transparent"/>
-                    <Button icon="sap-icon://person-placeholder" text="Profile" press=".onNavProfile" type="Transparent"/>
+                    <Button icon="./assets/icons/user-circle.svg" text="Profile" press=".onNavProfile" type="Transparent"/>
                 </contentLeft>
                 <contentRight>
                     <Button icon="sap-icon://log" text="Logout" press=".onLogout" type="Transparent"/>
@@ -35,7 +35,7 @@
 
                 <!-- Logo and App Name -->
                 <VBox alignItems="Center" class="logoContainer">
-                    <core:Icon src="sap-icon://nutrition-activity" size="5rem" color="#6b3d00" class="sapUiLargeMarginBottom"/>
+                    <Image src="./assets/icons/coffee-cup.svg" width="80px" height="80px" class="sapUiLargeMarginBottom coffeeIcon"/>
                     <Title text="CoffeeX" level="H1" class="brandTitle"/>
                 </VBox>
 
@@ -46,6 +46,7 @@
                 <!-- Balance and Today's Count -->
                 <HBox class="balanceRow" alignItems="Center" justifyContent="SpaceAround" width="100%">
                     <VBox alignItems="Center" class="balanceItem">
+                        <Image src="./assets/icons/wallet.svg" width="32px" height="32px" class="sapUiTinyMarginBottom"/>
                         <ObjectNumber 
                             number="{user>/balance}" 
                             unit="€"
@@ -54,6 +55,7 @@
                         <Text text="Balance" class="objectLabel"/>
                     </VBox>
                     <VBox alignItems="Center" class="balanceItem">
+                        <Image src="./assets/icons/coffee-cup.svg" width="32px" height="32px" class="sapUiTinyMarginBottom"/>
                         <ObjectNumber 
                             number="{/todayCount}" 
                             unit="Cups"
@@ -67,14 +69,15 @@
                 <VBox alignItems="Center" class="sapUiMediumMarginTopBottom">
                     <HBox alignItems="Center" justifyContent="Center" visible="{= ${/machineId} !== null}">
                         <VBox alignItems="Center" class="sapUiSmallMarginEnd">
-                            <core:Icon
-                                    src="sap-icon://sys-monitor"
-                                    size="1.5rem"
-                                    color="{= ${/machineStatus} === 'online' ? 'green' : 'red'}"/>
+                            <Image
+                                    src="./assets/icons/machine.svg"
+                                    width="32px"
+                                    height="32px"
+                                    class="{= ${/machineStatus} === 'online' ? 'machineOnline' : 'machineOffline'}"/>
                             <Text text="Machine {/machineStatus}"/>
                         </VBox>
                         <VBox alignItems="Center" class="sapUiSmallMarginBegin">
-                            <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} &gt; 20 ? 'green' : 'orange'}"/>
+                            <Image src="./assets/icons/coffee-bean.svg" width="32px" height="32px" class="{= ${/beansLevel} &gt; 20 ? 'beansGood' : 'beansLow'}"/>
                             <Text text="Beans {/beansLevel}%"/>
                         </VBox>
                     </HBox>
@@ -88,7 +91,7 @@
                     <!-- Select Machine Button -->
                     <Button 
                         text="{= ${/machineId} ? 'Change Machine' : 'Select Machine'}" 
-                        icon="sap-icon://nfc-tag"
+                        icon="./assets/icons/nfc-chip.svg.svg"
                         type="Transparent"
                         class="sapUiTinyMarginTop"
                         press=".onSelectMachine"/>
