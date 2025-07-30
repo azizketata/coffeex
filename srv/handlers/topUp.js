@@ -20,7 +20,7 @@ module.exports = srv => {
 
             if (!dbUser) {
                 console.warn(`❌ Unknown user with ID: ${user.id}`);
-                return req.error(404, 'Unknown user');
+                return req.reject(404, 'Unknown user');
             }
             console.log(`✅ Found user in DB: ${dbUser.email || user.id}`);
 
@@ -52,7 +52,7 @@ module.exports = srv => {
         } catch (err) {
             console.error('❌ Failed to process TopUp:', err.message);
             console.error(err.stack);
-            return req.error(500, 'Top-up failed: Could not create PayPal order or persist transaction.');
+            return req.reject(500, 'Top-up failed: Could not create PayPal order or persist transaction.');
         }
     });
 };

@@ -10,11 +10,11 @@ module.exports = srv => {
 
     // Validate machine exists
     const [machine] = await db.read(Machines).where({ machineId });
-    if (!machine) return req.error(404, `Unknown machine: ${machineId}`);
+    if (!machine) return req.reject(404, `Unknown machine: ${machineId}`);
 
     // Validate user exists
     const [user] = await db.read(Users).where({ userId });
-    if (!user) return req.error(404, 'Unknown user');
+    if (!user) return req.reject(404, 'Unknown user');
 
     // Determine price and beans based on coffee type
     const isDouble = coffeeType === 'DOUBLE';
@@ -47,7 +47,7 @@ module.exports = srv => {
 
     // Fire-and-forget: trigger SwitchBot
     const switchbot = require('../integrations/switchbot');
-    cds.spawn(async () => {
+    cds.spawn(async (tx) => {
       try {
         await switchbot.brew(machineId);
       } catch (err) {
@@ -57,12 +57,14 @@ module.exports = srv => {
 
     // Optional: alert if balance low
     if (user.balance < 5) {
-      try {
-        const alerts = await cds.connect.to('alerting');
-        alerts.emit('LOW_BALANCE', { userId, balance: user.balance });
-      } catch (err) {
-        console.error('Alert notification failed:', err);
-      }
+      cds.spawn(async () => {
+        try {
+          const alerts = await cds.connect.to('alerting');
+          await alerts.emit('LOW_BALANCE', { userId, balance: user.balance });
+        } catch (err) {
+          console.error('Alert notification failed:', err);
+        }
+      });
     }
 
     return tx;
