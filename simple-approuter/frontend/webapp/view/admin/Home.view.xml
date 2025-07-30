@@ -45,14 +45,7 @@
                     </HBox>
                 </VBox>
 
-                <VBox alignItems="Center" class="sapUiLargeMarginTop">
-                    <Title text="Admin Actions" level="H3" class="sapUiMediumMarginBottom"/>
-                    <HBox>
-                        <Button text="Check Low Balances" icon="sap-icon://alert" press=".onCheckLowBalances" class="sapUiTinyMarginEnd"/>
-                        <Button text="Run Forecast" icon="sap-icon://line-chart" press=".onRunForecast" class="sapUiTinyMarginEnd"/>
-                        <Button text="Batch Payment" icon="sap-icon://batch-payments" press=".onBatchPayment"/>
-                    </HBox>
-                </VBox>
+
             </VBox>
         </content>
     </Page>
