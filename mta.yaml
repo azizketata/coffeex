@@ -23,7 +23,7 @@ modules:
     path: gen/srv
     requires:
       - name: coffeex-hdi
-      - name: coffeex-alerts
+      # - name: coffeex-alerts  # Commented out - service not available
       - name: coffeex  # ✅ XSUAA auth binding added
     provides:
       - name: srv-api
@@ -195,11 +195,12 @@ resources:
   #           subscribeFilter:
   #             - "${namespace}/*"
               
-  - name: coffeex-alerts
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: alert-notification
-      service-plan: free
+  # Commented out - Alert Notification service plan 'free' not available
+  # - name: coffeex-alerts
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: alert-notification
+  #     service-plan: free
       
 parameters:
   # deploy_mode: html5-repo   ❌ REMOVE HTML5 REPO MODE
