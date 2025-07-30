@@ -1,11 +1,14 @@
 #!/bin/bash
 
 # --- CONFIGURATION ---
-APP_BASE_URL="https://technische-universit-t-m-nchen-sap-hochschulkompetenzze10654f97.cfapps.us10-001.hana.ondemand.com"
+# Approuter URL from cf apps output
+APPROUTER_URL="https://technische-universit-t-m-nchen-sap-hochschulkompetenzze10654f97.cfapps.us10-001.hana.ondemand.com"
+APP_BASE_URL="$APPROUTER_URL"
 TAP_ENDPOINT="$APP_BASE_URL/backend/odata/v4/Tap"
 TOPUP_ENDPOINT="$APP_BASE_URL/backend/odata/v4/TopUp"
 MACHINE_ID="5bd4f91f-d9b4-4573-88df-11b2f14e7c78"
 USER_ID="27b8c76f-942e-4011-b1f3-23a42d293e4f"
+# You may need to get a fresh session cookie by logging into the approuter
 SESSION_COOKIE='JSESSIONID=s%3A_KuSAjtKrpLldCNBMbwc_k7_AoXdDU5P.ltcYNCSYQnXMaNoaXvTCz0PbF8R5QHzr1%2BZCdnj%2FJRs; _VCAP_ID_=617ce74c-625b-46ff-701c-ea61'
 
 # Colors for output
