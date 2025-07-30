@@ -1,0 +1,156 @@
+<mvc:View
+    controllerName="coffeex.controller.user.Home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <Page title="CoffeeX">
+        <customHeader>
+            <Bar class="coffeeHeader">
+                <contentLeft>
+                    <Button icon="sap-icon://home" text="Home" press=".onNavHome" type="Transparent" class="headerButton"/>
+                    <Button icon="sap-icon://customer" text="Profile" press=".onNavProfile" type="Transparent" class="headerButton"/>
+                </contentLeft>
+                <contentMiddle>
+                    <HBox alignItems="Center">
+                        <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="white" class="sapUiTinyMarginEnd"/>
+                        <Title text="CoffeeX" level="H4" class="headerTitle"/>
+                    </HBox>
+                </contentMiddle>
+                <contentRight>
+                    <Button icon="sap-icon://log" text="Logout" press=".onLogout" type="Transparent" class="headerButton"/>
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <VBox
+                class="homePageContainer"
+                justifyContent="Center"
+                alignItems="Center"
+                width="100%">
+
+                <!-- Enhanced Logo with Animation -->
+                <VBox alignItems="Center" class="logoContainer">
+                    <core:HTML content='<div class="coffee-logo-wrapper">
+                        <svg class="coffee-cup" width="80" height="80" viewBox="0 0 24 24" fill="#6b3d00">
+                            <path d="M2 21h18v-2H2v2zm2-4h14c1.11 0 2-.89 2-2v-5c0-1.11-.89-2-2-2h-2V5c0-.55-.45-1-1-1H7c-.55 0-1 .45-1 1v3H4c-1.11 0-2 .89-2 2v5c0 1.11.89 2 2 2zm4-11h6v3H8V6zm-4 4h2v5H4v-5zm4 0h6v5H8v-5zm8 0h2v5h-2v-5z"/>
+                        </svg>
+                        <div class="steam-container">
+                            <div class="steam steam1"></div>
+                            <div class="steam steam2"></div>
+                            <div class="steam steam3"></div>
+                        </div>
+                    </div>'/>
+                    <Title text="CoffeeX" level="H1" class="brandTitle"/>
+                </VBox>
+
+                <!-- Enhanced Greeting -->
+                <HBox alignItems="Center" justifyContent="Center" class="greetingBox">
+                    <core:Icon src="sap-icon://hello" size="1.2rem" color="#6b3d00" class="sapUiTinyMarginEnd"/>
+                    <Text text="{= 'Good ' + (${/hours} &lt; 12 ? 'Morning' : ${/hours} &lt; 18 ? 'Afternoon' : 'Evening') + ', ' + ${user>/displayName}}" 
+                          class="greetingText"/>
+                    <Text text=" ☕" class="greetingText"/>
+                </HBox>
+
+                <!-- Enhanced Balance Cards -->
+                <HBox class="balanceRow" alignItems="Center" justifyContent="SpaceAround" width="100%">
+                    <VBox alignItems="Center" class="balanceItem balanceCard">
+                        <core:Icon src="sap-icon://wallet" size="2rem" color="#2e7d32" class="sapUiSmallMarginBottom"/>
+                        <ObjectNumber 
+                            number="{user>/balance}" 
+                            unit="€"
+                            state="{= ${user>/balance} &gt; 5 ? 'Success' : ${user>/balance} &gt; 2 ? 'Warning' : 'Error'}"
+                            class="sapUiSmallMarginBottom"/>
+                        <Text text="Balance" class="objectLabel"/>
+                    </VBox>
+                    <VBox alignItems="Center" class="balanceItem coffeeCard">
+                        <core:Icon src="sap-icon://meal" size="2rem" color="#6b3d00" class="sapUiSmallMarginBottom"/>
+                        <ObjectNumber 
+                            number="{/todayCount}" 
+                            unit="Cups"
+                            state="Information"
+                            class="sapUiSmallMarginBottom"/>
+                        <Text text="Today" class="objectLabel"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Enhanced Machine Status -->
+                <VBox alignItems="Center" class="machineStatusSection sapUiMediumMarginTopBottom">
+                    <HBox alignItems="Center" justifyContent="Center" visible="{= ${/machineId} !== null}" class="machineStatusCard">
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                            <core:Icon
+                                src="sap-icon://machine"
+                                size="2rem"
+                                color="{= ${/machineStatus} === 'online' ? '#2e7d32' : '#d32f2f'}"/>
+                            <Text text="Machine" class="statusLabel"/>
+                            <Text text="{/machineStatus}" class="statusText {= ${/machineStatus} === 'online' ? 'online' : 'offline'}"/>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginBegin">
+                            <core:Icon src="sap-icon://measuring-point" size="2rem" color="{= ${/beansLevel} &gt; 20 ? '#2e7d32' : '#f57c00'}"/>
+                            <Text text="Beans" class="statusLabel"/>
+                            <Text text="{/beansLevel}%" class="statusText"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Machine Location with Icon -->
+                    <HBox alignItems="Center" justifyContent="Center" class="locationBox sapUiSmallMarginTop">
+                        <core:Icon src="sap-icon://map-2" size="1.2rem" color="#6b3d00" class="sapUiTinyMarginEnd"/>
+                        <Text text="{= ${/machineLocation} ? ${/machineLocation} : 'No machine selected'}" class="machineLocationText"/>
+                    </HBox>
+                    
+                    <!-- Enhanced Select Machine Button -->
+                    <Button 
+                        text="{= ${/machineId} ? 'Change Machine' : 'Select Machine'}" 
+                        icon="sap-icon://activate"
+                        type="Transparent"
+                        class="selectMachineButton sapUiTinyMarginTop"
+                        press=".onSelectMachine"/>
+                </VBox>
+
+                <!-- Enhanced Size Selector -->
+                <VBox alignItems="Center" class="sizeSection chooseSize sapUiMediumMarginTopBottom">
+                    <HBox alignItems="Center" justifyContent="Center" class="sapUiSmallMarginBottom">
+                        <core:Icon src="sap-icon://measuring-point" size="1rem" color="#6b3d00" class="sapUiTinyMarginEnd"/>
+                        <Text text="Choose your size" class="sectionTitle"/>
+                    </HBox>
+                    <SegmentedButton selectedKey="{/selectedSize}" class="sizeSelector">
+                        <items>
+                            <SegmentedButtonItem key="single" text="Single ☕" press=".onSelectSingle"/>
+                            <SegmentedButtonItem key="double" text="Double ☕☕" press=".onSelectDouble"/>
+                        </items>
+                    </SegmentedButton>
+                </VBox>
+
+                <!-- Enhanced Order Button -->
+                <Button 
+                    text="Order Coffee ☕" 
+                    type="Emphasized" 
+                    class="payButton orderButton sapUiMediumMarginTopBottom" 
+                    press=".onOrderCoffee"
+                    enabled="{= ${user>/balance} >= 1}">
+                    <layoutData>
+                        <FlexItemData growFactor="1" />
+                    </layoutData>
+                </Button>
+
+                <!-- Enhanced Top-up Link -->
+                <HBox alignItems="Center" justifyContent="Center" class="topupSection">
+                    <core:Icon src="sap-icon://add-coursebook" size="1rem" color="#6b3d00" class="sapUiTinyMarginEnd"/>
+                    <Link text="Top up Balance" class="topupLink" press=".onTopUpBalance"/>
+                </HBox>
+
+                <!-- Enhanced Footer -->
+                <VBox alignItems="Center" class="footer sapUiLargeMarginTop">
+                    <HBox alignItems="Center" justifyContent="Center">
+                        <core:Icon src="sap-icon://sap-logo-shape" size="1rem" color="#999" class="sapUiTinyMarginEnd"/>
+                        <Text text="Powered by SAP" class="footerText"/>
+                    </HBox>
+                    <Link text="Terms of Service" press=".onTerms" class="footerLink"/>
+                </VBox>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
