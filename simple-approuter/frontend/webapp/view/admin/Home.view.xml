@@ -39,7 +39,7 @@
                             <Text text="Active Machines"/>
                         </VBox>
                         <VBox alignItems="Center">
-                            <ObjectNumber number="{/todaySales}" unit="€" state="Good"/>
+                            <ObjectNumber number="{/todaySales}" unit="€" state="Success"/>
                             <Text text="Today's Sales"/>
                         </VBox>
                     </HBox>
