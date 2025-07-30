@@ -12,18 +12,40 @@ sap.ui.define([
                 monthlyOrders: [],
                 totalOrders: 0,
                 avgOrdersPerMonth: 0,
-                totalRevenue: 0
+                totalRevenue: 0,
+                selectedMachine: "all",
+                forecast: {
+                    currentBeanLevel: 0,
+                    estimatedBeansNextMonth: 0,
+                    estimatedRefillsNeeded: 0,
+                    normalCoffees: 0,
+                    doubleCoffees: 0
+                }
             });
             this.getView().setModel(viewModel);
             
+            // Initialize machines model
+            const machinesModel = new JSONModel({ machines: [] });
+            this.getView().setModel(machinesModel, "machines");
+            
             // Load the data
+            this.loadMachines();
             this.loadMonthlyOrders();
+            this.loadBeanForecast();
         },
         
         loadMonthlyOrders: function() {
-            // Fetch all coffee transactions
+            const selectedMachine = this.getView().getModel().getProperty("/selectedMachine");
+            let url = "/backend/odata/v4/CoffeeTx?$expand=user,machine&$orderby=createdAt";
+            
+            // Add filter if specific machine is selected
+            if (selectedMachine && selectedMachine !== "all") {
+                url += `&$filter=machineId eq ${selectedMachine}`;
+            }
+            
+            // Fetch coffee transactions
             jQuery.ajax({
-                url: "/backend/odata/v4/CoffeeTx?$expand=user,machine&$orderby=createdAt",
+                url: url,
                 method: "GET",
                 success: (data) => {
                     const transactions = data.value || [];
@@ -31,9 +53,11 @@ sap.ui.define([
                     // Process monthly data
                     const monthlyData = this._processMonthlyData(transactions);
                     
-                    // Update the model
+                    // Update the model (preserve existing data)
                     const viewModel = this.getView().getModel();
+                    const currentData = viewModel.getData();
                     viewModel.setData({
+                        ...currentData,
                         monthlyOrders: monthlyData.chartData,
                         totalOrders: monthlyData.totalOrders,
                         avgOrdersPerMonth: monthlyData.avgOrdersPerMonth,
@@ -135,6 +159,82 @@ sap.ui.define([
                     }
                 });
             }
+        },
+        
+        loadMachines: function() {
+            jQuery.ajax({
+                url: "/backend/odata/v4/Machines",
+                method: "GET",
+                success: (data) => {
+                    const machines = data.value || [];
+                    this.getView().getModel("machines").setData({ machines });
+                },
+                error: (xhr) => {
+                    console.error("Failed to load machines:", xhr);
+                }
+            });
+        },
+        
+        loadBeanForecast: function() {
+            jQuery.ajax({
+                url: "/backend/odata/v4/ForecastBeans()",
+                method: "GET",
+                success: (data) => {
+                    const forecasts = data.value || [];
+                    this._updateForecastDisplay(forecasts);
+                },
+                error: (xhr) => {
+                    console.error("Failed to load bean forecast:", xhr);
+                    MessageToast.show("Failed to load bean forecast data");
+                }
+            });
+        },
+        
+        _updateForecastDisplay: function(forecasts) {
+            const viewModel = this.getView().getModel();
+            const selectedMachine = viewModel.getProperty("/selectedMachine");
+            
+            let forecastData;
+            
+            if (selectedMachine === "all") {
+                // Aggregate data for all machines
+                forecastData = {
+                    currentBeanLevel: 0,
+                    estimatedBeansNextMonth: 0,
+                    estimatedRefillsNeeded: 0,
+                    normalCoffees: 0,
+                    doubleCoffees: 0
+                };
+                
+                forecasts.forEach(f => {
+                    forecastData.currentBeanLevel += f.currentBeanLevel;
+                    forecastData.estimatedBeansNextMonth += f.estimatedBeansNextMonth;
+                    forecastData.estimatedRefillsNeeded += f.estimatedRefillsNeeded;
+                    forecastData.normalCoffees += f.normalCoffees;
+                    forecastData.doubleCoffees += f.doubleCoffees;
+                });
+            } else {
+                // Find specific machine data
+                forecastData = forecasts.find(f => f.machineId === selectedMachine) || {
+                    currentBeanLevel: 0,
+                    estimatedBeansNextMonth: 0,
+                    estimatedRefillsNeeded: 0,
+                    normalCoffees: 0,
+                    doubleCoffees: 0
+                };
+            }
+            
+            viewModel.setProperty("/forecast", forecastData);
+        },
+        
+        onMachineChange: function() {
+            const selectedMachine = this.getView().getModel().getProperty("/selectedMachine");
+            
+            // Reload forecast for selected machine
+            this.loadBeanForecast();
+            
+            // Update monthly orders chart for selected machine
+            this.loadMonthlyOrders();
         },
         
         onNavBack: function() {
