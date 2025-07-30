@@ -124,48 +124,67 @@ sap.ui.define([
 
             sap.ui.core.BusyIndicator.show(0);
 
-            // Get first available machine
+            // First fetch CSRF token
             jQuery.ajax({
-                url: "/backend/odata/v4/Machines?$top=1",
+                url: "/backend/odata/v4/",
                 method: "GET",
-                success: (data) => {
-                    if (!data.value || data.value.length === 0) {
-                        sap.ui.core.BusyIndicator.hide();
-                        MessageBox.error("No coffee machine available.");
-                        return;
-                    }
-
-                    const machineId = data.value[0].machineId;
-
-                    // Call Tap action with coffeeType
+                headers: {
+                    "X-CSRF-Token": "Fetch"
+                },
+                success: (data, textStatus, xhr) => {
+                    const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+                    
+                    // Get first available machine
                     jQuery.ajax({
-                        url: "/backend/odata/v4/Tap",
-                        method: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            machineId: machineId,
-                            userId: userId,
-                            coffeeType: isDouble ? "DOUBLE" : "NORMAL"
-                        }),
-                        success: () => {
-                            sap.ui.core.BusyIndicator.hide();
-                            MessageToast.show(`☕ ${selectedSize} shot ordered successfully!`);
-                            this.refreshBalance();
-                            
-                            // Update today count manually
-                            const currentCount = this.getView().getModel().getProperty("/todayCount");
-                            this.getView().getModel().setProperty("/todayCount", currentCount + 1);
+                        url: "/backend/odata/v4/Machines?$top=1",
+                        method: "GET",
+                        success: (data) => {
+                            if (!data.value || data.value.length === 0) {
+                                sap.ui.core.BusyIndicator.hide();
+                                MessageBox.error("No coffee machine available.");
+                                return;
+                            }
+
+                            const machineId = data.value[0].machineId;
+
+                            // Call Tap action with coffeeType and CSRF token
+                            jQuery.ajax({
+                                url: "/backend/odata/v4/Tap",
+                                method: "POST",
+                                contentType: "application/json",
+                                headers: {
+                                    "X-CSRF-Token": csrfToken
+                                },
+                                data: JSON.stringify({
+                                    machineId: machineId,
+                                    userId: userId,
+                                    coffeeType: isDouble ? "DOUBLE" : "NORMAL"
+                                }),
+                                success: () => {
+                                    sap.ui.core.BusyIndicator.hide();
+                                    MessageToast.show(`☕ ${selectedSize} shot ordered successfully!`);
+                                    this.refreshBalance();
+                                    
+                                    // Update today count manually
+                                    const currentCount = this.getView().getModel().getProperty("/todayCount");
+                                    this.getView().getModel().setProperty("/todayCount", currentCount + 1);
+                                },
+                                error: (xhr) => {
+                                    sap.ui.core.BusyIndicator.hide();
+                                    const error = xhr.responseJSON?.error?.message || "Failed to order coffee";
+                                    MessageBox.error(error);
+                                }
+                            });
                         },
-                        error: (xhr) => {
+                        error: () => {
                             sap.ui.core.BusyIndicator.hide();
-                            const error = xhr.responseJSON?.error?.message || "Failed to order coffee";
-                            MessageBox.error(error);
+                            MessageBox.error("Failed to connect to coffee machine.");
                         }
                     });
                 },
                 error: () => {
                     sap.ui.core.BusyIndicator.hide();
-                    MessageBox.error("Failed to connect to coffee machine.");
+                    MessageBox.error("Failed to fetch CSRF token.");
                 }
             });
         },
@@ -201,40 +220,59 @@ sap.ui.define([
         _topUp: function(amount) {
             sap.ui.core.BusyIndicator.show(0);
             
+            // First fetch CSRF token
             jQuery.ajax({
-                url: "/backend/odata/v4/TopUp",
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    amount: amount
-                }),
-                success: (data) => {
-                    sap.ui.core.BusyIndicator.hide();
-                    this._topUpDialog.close();
-                    
-                    // The backend returns a string (PayPal URL) directly
-                    const paypalUrl = data.value || data;
-                    if (paypalUrl) {
-                        // Redirect to PayPal
-                        window.open(paypalUrl, "_blank");
-                        MessageToast.show("Redirecting to PayPal...");
-                        
-                        // Show message about checking balance
-                        MessageBox.information("Please complete the payment in PayPal. Your balance will be updated once the payment is confirmed.");
-                        
-                        // Refresh balance periodically
-                        const refreshInterval = setInterval(() => {
-                            this.refreshBalance();
-                        }, 3000);
-                        
-                        // Stop refreshing after 30 seconds
-                        setTimeout(() => clearInterval(refreshInterval), 30000);
-                    }
+                url: "/backend/odata/v4/",
+                method: "GET",
+                headers: {
+                    "X-CSRF-Token": "Fetch"
                 },
-                error: (xhr) => {
+                success: (data, textStatus, xhr) => {
+                    const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+                    
+                    jQuery.ajax({
+                        url: "/backend/odata/v4/TopUp",
+                        method: "POST",
+                        contentType: "application/json",
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        },
+                        data: JSON.stringify({
+                            amount: amount
+                        }),
+                        success: (data) => {
+                            sap.ui.core.BusyIndicator.hide();
+                            this._topUpDialog.close();
+                            
+                            // The backend returns a string (PayPal URL) directly
+                            const paypalUrl = data.value || data;
+                            if (paypalUrl) {
+                                // Redirect to PayPal
+                                window.open(paypalUrl, "_blank");
+                                MessageToast.show("Redirecting to PayPal...");
+                                
+                                // Show message about checking balance
+                                MessageBox.information("Please complete the payment in PayPal. Your balance will be updated once the payment is confirmed.");
+                                
+                                // Refresh balance periodically
+                                const refreshInterval = setInterval(() => {
+                                    this.refreshBalance();
+                                }, 3000);
+                                
+                                // Stop refreshing after 30 seconds
+                                setTimeout(() => clearInterval(refreshInterval), 30000);
+                            }
+                        },
+                        error: (xhr) => {
+                            sap.ui.core.BusyIndicator.hide();
+                            const error = xhr.responseJSON?.error?.message || "Top-up failed. Please try again.";
+                            MessageBox.error(error);
+                        }
+                    });
+                },
+                error: () => {
                     sap.ui.core.BusyIndicator.hide();
-                    const error = xhr.responseJSON?.error?.message || "Top-up failed. Please try again.";
-                    MessageBox.error(error);
+                    MessageBox.error("Failed to fetch CSRF token.");
                 }
             });
         },
