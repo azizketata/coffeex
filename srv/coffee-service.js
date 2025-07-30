@@ -51,6 +51,7 @@ module.exports = class CoffeeService extends cds.ApplicationService {
     const tapHandler = require('./handlers/tap');
     const batchPayHandler = require('./handlers/batchPay');
     const forecastHandler = require('./handlers/forecast');
+    const forecastBeansHandler = require('./handlers/forecastBeans');
     const lowBalanceHandler = require('./handlers/lowBalance');
     const topUpHandler = require('./handlers/topUp');
 
@@ -58,6 +59,7 @@ module.exports = class CoffeeService extends cds.ApplicationService {
     tapHandler(this);
     batchPayHandler(this);
     forecastHandler(this);
+    forecastBeansHandler(this);
     lowBalanceHandler(this);
     topUpHandler(this);
 

@@ -25,6 +25,8 @@ entity CoffeeTx : managed {
       machineId  : UUID;
       price      : Decimal(5,2);
       paymentStatus : String(20) enum { OPEN; CAPTURED; FAILED; };
+      coffeeType : String(20) enum { NORMAL; DOUBLE; } default 'NORMAL';
+      beansUsed  : Integer default 7; // grams - 7g for normal, 14g for double
 }
 
 entity RefillEvent : managed {

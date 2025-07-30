@@ -24,6 +24,17 @@ service CoffeeService @(path:'/odata/v4') {
   
   @requires:'Admin'
   action Forecast() returns Integer;
+  
+  @requires:'Admin'
+  action ForecastBeans() returns array of {
+    machineId: UUID;
+    location: String;
+    currentBeanLevel: Integer;
+    estimatedBeansNextMonth: Integer;
+    estimatedRefillsNeeded: Integer;
+    normalCoffees: Integer;
+    doubleCoffees: Integer;
+  };
 
   @requires: 'authenticated-user'
   entity TopUpTransactions as projection on db.TopUpTransaction;

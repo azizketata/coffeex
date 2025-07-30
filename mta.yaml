@@ -1,7 +1,7 @@
 _schema-version: '3.1'
 ID: coffeex-cap
 description: CoffeeX Smart Coffee Dispenser Backend
-version: 1.0.0
+version: 1.0.1
 
 modules:
   - name: coffeex-simple-approuter
@@ -23,7 +23,7 @@ modules:
     path: gen/srv
     requires:
       - name: coffeex-hdi
-      - name: coffeex-alerts
+      # - name: coffeex-alerts  # Commented out - service not available
       - name: coffeex  # ✅ XSUAA auth binding added
     provides:
       - name: srv-api
@@ -82,22 +82,6 @@ modules:
   #         artifacts:
   #           - coffee-frontend.zip
   #         target-path: resources/
-
-  - name: coffeex-approuter
-    type: approuter.nodejs
-    path: approuter
-    parameters:
-      disk-quota: 256M
-      memory: 256M
-    requires:
-      - name: coffeex  # this is your XSUAA service instance
-      - name: coffeex-srv-api  # ✅ Changed from coffeex-Destination to coffeex-srv-api
-      - name: srv-api
-        group: destinations
-        properties:
-          name: coffeex-srv-api
-          url: ~{srv-url}
-          forwardAuthToken: true
 
 resources:
   - name: coffeex-backend-destination
@@ -194,11 +178,12 @@ resources:
   #           subscribeFilter:
   #             - "${namespace}/*"
               
-  - name: coffeex-alerts
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: alert-notification
-      service-plan: free
+  # Commented out - Alert Notification service plan 'free' not available
+  # - name: coffeex-alerts
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: alert-notification
+  #     service-plan: free
       
 parameters:
   # deploy_mode: html5-repo   ❌ REMOVE HTML5 REPO MODE
