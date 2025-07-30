@@ -1,7 +1,7 @@
 _schema-version: '3.1'
 ID: coffeex-cap
 description: CoffeeX Smart Coffee Dispenser Backend
-version: 1.0.0
+version: 1.0.1
 
 modules:
   - name: coffeex-simple-approuter
