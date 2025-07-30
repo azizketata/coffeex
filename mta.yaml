@@ -85,7 +85,7 @@ modules:
 
   - name: coffeex-approuter
     type: approuter.nodejs
-    path: approuter
+    path: simple-approuter
     parameters:
       disk-quota: 256M
       memory: 256M
