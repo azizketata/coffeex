@@ -221,10 +221,26 @@
 
 
 
-.footerText {
-    font-size: 0.7rem;
-    color: gray;
-    margin-top: 2rem;
-    text-align: center;
+ .footerText {
+     font-size: 0.7rem;
+     color: gray;
+     margin-top: 2rem;
+     text-align: center;
+ }
+
+/* ─────────────────────────────────────────────────────────
+   Admin Machine Management Styles
+   ───────────────────────────────────────────────────────── */
+.sapUiResponsiveMargin {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
 }
-  
+
+.sapMListTblCell .sapMInputBase {
+    max-width: 120px;
+}
+
+.sapMListTblCell .sapMBtn {
+    margin: 0 2px;
+}
+     

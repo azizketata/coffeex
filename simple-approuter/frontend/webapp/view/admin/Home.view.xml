@@ -45,6 +45,67 @@
                     </HBox>
                 </VBox>
 
+                <!-- Machine Management Section -->
+                <VBox alignItems="Center" class="sapUiLargeMarginTop" width="80%">
+                    <Title text="Machine Bean Level Management" level="H2" class="sapUiMediumMarginBottom"/>
+                    <Table
+                        id="machineTable"
+                        items="{machines>/machines}"
+                        mode="None"
+                        width="100%"
+                        class="sapUiResponsiveMargin">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="Coffee Machines" level="H3"/>
+                                <ToolbarSpacer/>
+                                <Button icon="sap-icon://refresh" press=".onRefreshMachines" tooltip="Refresh"/>
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column width="40%">
+                                <Text text="Location"/>
+                            </Column>
+                            <Column width="20%">
+                                <Text text="Current Level (g)"/>
+                            </Column>
+                            <Column width="20%">
+                                <Text text="New Level (g)"/>
+                            </Column>
+                            <Column width="20%">
+                                <Text text="Action"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{machines>location}"/>
+                                    <ObjectNumber 
+                                        number="{machines>beanLevel}" 
+                                        unit="g"
+                                        state="{= ${machines>beanLevel} > 500 ? 'Success' : ${machines>beanLevel} > 200 ? 'Warning' : 'Error'}"/>
+                                    <Input 
+                                        value="{machines>newBeanLevel}"
+                                        type="Number"
+                                        placeholder="Enter new level"
+                                        width="100%"/>
+                                    <HBox>
+                                        <Button 
+                                            text="Update" 
+                                            type="Emphasized"
+                                            press=".onUpdateBeanLevel"
+                                            enabled="{= ${machines>newBeanLevel} !== null &amp;&amp; ${machines>newBeanLevel} !== undefined &amp;&amp; ${machines>newBeanLevel} >= 0}"/>
+                                        <Button 
+                                            icon="sap-icon://add" 
+                                            tooltip="Refill 1kg"
+                                            press=".onRefill1kg"
+                                            type="Accept"
+                                            class="sapUiTinyMarginBegin"/>
+                                    </HBox>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
 
             </VBox>
         </content>
