@@ -83,27 +83,7 @@ sap.ui.define([
                 case "Personal Coffee Consumption":
                     MessageToast.show("Coffee consumption analytics coming soon!");
                     break;
-                case "Payment Method":
-                    MessageToast.show("Payment methods management coming soon!");
-                    break;
-                case "Data Privacy":
-                    MessageToast.show("Data privacy settings coming soon!");
-                    break;
-                case "Feedback":
-                    MessageToast.show("Feedback form coming soon!");
-                    break;
             }
-        },
-        
-        onSignOut: function() {
-            MessageBox.confirm("Are you sure you want to sign out?", {
-                title: "Sign Out",
-                onClose: (oAction) => {
-                    if (oAction === MessageBox.Action.OK) {
-                        window.location.href = "/logout";
-                    }
-                }
-            });
         },
         
         onNavBack: function() {

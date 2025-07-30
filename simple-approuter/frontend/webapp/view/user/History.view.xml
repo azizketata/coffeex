@@ -27,7 +27,7 @@
                         title="{
                             parts: [
                                 {path: 'coffeeType'},
-                                {path: 'timestamp'}
+                                {path: 'createdAt'}
                             ],
                             formatter: '.formatTitle'
                         }"

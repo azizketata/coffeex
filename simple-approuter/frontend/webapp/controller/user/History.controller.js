@@ -31,7 +31,7 @@ sap.ui.define([
             
             // Fetch user's transactions with machine details
             jQuery.ajax({
-                url: `/backend/odata/v4/CoffeeTx?$filter=userId eq '${userId}'&$expand=machine&$orderby=timestamp desc`,
+                url: `/backend/odata/v4/CoffeeTx?$filter=userId eq '${userId}'&$expand=machine&$orderby=createdAt desc`,
                 method: "GET",
                 success: (data) => {
                     const transactions = data.value || [];
@@ -51,9 +51,9 @@ sap.ui.define([
             });
         },
         
-        formatTitle: function(coffeeType, timestamp) {
+        formatTitle: function(coffeeType, createdAt) {
             const type = coffeeType === 'DOUBLE' ? 'Double Shot' : 'Normal Shot';
-            const date = new Date(timestamp);
+            const date = new Date(createdAt);
             const dateStr = date.toLocaleDateString();
             const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return `${type} - ${dateStr} ${timeStr}`;
@@ -93,7 +93,7 @@ sap.ui.define([
                 `Machine: ${transaction.machine?.location || 'Unknown'}\n` +
                 `Beans Used: ${transaction.beansUsed || 7}g\n` +
                 `Payment Status: ${transaction.paymentStatus}\n` +
-                `Date: ${new Date(transaction.timestamp).toLocaleString()}`,
+                `Date: ${new Date(transaction.createdAt).toLocaleString()}`,
                 {
                     title: "Transaction Details"
                 }

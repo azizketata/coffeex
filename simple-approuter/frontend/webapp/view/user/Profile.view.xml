@@ -29,26 +29,7 @@
                     <StandardListItem 
                         title="Personal Coffee Consumption" 
                         type="Navigation"/>
-                    <StandardListItem 
-                        title="Payment Method" 
-                        type="Navigation"/>
-                    <StandardListItem 
-                        title="Data Privacy" 
-                        type="Navigation"/>
-                    <StandardListItem 
-                        title="Feedback" 
-                        type="Navigation"/>
                 </List>
-                
-                <!-- Sign Out -->
-                <Button 
-                    text="Sign Out" 
-                    type="Reject" 
-                    class="signOutBtn"
-                    press=".onSignOut"/>
-                
-                <!-- Warning Text -->
-                <Text text="Signing out may lead to loss of unsynced data." class="warningText"/>
                 
                 <!-- Footer -->
                 <Text text="Coffeex, version 1.0.1, All rights reserved" class="footerText"/>
