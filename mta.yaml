@@ -83,21 +83,6 @@ modules:
   #           - coffee-frontend.zip
   #         target-path: resources/
 
-  - name: coffeex-approuter
-    type: approuter.nodejs
-    path: approuter
-    parameters:
-      disk-quota: 256M
-      memory: 256M
-    requires:
-      - name: coffeex  # this is your XSUAA service instance
-      - name: coffeex-srv-api  # ✅ Changed from coffeex-Destination to coffeex-srv-api
-      - name: srv-api
-        group: destinations
-        properties:
-          name: coffeex-srv-api
-          url: ~{srv-url}
-          forwardAuthToken: true
 
 resources:
   - name: coffeex-backend-destination
