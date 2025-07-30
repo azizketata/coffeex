@@ -22,10 +22,10 @@ service CoffeeService @(path:'/odata/v4') {
   @requires:'authenticated-user'
   action BatchPay() returns Integer;
   
-  @requires:'Admin'
+  @requires:'admin'
   action Forecast() returns Integer;
   
-  @requires:'Admin'
+  @requires:'authenticated-user'
   action ForecastBeans() returns array of {
     machineId: UUID;
     location: String;
@@ -39,7 +39,7 @@ service CoffeeService @(path:'/odata/v4') {
   @requires: 'authenticated-user'
   entity TopUpTransactions as projection on db.TopUpTransaction;
   
-  @requires:'Admin'
+  @requires:'admin'
   action CheckLowBalances() returns Integer;
 
 
