@@ -2,14 +2,57 @@
     controllerName="coffeex.controller.admin.Dashboard"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
     displayBlock="true">
 
     <Page title="Admin Dashboard" showNavButton="true" navButtonPress=".onNavBack">
         <content>
-            <VBox alignItems="Center" class="sapUiLargeMarginTop">
-                <Title text="Analytics Dashboard" level="H2"/>
-                <Text text="Coming soon..." class="sapUiMediumMarginTop"/>
-            </VBox>
+            <ScrollContainer height="100%" width="100%" vertical="true">
+                <VBox class="sapUiMediumMargin">
+                    <Title text="Analytics Dashboard" level="H2" class="sapUiMediumMarginBottom"/>
+                    
+                    <!-- Monthly Orders Chart -->
+                    <VBox class="sapUiMediumMarginBottom">
+                        <Title text="Monthly Coffee Orders" level="H3" class="sapUiSmallMarginBottom"/>
+                        <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" 
+                                      height="400px" width="100%" vizType="column">
+                            <viz:dataset>
+                                <viz.data:FlattenedDataset data="{/monthlyOrders}">
+                                    <viz.data:dimensions>
+                                        <viz.data:DimensionDefinition name="Month" value="{month}"/>
+                                    </viz.data:dimensions>
+                                    <viz.data:measures>
+                                        <viz.data:MeasureDefinition name="Orders" value="{orders}"/>
+                                    </viz.data:measures>
+                                </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                            
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Orders"/>
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Month"/>
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </VBox>
+                    
+                    <!-- Summary Stats -->
+                    <HBox class="sapUiMediumMarginTop">
+                        <VBox class="sapUiMediumMarginEnd">
+                            <Title text="Total Orders" level="H4"/>
+                            <ObjectNumber number="{/totalOrders}" emphasized="true" class="sapUiSmallMarginTop"/>
+                        </VBox>
+                        <VBox class="sapUiMediumMarginEnd">
+                            <Title text="Average per Month" level="H4"/>
+                            <ObjectNumber number="{/avgOrdersPerMonth}" emphasized="true" class="sapUiSmallMarginTop"/>
+                        </VBox>
+                        <VBox>
+                            <Title text="Total Revenue" level="H4"/>
+                            <ObjectNumber number="{/totalRevenue}" unit="€" emphasized="true" class="sapUiSmallMarginTop"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </ScrollContainer>
         </content>
     </Page>
 </mvc:View> 
