@@ -13,7 +13,7 @@ module.exports = srv => {
         try {
             // 🧠 Step 1: Validate user exists in DB
             console.log("🔎 Checking if user exists in DB...");
-            const [dbUser] = await db.read('coffeex.User').where({ userId: user.id });
+            const [dbUser] = await db.read('Users').where({ userId: user.id });
 
             if (!dbUser) {
                 console.warn(`❌ Unknown user with ID: ${user.id}`);
@@ -37,7 +37,7 @@ module.exports = srv => {
             };
 
             console.log("📥 Inserting into TopUpTransaction:", topUpEntry);
-            await db.run(INSERT.into('coffeex.TopUpTransaction').entries(topUpEntry));
+            await db.run(INSERT.into('TopUpTransactions').entries(topUpEntry));
             console.log('✅ TopUpTransaction inserted successfully');
 
             // 🧠 Step 4: Return PayPal redirect link
