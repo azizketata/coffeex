@@ -46,7 +46,7 @@ sap.ui.define([
                             });
 
                             // Route based on role
-                            if (userDetails.role === "Admin") {
+                            if (userDetails.role === "admin") {
                                 this.getRouter().navTo("adminHome");
                             } else {
                                 this.getRouter().navTo("userHome");
