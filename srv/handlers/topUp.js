@@ -43,6 +43,9 @@ module.exports = srv => {
             console.log("📥 Inserting into TopUpTransaction:", topUpEntry);
             await db.run(INSERT.into(TopUpTransactions).entries(topUpEntry));
             console.log('✅ TopUpTransaction inserted successfully');
+            
+            // Ensure transaction is committed
+            await db.commit();
 
             // 🧠 Step 4: Return PayPal redirect link
             const redirectUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${orderId}`;

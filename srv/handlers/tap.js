@@ -56,27 +56,23 @@ module.exports = srv => {
     await db.run(UPDATE(Machines)
       .set({ beanLevel: machine.beanLevel - beansUsed })
       .where({ machineId }));
+    
+    // Ensure transaction is committed
+    await db.commit();
 
     // Fire-and-forget: trigger SwitchBot
     const switchbot = require('../integrations/switchbot');
-    cds.spawn(async (tx) => {
-      try {
-        await switchbot.brew(machineId);
-      } catch (err) {
+    setTimeout(() => {
+      switchbot.brew(machineId).catch(err => {
         console.error('SwitchBot trigger failed:', err);
-      }
-    });
+      });
+    }, 0);
 
     // Optional: alert if balance low
     if (user.balance < 5) {
-      cds.spawn(async () => {
-        try {
-          const alerts = await cds.connect.to('alerting');
-          await alerts.emit('LOW_BALANCE', { userId, balance: user.balance });
-        } catch (err) {
-          console.error('Alert notification failed:', err);
-        }
-      });
+      setTimeout(() => {
+        console.log('[LOW_BALANCE] User has low balance:', { userId, balance: user.balance });
+      }, 0);
     }
 
     return tx;
