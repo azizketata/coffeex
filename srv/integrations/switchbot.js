@@ -6,9 +6,9 @@ const SWITCHBOT_API_URL = process.env.SWITCHBOT_API_URL || 'https://api.switch-b
 const SWITCHBOT_TOKEN = process.env.SWITCHBOT_TOKEN;
 const SWITCHBOT_SECRET = process.env.SWITCHBOT_SECRET;
 
-// Safety check
+// Safety check - log warning but don't crash
 if (!SWITCHBOT_TOKEN || !SWITCHBOT_SECRET) {
-  throw new Error('❌ SwitchBot API credentials (TOKEN or SECRET) are missing.');
+  console.warn('⚠️ SwitchBot API credentials (TOKEN or SECRET) are missing. SwitchBot integration disabled.');
 }
 
 /**
@@ -18,6 +18,12 @@ if (!SWITCHBOT_TOKEN || !SWITCHBOT_SECRET) {
  */
 async function brew(machineId) {
   try {
+    // Check if credentials are available
+    if (!SWITCHBOT_TOKEN || !SWITCHBOT_SECRET) {
+      console.log('🔧 SwitchBot integration disabled - no credentials');
+      return false;
+    }
+    
     const deviceId = mapMachineToDevice(machineId);
     if (!deviceId) {
       console.warn(`⚠️ No device mapped for machineId: ${machineId}`);

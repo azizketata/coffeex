@@ -46,7 +46,14 @@ module.exports = srv => {
       .where({ machineId }));
 
     // Fire-and-forget: trigger SwitchBot
-    cds.spawn(require('../integrations/switchbot').brew(machineId));
+    const switchbot = require('../integrations/switchbot');
+    cds.spawn(async () => {
+      try {
+        await switchbot.brew(machineId);
+      } catch (err) {
+        console.error('SwitchBot trigger failed:', err);
+      }
+    });
 
     // Optional: alert if balance low
     if (user.balance < 5) {
