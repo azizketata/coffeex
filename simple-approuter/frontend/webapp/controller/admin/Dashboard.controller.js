@@ -167,7 +167,11 @@ sap.ui.define([
                 method: "GET",
                 success: (data) => {
                     const machines = data.value || [];
-                    this.getView().getModel("machines").setData({ machines });
+                    const machineItems = [{
+                        machineId: "all",
+                        location: "All Machines"
+                    }].concat(machines);
+                    this.getView().getModel("machines").setData({ machines: machineItems });
                 },
                 error: (xhr) => {
                     console.error("Failed to load machines:", xhr);
@@ -177,10 +181,12 @@ sap.ui.define([
         
         loadBeanForecast: function() {
             jQuery.ajax({
-                url: "/backend/odata/v4/ForecastBeans()",
-                method: "GET",
+                url: "/backend/odata/v4/ForecastBeans",
+                method: "POST",
+                contentType: "application/json",
                 success: (data) => {
-                    const forecasts = data.value || [];
+                    const forecasts = data.value || data || [];
+                    this.forecastData = forecasts; // Store for later use
                     this._updateForecastDisplay(forecasts);
                 },
                 error: (xhr) => {
@@ -230,8 +236,10 @@ sap.ui.define([
         onMachineChange: function() {
             const selectedMachine = this.getView().getModel().getProperty("/selectedMachine");
             
-            // Reload forecast for selected machine
-            this.loadBeanForecast();
+            // Update forecast display for selected machine
+            if (this.forecastData) {
+                this._updateForecastDisplay(this.forecastData);
+            }
             
             // Update monthly orders chart for selected machine
             this.loadMonthlyOrders();

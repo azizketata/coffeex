@@ -20,11 +20,9 @@
                         <Select id="machineSelect" 
                                 selectedKey="{/selectedMachine}"
                                 change=".onMachineChange"
-                                width="300px">
-                            <items>
-                                <core:Item key="all" text="All Machines"/>
-                                <core:Item key="{machines>machineId}" text="{machines>location}"/>
-                            </items>
+                                width="300px"
+                                items="{machines>/machines}">
+                            <core:Item key="{machines>machineId}" text="{machines>location}"/>
                         </Select>
                     </HBox>
                     
