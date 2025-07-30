@@ -36,8 +36,8 @@ sap.ui.define([
                 success: (data) => {
                     const transactions = data.value || [];
                     
-                    // Calculate total amount
-                    const total = transactions.reduce((sum, tx) => sum + (tx.price || 0), 0);
+                    // Calculate total amount - ensure price is parsed as number
+                    const total = transactions.reduce((sum, tx) => sum + parseFloat(tx.price || 0), 0);
                     
                     this.getView().getModel().setData({
                         transactions: transactions,
