@@ -1,0 +1,249 @@
+/* ─────────────────────────────────────────────────────────
+   Coffee Steam Animation
+   ───────────────────────────────────────────────────────── */
+.coffee-logo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.coffee-cup {
+  animation: gentle-bounce 3s ease-in-out infinite;
+}
+
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.steam-container {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.steam {
+  position: absolute;
+  width: 3px;
+  height: 30px;
+  background: linear-gradient(to top, rgba(107, 61, 0, 0.4), transparent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: rise 3s ease-out infinite;
+}
+
+.steam1 {
+  left: -10px;
+  animation-delay: 0s;
+}
+
+.steam2 {
+  left: 0px;
+  animation-delay: 1s;
+}
+
+.steam3 {
+  left: 10px;
+  animation-delay: 2s;
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(1);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scaleX(3);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Balance Card Animations
+   ───────────────────────────────────────────────────────── */
+.balanceCard {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.coffeeCard {
+  animation: slideInRight 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Order Button Pulse Animation
+   ───────────────────────────────────────────────────────── */
+.orderButton:enabled {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(107, 61, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(107, 61, 0, 0.5);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Machine Status Animations
+   ───────────────────────────────────────────────────────── */
+.machineStatusCard {
+  animation: fadeInScale 0.5s ease-out 0.3s both;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Status text colors */
+.statusText.online {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.statusText.offline {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Low Balance Warning Animation
+   ───────────────────────────────────────────────────────── */
+.lowBalanceWarning {
+  animation: shake 0.5s ease-in-out;
+  animation-iteration-count: 3;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Success Animation for Order Confirmation
+   ───────────────────────────────────────────────────────── */
+.orderSuccess {
+  animation: checkmark 0.6s ease-out;
+}
+
+@keyframes checkmark {
+  0% {
+    transform: scale(0) rotate(45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(45deg);
+  }
+  100% {
+    transform: scale(1) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Loading Spinner for Processing
+   ───────────────────────────────────────────────────────── */
+.coffeeLoader {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.coffeeLoader:after {
+  content: " ";
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border-radius: 50%;
+  border: 3px solid #6b3d00;
+  border-color: #6b3d00 transparent #6b3d00 transparent;
+  animation: coffeeLoader 1.2s linear infinite;
+}
+
+@keyframes coffeeLoader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Hover Effects
+   ───────────────────────────────────────────────────────── */
+.selectMachineButton:hover {
+  background: rgba(107, 61, 0, 0.1) !important;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.topupLink:hover {
+  text-decoration: underline !important;
+  color: #8b5a00 !important;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Admin Dashboard Enhancements
+   ───────────────────────────────────────────────────────── */
+.adminStatsIcon {
+  font-size: 3rem !important;
+  opacity: 0.1;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: var(--primary-color);
+}
+
+.statCard {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.statCard:hover .adminStatsIcon {
+  opacity: 0.2;
+  transform: scale(1.1);
+}

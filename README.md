@@ -1,237 +1,493 @@
-# CoffeeX Backend - Smart Coffee Dispenser on SAP BTP
+# CoffeeX ☕ - Smart Coffee Dispenser Platform
 
-Backend service for the CoffeeX smart coffee dispenser system, built with SAP Cloud Application Programming Model (CAP).
+<p align="center">
+  <img src="assets/logo.png" alt="CoffeeX Logo" width="200"/>
+</p>
 
-## Overview
+<p align="center">
+  <strong>A cloud-native, NFC-enabled coffee management system built on SAP Business Technology Platform</strong>
+</p>
 
-CoffeeX provides a cashless, tap-to-brew coffee experience with real-time analytics and automated refill forecasting. This backend service handles:
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#deployment">Deployment</a> •
+  <a href="#api-documentation">API</a> •
+  <a href="#contributing">Contributing</a>
+</p>
 
-- NFC tap authentication and coffee dispensing
-- Payment processing via PayPal
-- Bean level tracking and refill event processing
-- Machine usage forecasting using HANA PAL
-- Real-time alerts for low balance and empty machines
+---
 
-## Architecture
+## 📋 Table of Contents
 
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Configuration](#configuration)
+- [API Documentation](#api-documentation)
+- [Frontend Routes](#frontend-routes)
+- [Deployment](#deployment)
+- [Testing](#testing)
+- [Hardware Setup](#hardware-setup)
+- [Known Issues](#known-issues)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+
+## 🎯 Overview
+
+CoffeeX is an enterprise-grade coffee management platform that revolutionizes the workplace coffee experience. By combining NFC technology, cloud computing, and IoT devices, CoffeeX provides a seamless, cashless coffee ordering system with real-time analytics and automated inventory management.
+
+### Key Highlights
+
+- **🏷️ NFC Tag Integration**: Tap to select coffee machines instantly
+- **💳 Cashless Payments**: Integrated PayPal for balance top-ups
+- **📊 Real-time Analytics**: Track consumption patterns and forecast bean usage
+- **🔔 Smart Notifications**: Low balance alerts and refill reminders
+- **🎨 Modern UI**: Responsive SAPUI5 interface with role-based dashboards
+- **☁️ Cloud Native**: Fully deployed on SAP Business Technology Platform
+
+## ✨ Features
+
+### For Users
+- **Quick Coffee Ordering**
+  - NFC tap to select machine
+  - Single/Double shot selection
+  - Real-time balance checking
+  - Order confirmation with animations
+
+- **Profile Management**
+  - View current balance
+  - Transaction history
+  - Personal consumption analytics
+  - Monthly coffee trends visualization
+
+- **Smart Features**
+  - Low balance notifications (≤ €5)
+  - Machine status indicators
+  - Bean level monitoring
+  - Location-based machine selection
+
+### For Administrators
+- **Dashboard Analytics**
+  - User statistics
+  - Machine performance metrics
+  - Revenue tracking
+  - Monthly order trends
+
+- **Machine Management**
+  - Real-time bean level monitoring
+  - One-click refill updates
+  - Batch bean level management
+  - Forecast-based refill planning
+
+- **Predictive Analytics**
+  - Bean consumption forecasting
+  - Refill need predictions
+  - Usage pattern analysis
+  - Machine-specific insights
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                          Frontend Layer                          │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────────┐   │
+│  │   SAPUI5    │  │  Approuter   │  │   XSUAA (Auth)     │   │
+│  │  Web App    │  │              │  │                     │   │
+│  └─────────────┘  └──────────────┘  └─────────────────────┘   │
+└─────────────────────────────┬───────────────────────────────────┘
+                              │ HTTPS
+┌─────────────────────────────┴───────────────────────────────────┐
+│                          Backend Layer                           │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────────┐   │
+│  │  SAP CAP    │  │  OData V4    │  │   Business Logic    │   │
+│  │  Service    │  │  APIs        │  │   & Handlers        │   │
+│  └─────────────┘  └──────────────┘  └─────────────────────┘   │
+└─────────────────────────────┬───────────────────────────────────┘
+                              │
+┌─────────────────────────────┴───────────────────────────────────┐
+│                       Integration Layer                          │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────────┐   │
+│  │   PayPal    │  │  SwitchBot   │  │  Scaleway SQS      │   │
+│  │   API       │  │  IoT API     │  │  Messaging         │   │
+│  └─────────────┘  └──────────────┘  └─────────────────────┘   │
+└─────────────────────────────┬───────────────────────────────────┘
+                              │
+┌─────────────────────────────┴───────────────────────────────────┐
+│                        Data Layer                                │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │                    SAP HANA Cloud                        │   │
+│  │  ┌─────────┐  ┌──────────┐  ┌────────────┐            │   │
+│  │  │  Users  │  │ Machines │  │ CoffeeTx   │            │   │
+│  │  └─────────┘  └──────────┘  └────────────┘            │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **Framework**: SAPUI5 1.60+
+- **Router**: SAP Approuter
+- **Styling**: Custom CSS with animations
+- **Charts**: SAP Viz library
+- **Icons**: SAP Icon set + Custom SVGs
+
+### Backend
 - **Runtime**: Node.js 18+
 - **Framework**: SAP CAP (Cloud Application Programming Model)
+- **Protocol**: OData V4
 - **Database**: SAP HANA Cloud
-- **Messaging**: Scaleway Queues (SQS-compatible)
-- **Authentication**: SAP XSUAA
-- **Payment**: PayPal REST API
-- **Device Control**: Switch-Bot API
-- **Deployment**: Cloud Foundry on SAP BTP
+- **Authentication**: SAP XSUAA (JWT-based)
 
-## Prerequisites
+### External Services
+- **Payment**: PayPal REST API
+- **IoT Control**: SwitchBot API
+- **Messaging**: Scaleway SQS
+- **Deployment**: SAP BTP Cloud Foundry
+
+## 📁 Project Structure
+
+```
+coffeex/
+├── 📂 simple-approuter/          # Frontend application
+│   ├── 📂 frontend/webapp/       # SAPUI5 web application
+│   │   ├── 📂 controller/        # View controllers
+│   │   │   ├── 📂 user/         # User portal controllers
+│   │   │   └── 📂 admin/        # Admin portal controllers
+│   │   ├── 📂 view/             # XML views
+│   │   │   ├── 📂 user/         # User portal views
+│   │   │   └── 📂 admin/        # Admin portal views
+│   │   ├── 📂 css/              # Stylesheets
+│   │   ├── 📂 assets/           # Images and icons
+│   │   ├── Component.js         # UI5 component
+│   │   ├── manifest.json        # App descriptor
+│   │   └── index.html          # Entry point
+│   ├── xs-app.json             # Approuter config
+│   └── package.json
+│
+├── 📂 srv/                      # Backend service layer
+│   ├── coffee-service.cds       # Service definitions
+│   ├── coffee-service.js        # Service implementation
+│   ├── server.js               # Express server config
+│   ├── 📂 handlers/            # Action handlers
+│   │   ├── tap.js              # Coffee ordering
+│   │   ├── topUp.js            # Balance top-up
+│   │   └── forecast.js         # Analytics
+│   └── 📂 integrations/        # External services
+│       ├── paypal.js
+│       ├── switchbot.js
+│       └── scaleway-sqs.js
+│
+├── 📂 db/                      # Database layer
+│   ├── schema.cds              # Entity definitions
+│   ├── views.cds               # Database views
+│   └── 📂 data/               # Test data (CSV)
+│
+├── 📂 test/                    # Test suites
+├── 📂 docs/                    # Documentation
+├── mta.yaml                    # Multi-target app config
+├── package.json                # Node.js dependencies
+└── xs-security.json            # XSUAA security config
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
 
 - Node.js 18 or higher
-- SAP CAP development kit: `npm i -g @sap/cds-dk`
+- SAP CAP development kit
 - Cloud Foundry CLI
-- Access to SAP BTP account with required services
+- SAP BTP account with subaccount
+- Git
 
-## Local Development
+### Installation
 
-1. **Install dependencies**:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/coffeex.git
+   cd coffeex
+   ```
+
+2. **Install CAP tools globally**
+   ```bash
+   npm install -g @sap/cds-dk
+   ```
+
+3. **Install dependencies**
    ```bash
    npm install
+   cd simple-approuter && npm install
+   cd ..
    ```
 
-2. **Run locally with in-memory SQLite**:
+4. **Run locally**
    ```bash
+   # Terminal 1: Start backend
    npm run watch
+
+   # Terminal 2: Start approuter (optional)
+   cd simple-approuter
+   npm start
    ```
 
-3. **Run tests**:
-   ```bash
-   npm test
-   ```
+5. **Access the application**
+   - Backend: http://localhost:4004
+   - Frontend: http://localhost:5000
 
-## API Endpoints
+### Default Test Users
 
-### OData V4 Service
+| Email | Password | Role | Balance |
+|-------|----------|------|---------|
+| ge34ram@mytum.de | - | Admin | €50.00 |
+| test.student@sap.com | - | User | €12.50 |
 
-Base URL: `/odata/v4`
-
-#### Entities
-- `GET /Users` - List all users (read-only)
-- `GET /Machines` - List all machines (read-only)
-- `GET/POST/PATCH/DELETE /CoffeeTxes` - Manage coffee transactions
-- `GET/POST/PATCH/DELETE /RefillEvents` - Manage refill events
-
-#### Actions
-- `POST /Tap` - Dispense coffee (requires User role)
-  ```json
-  {
-    "machineId": "uuid",
-    "userId": "uuid"
-  }
-  ```
-
-- `POST /BatchPay` - Process pending payments (requires Admin role)
-- `POST /Forecast` - Update machine forecasts (requires Admin role)
-
-### Health Endpoints
-
-- `GET /health` - Complete health check
-- `GET /health/live` - Liveness probe
-- `GET /health/ready` - Readiness probe
-
-## Configuration
+## ⚙️ Configuration
 
 ### Environment Variables
 
+Create a `.env` file in the root directory:
+
 ```bash
-# PayPal Integration
+# PayPal Configuration
 PAYPAL_API_URL=https://api-m.sandbox.paypal.com
 PAYPAL_CLIENT_ID=your-client-id
-PAYPAL_CLIENT_SECRET=your-client-secret
+PAYPAL_CLIENT_SECRET=your-secret
 
-# Switch-Bot Integration
+# SwitchBot IoT
 SWITCHBOT_API_URL=https://api.switch-bot.com/v1.1
 SWITCHBOT_TOKEN=your-token
 SWITCHBOT_SECRET=your-secret
 
-# Scaleway Messaging (Production)
-SCALEWAY_ACCESS_KEY=your-access-key
-SCALEWAY_SECRET_KEY=your-secret-key
-SCALEWAY_QUEUE_URL=https://sqs.mnq.fr-par.scaleway.com/project-id/queue-name
-SCALEWAY_SQS_ENDPOINT=https://sqs.mnq.fr-par.scaleway.com
+# Messaging Queue (Production)
+SCALEWAY_ACCESS_KEY=your-key
+SCALEWAY_SECRET_KEY=your-secret
+SCALEWAY_QUEUE_URL=https://sqs.mnq.fr-par.scaleway.com/queue
 USE_SCALEWAY_SQS=true
 
-# Logging
+# Development
 LOG_LEVEL=info
+NODE_ENV=development
 ```
 
-### Local Service Bindings
+### Security Configuration
 
-Create `.cdsrc-private.json` for local development:
+The `xs-security.json` defines roles and scopes:
+
 ```json
 {
-  "requires": {
-    "db": {
-      "credentials": {
-        "database": "coffeex.db"
-      }
-    }
-  }
+  "xsappname": "coffeex",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    { "name": "$XSAPPNAME.User", "description": "User access" },
+    { "name": "$XSAPPNAME.Admin", "description": "Admin access" }
+  ],
+  "role-templates": [
+    { "name": "User", "scope-references": ["$XSAPPNAME.User"] },
+    { "name": "Admin", "scope-references": ["$XSAPPNAME.Admin", "$XSAPPNAME.User"] }
+  ]
 }
 ```
 
-## Deployment
+## 📡 API Documentation
 
-### Build
+### OData V4 Endpoints
+
+Base URL: `/backend/odata/v4/`
+
+#### Entities
+
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/Users` | GET | List all users | ✅ |
+| `/Machines` | GET | List machines | ✅ |
+| `/Machines(id)` | PATCH | Update machine | ✅ Admin |
+| `/CoffeeTx` | GET | Get transactions | ✅ |
+| `/TopUpTransactions` | GET | Get top-ups | ✅ |
+
+#### Actions
+
+| Endpoint | Method | Payload | Description |
+|----------|--------|---------|-------------|
+| `/Tap` | POST | `{machineId, userId, coffeeType}` | Order coffee |
+| `/TopUp` | POST | `{amount}` | Add balance |
+| `/ForecastBeans` | POST | - | Get bean forecast |
+| `/getCurrentUser` | GET | - | Get user info |
+
+### Health Endpoints
+
+- `GET /health` - Application health check
+- `GET /health/live` - Kubernetes liveness probe
+- `GET /health/ready` - Kubernetes readiness probe
+
+## 🗺️ Frontend Routes
+
+### User Portal
+- `/` - Landing page (redirects based on role)
+- `/#/user/home` - User dashboard
+- `/#/user/profile` - User profile
+- `/#/user/history` - Transaction history
+- `/#/user/consumption` - Personal analytics
+
+### Admin Portal
+- `/#/admin/home` - Admin dashboard
+- `/#/admin/dashboard` - Analytics dashboard
+
+### NFC Integration
+- `/?machineId={uuid}` - Direct machine selection via NFC
+
+## 🚢 Deployment
+
+### Build the Application
+
 ```bash
-npm run build
-mbt build
+# Build the MTA archive
+mbt build -t ./
 ```
 
-### Deploy to Cloud Foundry (Windows PowerShell)
+### Deploy to SAP BTP
+
+**Windows PowerShell:**
 ```powershell
 ./deploy-to-btp.ps1
 ```
 
-### Deploy to Cloud Foundry (Linux/Mac)
+**Linux/macOS:**
 ```bash
 ./deploy-to-btp.sh
 ```
 
+### Manual Deployment Steps
+
+1. **Deploy database module**
+   ```bash
+   cf deploy coffeex-db.mtar
+   ```
+
+2. **Deploy backend service**
+   ```bash
+   cd srv
+   cf push coffeex-srv
+   ```
+
+3. **Deploy approuter**
+   ```bash
+   cd simple-approuter
+   cf push coffeex-approuter
+   ```
+
 ### Required BTP Services
-- HANA Cloud (hana-cloud-free)
-- Alert Notification (standard)
-- XSUAA (application)
 
-### External Services
-- Scaleway Queues - For event messaging (SQS-compatible)
-- PayPal - For payment processing
-- Switch-Bot - For device control
+- **hana**: HANA Cloud database
+- **xsuaa**: Authentication & Authorization
+- **connectivity**: For external API calls
+- **destination**: Service destinations
 
-## Project Structure
+## 🧪 Testing
 
-```
-coffeex/
-├── db/                 # Domain model
-│   └── schema.cds      # Entity definitions
-├── srv/                # Service layer
-│   ├── coffee-service.cds   # Service definition
-│   ├── coffee-service.js    # Service implementation
-│   ├── handlers/       # Action handlers
-│   │   ├── tap.js
-│   │   ├── batchPay.js
-│   │   ├── forecast.js
-│   │   └── refillConsumer.js
-│   ├── integrations/   # External service integrations
-│   │   ├── switchbot.js
-│   │   ├── paypal.js
-│   │   └── scaleway-sqs.js
-│   └── server.js       # Server configuration
-├── jobs/               # Scheduled jobs
-│   ├── cron.cds        # Job definitions
-│   └── runner.js       # Job scheduler
-├── test/               # Unit tests
-│   └── coffee-service.test.js
-├── docs/               # Documentation
-│   └── openapi.yaml    # API specification
-└── mta.yaml            # Multi-target application descriptor
+### Unit Tests
+```bash
+npm test
 ```
 
-## Scheduled Jobs
+### Integration Tests
+```bash
+npm run test:integration
+```
 
-- **BatchPay**: Runs hourly to process pending transactions
-- **Forecast**: Runs daily at 3 AM CEST to update machine forecasts
+### Manual Testing
 
-## Security
+1. **Test NFC Flow**
+   ```powershell
+   ./test-nfc-routing.ps1
+   ```
 
-- JWT-based authentication via SAP Identity Service
-- Role-based access control (User, Admin)
-- Input validation on all endpoints
-- Secure credential storage via BTP service bindings
+2. **Test Backend Endpoints**
+   ```powershell
+   ./test-btp-endpoints.ps1
+   ```
 
-## Monitoring
-
-- Structured JSON logging with Winston
-- Alert Notification integration for critical events
-- Health endpoints for Kubernetes probes
-- Application logs available via `cf logs coffeex-srv`
-
-## Development Workflow
-
-1. Create feature branch: `git checkout -b feature/your-feature`
-2. Make changes and test locally
-3. Run tests: `npm test`
-4. Build: `npm run build`
-5. Create pull request
-6. CI/CD pipeline deploys to dev space after merge
-
-
-## Hardware
-
-### SwitchBot
-
-#### SwitchBot Account Details
-- Email: coffeex.tum@gmail.com
-- PW: coffee@tum2025
-
-#### SwitchBot Device Details
-SwitchBot Device ID: CD3430374B90
-SwitchBot Hub ID: Currently not in use.
+## 🔧 Hardware Setup
 
 ### Coffee Machine
-Machine UUID [5bd4f91f-d9b4-4573-88df-11b2f14e7c78] is mocked and linked to Switch-Bot device ID [CD3430374B90] during setup.
+- **Machine UUID**: `5bd4f91f-d9b4-4573-88df-11b2f14e7c78`
+- **Location**: TUM SAP UCC - Building A
+
+### SwitchBot Integration
+- **Device ID**: `CD3430374B90`
+- **Account**: coffeex.tum@gmail.com
 
 ### NFC Tags
-#### Tag 1
-Routing to https://our-frontend-app.com/tap?machineId=5bd4f91f-d9b4-4573-88df-11b2f14e7c78
+Configure NFC tags to redirect to:
+```
+https://your-app-url.cfapps.eu10.hana.ondemand.com/?machineId={machine-uuid}
+```
 
-#### Tag 2
-Currently not in use.
+## 🐛 Known Issues
 
-#### Tag 3
-Currently not in use.
+1. **Component-preload.js 404**: This is a UI5 optimization file, safe to ignore in development
+2. **favicon.ico 404**: Missing favicon, cosmetic issue only
+3. **CSRF Token**: Some older browsers may have issues with CSRF token handling
 
+## 🗓️ Roadmap
 
+### Phase 1 (Current)
+- ✅ Core coffee ordering system
+- ✅ NFC integration
+- ✅ Basic analytics
+- ✅ PayPal integration
 
+### Phase 2 (Q2 2025)
+- [ ] Mobile app (iOS/Android)
+- [ ] Multiple payment providers
+- [ ] Advanced ML-based forecasting
+- [ ] Multi-tenant support
 
-## License
+### Phase 3 (Q3 2025)
+- [ ] Voice ordering (Alexa/Google)
+- [ ] Loyalty program
+- [ ] Coffee preference learning
+- [ ] API marketplace
 
-Copyright (c) 2024 CoffeeX Team. All rights reserved.
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Code Style
+- Use ESLint configuration
+- Follow SAP CAP best practices
+- Write meaningful commit messages
+- Add tests for new features
+
+## 📄 License
+
+Copyright (c) 2024-2025 CoffeeX Team, TUM SAP University Competence Center
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  Made with ☕ and ❤️ by the CoffeeX Team
+</p>
+
+<p align="center">
+  <a href="https://github.com/your-org/coffeex/issues">Report Bug</a> •
+  <a href="https://github.com/your-org/coffeex/issues">Request Feature</a> •
+  <a href="mailto:coffeex.tum@gmail.com">Contact Us</a>
+</p>
