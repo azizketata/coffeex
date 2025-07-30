@@ -57,6 +57,11 @@
                     "target": "userHome"
                 },
                 {
+                    "name": "userHomeWithMachine",
+                    "pattern": "user/home/:machineId:",
+                    "target": "userHome"
+                },
+                {
                     "name": "userProfile",
                     "pattern": "user/profile",
                     "target": "userProfile"

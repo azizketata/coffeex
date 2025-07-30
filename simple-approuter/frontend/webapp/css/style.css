@@ -171,6 +171,13 @@
     margin: 4px 0;
   }
   
+  /* Machine location text */
+  .machineLocationText {
+    font-weight: 600;
+    color: #6b3d00;
+    font-size: 1rem;
+  }
+
   /* ─────────────────────────────────────────────────────────
    Responsive
    ───────────────────────────────────────────────────────── */

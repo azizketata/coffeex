@@ -55,17 +55,36 @@
                     </VBox>
                 </HBox>
 
-                <!-- Status icons -->
-                <HBox class="iconRow sapUiMediumMarginTopBottom" alignItems="Center" justifyContent="Center">
-                    <VBox alignItems="Center" class="sapUiSmallMarginEnd">
-                        <core:Icon src="sap-icon://sys-monitor" size="1.5rem" color="{= ${/machineStatus} === 'online' ? 'green' : 'red'}"/>
-                        <Text text="Machine {/machineStatus}"/>
-                    </VBox>
-                    <VBox alignItems="Center" class="sapUiSmallMarginBegin">
-                        <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} &gt; 20 ? 'green' : 'orange'}"/>
-                        <Text text="Beans {/beansLevel}%"/>
-                    </VBox>
-                </HBox>
+                <!-- Machine Selection and Status -->
+                <VBox alignItems="Center" class="sapUiMediumMarginTopBottom">
+                    <HBox alignItems="Center" justifyContent="Center" visible="{= ${/machineId} !== null}">
+                        <VBox alignItems="Center" class="sapUiSmallMarginEnd">
+                            <core:Icon
+                                    src="sap-icon://sys-monitor"
+                                    size="1.5rem"
+                                    color="{= ${/machineStatus} === 'online' ? 'green' : 'red'}"/>
+                            <Text text="Machine {/machineStatus}"/>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiSmallMarginBegin">
+                            <core:Icon src="sap-icon://nutrition-activity" size="1.5rem" color="{= ${/beansLevel} &gt; 20 ? 'green' : 'orange'}"/>
+                            <Text text="Beans {/beansLevel}%"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Machine Location Display -->
+                    <HBox alignItems="Center" justifyContent="Center" class="sapUiSmallMarginTop">
+                        <core:Icon src="sap-icon://locate-me" size="1rem" color="#6b3d00" class="sapUiTinyMarginEnd"/>
+                        <Text text="{= ${/machineLocation} ? ${/machineLocation} : 'No machine selected'}" class="machineLocationText"/>
+                    </HBox>
+                    
+                    <!-- Select Machine Button -->
+                    <Button 
+                        text="{= ${/machineId} ? 'Change Machine' : 'Select Machine'}" 
+                        icon="sap-icon://nfc-tag"
+                        type="Transparent"
+                        class="sapUiTinyMarginTop"
+                        press=".onSelectMachine"/>
+                </VBox>
 
                 <!-- Size selector -->
                 <VBox alignItems="Center" class="chooseSize sapUiMediumMarginTopBottom">
