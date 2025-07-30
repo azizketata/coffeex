@@ -8,8 +8,9 @@ sap.ui.define([
 
     return Controller.extend("coffeex.controller.user.Home", {
         onInit: function() {
-
-            const machineId = localStorage.getItem("machineId");
+            // Get machine ID from component model or localStorage
+            const machineModel = this.getOwnerComponent().getModel("machine");
+            const machineId = machineModel ? machineModel.getProperty("/machineId") : localStorage.getItem("machineId");
 
             // Initialize view model
             const viewModel = new JSONModel({
@@ -17,6 +18,7 @@ sap.ui.define([
                 todayCount: 0,
                 machineStatus: "online",
                 machineId: machineId || null,
+                machineLocation: null,
                 beansLevel: 75,
                 selectedSize: "single",
             });
@@ -27,6 +29,37 @@ sap.ui.define([
             this.refreshBalance();
             this.loadTodayCount();
             this.checkMachineStatus();
+            
+            // Load machine details if we have a machine ID
+            if (machineId) {
+                this.loadMachineDetails(machineId);
+            }
+
+            // Listen for route pattern matched
+            this.getOwnerComponent().getRouter().getRoute("userHomeWithMachine").attachPatternMatched(this._onMachineRouteMatched, this);
+        },
+
+        _onMachineRouteMatched: function(oEvent) {
+            const machineId = oEvent.getParameter("arguments").machineId;
+            
+            if (machineId) {
+                // Update view model
+                this.getView().getModel().setProperty("/machineId", machineId);
+                
+                // Update component model
+                const machineModel = this.getOwnerComponent().getModel("machine");
+                if (!machineModel) {
+                    this.getOwnerComponent().setModel(new JSONModel({ machineId }), "machine");
+                } else {
+                    machineModel.setProperty("/machineId", machineId);
+                }
+                
+                // Store in localStorage
+                localStorage.setItem("machineId", machineId);
+                
+                // Load machine details
+                this.loadMachineDetails(machineId);
+            }
         },
 
         refreshBalance: function() {
@@ -84,6 +117,86 @@ sap.ui.define([
             });
         },
 
+        loadMachineDetails: function(machineId) {
+            jQuery.ajax({
+                url: `/backend/odata/v4/Machines('${machineId}')`,
+                method: "GET",
+                success: (data) => {
+                    this.getView().getModel().setProperty("/machineLocation", data.location);
+                    this.getView().getModel().setProperty("/beansLevel", Math.round((data.beanLevel / 1000) * 100)); // Convert grams to percentage
+                    this.getView().getModel().setProperty("/machineStatus", "online");
+                },
+                error: (xhr) => {
+                    console.error("Failed to load machine details:", xhr);
+                    // Clear machine selection if not found
+                    this.getView().getModel().setProperty("/machineId", null);
+                    this.getView().getModel().setProperty("/machineLocation", null);
+                    localStorage.removeItem("machineId");
+                    MessageToast.show("Machine not found. Please scan a valid NFC tag.");
+                }
+            });
+        },
+
+        onSelectMachine: function() {
+            // Open machine selection dialog
+            if (!this._machineDialog) {
+                this._machineDialog = new sap.m.SelectDialog({
+                    title: "Select Coffee Machine",
+                    confirm: (oEvent) => {
+                        const selectedItem = oEvent.getParameter("selectedItem");
+                        if (selectedItem) {
+                            const machineId = selectedItem.getBindingContext().getObject().machineId;
+                            const location = selectedItem.getBindingContext().getObject().location;
+                            
+                            // Update view model
+                            this.getView().getModel().setProperty("/machineId", machineId);
+                            this.getView().getModel().setProperty("/machineLocation", location);
+                            
+                            // Update component model
+                            const machineModel = this.getOwnerComponent().getModel("machine");
+                            if (machineModel) {
+                                machineModel.setProperty("/machineId", machineId);
+                            }
+                            
+                            // Store in localStorage
+                            localStorage.setItem("machineId", machineId);
+                            
+                            // Load full machine details
+                            this.loadMachineDetails(machineId);
+                            
+                            MessageToast.show(`Selected: ${location}`);
+                        }
+                    },
+                    search: (oEvent) => {
+                        const sValue = oEvent.getParameter("value");
+                        const oFilter = new sap.ui.model.Filter("location", sap.ui.model.FilterOperator.Contains, sValue);
+                        oEvent.getSource().getBinding("items").filter([oFilter]);
+                    },
+                    cancel: () => {
+                        this._machineDialog.destroy();
+                        this._machineDialog = null;
+                    }
+                });
+
+                // Create the template for items
+                const itemTemplate = new sap.m.StandardListItem({
+                    title: "{location}",
+                    description: "Bean Level: {beanLevel}g",
+                    type: "Active"
+                });
+
+                this._machineDialog.bindAggregation("items", {
+                    path: "/Machines",
+                    template: itemTemplate
+                });
+
+                // Set the model
+                this._machineDialog.setModel(this.getOwnerComponent().getModel());
+            }
+
+            this._machineDialog.open();
+        },
+
         onNavHome: function() {
             // Already on home
         },
@@ -117,35 +230,46 @@ sap.ui.define([
             const userId = userModel.getProperty("/userId");
             const balance = userModel.getProperty("/balance");
             const selectedSize = this.getView().getModel().getProperty("/selectedSize");
+            const machineId = this.getView().getModel().getProperty("/machineId");
             
             // Check if double shot selected
             const isDouble = selectedSize === "double";
             const price = isDouble ? 3.0 : 1.5;
+
+            if (!userId) {
+                MessageBox.error("User not logged in.");
+                return;
+            }
+
+            if (!machineId) {
+                MessageBox.error("Please select a coffee machine first. You can scan an NFC tag or use the 'Select Machine' button.");
+                return;
+            }
 
             if (balance < price) {
                 MessageBox.error(`Insufficient balance. You need €${price.toFixed(2)} for a ${selectedSize} shot. Please top up first.`);
                 return;
             }
 
-            sap.ui.core.BusyIndicator.show(0);
-
-            // Get first available machine
+            // First fetch CSRF token
             jQuery.ajax({
-                url: "/backend/odata/v4/Machines?$top=1",
+                url: "/backend/odata/v4/",
                 method: "GET",
-                success: (data) => {
-                    if (!data.value || data.value.length === 0) {
-                        sap.ui.core.BusyIndicator.hide();
-                        MessageBox.error("No coffee machine available.");
-                        return;
-                    }
+                headers: {
+                    "X-CSRF-Token": "Fetch"
+                },
+                success: (data, textStatus, xhr) => {
+                    const csrfToken = xhr.getResponseHeader("X-CSRF-Token");
 
-                    const machineId = data.value[0].machineId;
+                    sap.ui.core.BusyIndicator.show(0);
 
-                    // Call Tap action with coffeeType
+                    // Call Tap action with selected machine and coffeeType
                     jQuery.ajax({
                         url: "/backend/odata/v4/Tap",
                         method: "POST",
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        },
                         contentType: "application/json",
                         data: JSON.stringify({
                             machineId: machineId,
@@ -168,9 +292,9 @@ sap.ui.define([
                         }
                     });
                 },
-                error: () => {
-                    sap.ui.core.BusyIndicator.hide();
-                    MessageBox.error("Failed to connect to coffee machine.");
+                error: (xhr) => {
+                    console.error("Failed to fetch CSRF token:", xhr);
+                    MessageBox.error("Failed to connect to server.");
                 }
             });
         },
