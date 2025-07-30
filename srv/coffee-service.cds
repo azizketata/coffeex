@@ -22,7 +22,7 @@ service CoffeeService @(path:'/odata/v4') {
   @requires:'Admin'
   action Forecast() returns Integer;
 
-  @requires: 'User'
+  @requires: 'authenticated-user'
   entity TopUpTransactions as projection on db.TopUpTransaction;
   
   @requires:'Admin'
@@ -39,5 +39,4 @@ service CoffeeService @(path:'/odata/v4') {
     lastName: String;
     displayName: String;
   };
-
 } 
