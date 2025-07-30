@@ -25,7 +25,14 @@ fi
 
 # Deploy to BTP
 echo -e "\n\033[33mStep 3: Deploying to BTP...\033[0m"
-cf deploy mta_archives/coffeex-cap_1.0.0.mtar
+# Find the latest mtar file
+MTAR_FILE=$(ls -t *.mtar 2>/dev/null | head -1)
+if [ -z "$MTAR_FILE" ]; then
+    echo -e "\033[31mNo mtar file found!\033[0m"
+    exit 1
+fi
+echo "Deploying $MTAR_FILE..."
+cf deploy "$MTAR_FILE"
 
 if [ $? -ne 0 ]; then
     echo -e "\033[31mDeployment failed! Please check the errors above.\033[0m"
