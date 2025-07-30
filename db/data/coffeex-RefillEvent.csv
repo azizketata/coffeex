@@ -1,2 +1,4 @@
-eventId,machineId,qtyGram
-e13a4c68-12b7-4f7e-9f68-5b05e1be2bc9,5bd4f91f-d9b4-4573-88df-11b2f14e7c78,500
+eventId,machineId,qtyGram,createdAt
+e13a4c68-12b7-4f7e-9f68-5b05e1be2bc9,5bd4f91f-d9b4-4573-88df-11b2f14e7c78,1000,2024-11-01T06:00:00Z
+3f4f5a6a-7b8c-5d9e-0f1a-2b3c4d5e6f7a,a2c3d4e5-f6a7-48b9-0c1d-2e3f4a5b6c7d,1000,2024-11-01T06:30:00Z
+4a5a6b7b-8c9d-6e0f-1a2b-3c4d5e6f7a8b,5bd4f91f-d9b4-4573-88df-11b2f14e7c78,1000,2024-12-01T07:00:00Z
