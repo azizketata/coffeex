@@ -1,86 +1,83 @@
-const axios = require('axios')
+const axios = require('axios');
+const crypto = require('crypto');
 
-// Switch-Bot configuration
-const SWITCHBOT_API_URL = process.env.SWITCHBOT_API_URL
-const SWITCHBOT_TOKEN = process.env.SWITCHBOT_TOKEN
-const SWITCHBOT_SECRET = process.env.SWITCHBOT_SECRET
-const SWITCHBOT_DEVICEID = process.env.SWITCHBOT_DEVICEID_COFFEE90
+// SwitchBot configuration from environment variables
+const SWITCHBOT_API_URL = process.env.SWITCHBOT_API_URL || 'https://api.switch-bot.com/v1.1';
+const SWITCHBOT_TOKEN = process.env.SWITCHBOT_TOKEN;
+const SWITCHBOT_SECRET = process.env.SWITCHBOT_SECRET;
 
+// Safety check
 if (!SWITCHBOT_TOKEN || !SWITCHBOT_SECRET) {
-  throw new Error('SwitchBot API credentials are missing.');
+  throw new Error('❌ SwitchBot API credentials (TOKEN or SECRET) are missing.');
 }
 
 /**
- * Trigger coffee brewing on a specific machine
- * @param {string} machineId - The machine UUID
- * @returns {Promise<boolean>} - Success status
+ * Brew command — triggers the switch for a coffee machine
+ * @param {string} machineId - UUID of the coffee machine
+ * @returns {Promise<boolean>}
  */
 async function brew(machineId) {
   try {
-    // In production, you would map machineId to actual Switch-Bot device ID
-    const deviceId = mapMachineToDevice(machineId)
-
+    const deviceId = mapMachineToDevice(machineId);
     if (!deviceId) {
-      console.error(`No Switch-Bot device mapped for machine ${machineId}`)
-      return false
+      console.warn(`⚠️ No device mapped for machineId: ${machineId}`);
+      return false;
     }
-    
-    // Create signature for authentication
-    const t = Date.now()
-    const nonce = Math.random().toString(36).substring(2, 15)
-    const data = SWITCHBOT_TOKEN + t + nonce
-    const crypto = require('crypto')
+
+    // Auth signature setup
+    const t = Date.now();
+    const nonce = Math.random().toString(36).substring(2);
+    const stringToSign = SWITCHBOT_TOKEN + t + nonce;
+
     const sign = crypto.createHmac('sha256', SWITCHBOT_SECRET)
-      .update(Buffer.from(data, 'utf-8'))
-      .digest('base64')
-    
-    // Send command to Switch-Bot
-    const response = await axios.post(
-      `${SWITCHBOT_API_URL}/devices/${deviceId}/commands`,
-      {
-        command: 'press',
-        parameter: 'default',
-        commandType: 'command'
-      },
-      {
-        headers: {
-          'Authorization': SWITCHBOT_TOKEN,
-          'sign': sign,
-          't': t,
-          'nonce': nonce,
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    
+        .update(Buffer.from(stringToSign, 'utf-8'))
+        .digest('base64');
+
+    const headers = {
+      Authorization: SWITCHBOT_TOKEN,
+      sign,
+      t: t.toString(),
+      nonce,
+      'Content-Type': 'application/json',
+    };
+
+    const body = {
+      command: 'press',
+      parameter: 'default',
+      commandType: 'command',
+    };
+
+    const url = `${SWITCHBOT_API_URL}/devices/${deviceId}/commands`;
+
+    const response = await axios.post(url, body, { headers });
+
     if (response.data.statusCode === 100) {
-      console.log(`Successfully triggered brew on machine ${machineId}`)
-      return true
+      console.log(`✅ Brew triggered for ${machineId} (device ${deviceId})`);
+      return true;
     } else {
-      console.error(`Switch-Bot command failed:`, response.data)
-      return false
+      console.error('❌ SwitchBot API error:', response.data);
+      return false;
     }
-    
-  } catch (error) {
-    console.error(`Failed to trigger Switch-Bot for machine ${machineId}:`, error.message)
-    return false
+
+  } catch (err) {
+    console.error(`❌ Brew failed for ${machineId}:`, err.message);
+    return false;
   }
 }
 
 /**
- * Map machine UUID to Switch-Bot device ID
- * In production, this would be a database lookup or configuration
+ * Maps a machine UUID to a registered SwitchBot device ID
+ * @param {string} machineId
+ * @returns {string|null}
  */
 function mapMachineToDevice(machineId) {
-  // Mock mapping for development
   const deviceMap = {
-    [machineId]: SWITCHBOT_DEVICEID
-    // Add future machines here
-  }
-
-  return deviceMap[machineId] || null
+    '5bd4f91f-d9b4-4573-88df-11b2f14e7c78': process.env.SWITCHBOT_DEVICEID_COFFEE90,
+    // Extend here for more devices
+  };
+  return deviceMap[machineId] || null;
 }
 
 module.exports = {
-  brew
-} 
+  brew,
+};

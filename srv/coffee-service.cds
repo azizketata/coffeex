@@ -13,7 +13,7 @@ service CoffeeService @(path:'/odata/v4') {
   
   @readonly entity LowBalanceUsers as projection on views.LowBalanceUsers;
 
-  @requires:'User'
+  @requires:'authenticated-user'
   action Tap(machineId : UUID, userId : UUID) returns CoffeeTx;
   
   @requires:'authenticated-user'
