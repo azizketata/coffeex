@@ -81,7 +81,7 @@ sap.ui.define([
                     this.getOwnerComponent().getRouter().navTo("userHistory");
                     break;
                 case "Personal Coffee Consumption":
-                    MessageToast.show("Coffee consumption analytics coming soon!");
+                    this.getOwnerComponent().getRouter().navTo("userConsumption");
                     break;
             }
         },
