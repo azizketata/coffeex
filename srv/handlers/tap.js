@@ -56,7 +56,12 @@ module.exports = srv => {
     await db.run(UPDATE(Machines)
       .set({ beanLevel: machine.beanLevel - beansUsed })
       .where({ machineId }));
-    
+
+    // Update user balance
+    await db.run(UPDATE(Users)
+        .set({ balance: user.balance - price })
+        .where({ userId }));
+
     // Ensure transaction is committed
     await db.commit();
 
