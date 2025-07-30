@@ -1,0 +1,2 @@
+txId,userId,amount,status,paypalOrderId,createdAt
+d6ad8ae9-18e1-4d4d-89c7-c62a2349de1b,2f5b1e8e-7c6c-4d6e-91bb-71cf1aafe1c3,10.00,COMPLETED,ORDER12345,2025-07-25T10:00:00Z

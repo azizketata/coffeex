@@ -47,7 +47,7 @@ cat > .cdsrc-production.json << 'EOF'
       "kind": "hana-cloud"
     },
     "auth": {
-      "kind": "mocked"
+      "kind": "xsuaa"
     },
     "messaging": {
       "impl": "./srv/mocks/scaleway-messaging.js",

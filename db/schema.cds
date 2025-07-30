@@ -5,6 +5,7 @@ namespace coffeex;
 
 entity User : managed {
   key userId     : UUID;
+      email      : String(100);
       balance    : Decimal(9,2)  default 0;
       role       : String(30);
 }
@@ -31,4 +32,13 @@ entity RefillEvent : managed {
       machine    : Association to Machine on machine.machineId = machineId;
       machineId  : UUID;
       qtyGram    : Integer;
+}
+
+entity TopUpTransaction : managed {
+  key txId       : UUID;
+      userId     : UUID;
+      amount     : Decimal(10,2);
+      status     : String(20) enum { PENDING; COMPLETED; FAILED; };
+      paypalOrderId : String;
+      createdAt  : Timestamp @default: current_timestamp;
 }

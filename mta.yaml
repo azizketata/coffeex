@@ -2,15 +2,29 @@ _schema-version: '3.1'
 ID: coffeex-cap
 description: CoffeeX Smart Coffee Dispenser Backend
 version: 1.0.0
+
 modules:
+  - name: coffeex-simple-approuter
+    type: approuter.nodejs
+    path: simple-approuter
+    parameters:
+      memory: 128M
+      disk-quota: 256M
+    requires:
+      - name: coffeex
+      - name: coffeex-backend-destination
+    provides:
+      - name: approuter-url
+        properties:
+          url: ${default-url}
+          
   - name: coffeex-srv
     type: nodejs
     path: gen/srv
     requires:
-      - name: coffeex-hana
-      # - name: coffeex-uaa  # Uncomment when XSUAA is available
-      # - name: coffeex-mesh  # Uncomment when Event Mesh is available
+      - name: coffeex-hdi
       - name: coffeex-alerts
+      - name: coffeex  # ✅ XSUAA auth binding added
     provides:
       - name: srv-api
         properties:
@@ -20,56 +34,143 @@ modules:
       memory: 512M
       disk-quota: 1024M
     build-parameters:
-      builder: npm
+      builder: custom
+      commands:
+        - npm install --legacy-peer-deps
+      env:
+        NODE_ENV: production  # ✅ Activate production profile
       
   - name: coffeex-db-deployer
     type: hdb
     path: gen/db
     requires:
-      - name: coffeex-hana
+      - name: coffeex-hdi
     parameters:
       buildpack: nodejs_buildpack
       memory: 256M
       disk-quota: 512M
       
+  # ❌ FRONTEND MODULE DISABLED — we will serve UI from approuter/resources instead
+  # - name: coffeex-ui
+  #   type: html5
+  #   path: app/coffee-frontend
+  #   build-parameters:
+  #     builder: custom
+  #     commands:
+  #       - npm install
+  #       - npm run build
+  #     build-result: dist
+  #     supported-platforms: []
+  #   requires:
+  #     - name: coffeex-srv
+  #       group: destinations
+  #       properties:
+  #         name: srv-api
+  #         url: ${srv-api-url}
+  #     - name: coffeex  # ✅ XSUAA auth binding added
+
+  # ❌ HTML5 DEPLOYER DISABLED
+  # - name: coffeex-ui-deployer
+  #   type: com.sap.application.content
+  #   path: .
+  #   requires:
+  #     - name: coffeex-html5-repo-host   # bound to HTML5 repo
+  #   build-parameters:
+  #     build-result: app/coffee-frontend/dist
+  #     requires:
+  #       - name: coffeex-ui
+  #         artifacts:
+  #           - coffee-frontend.zip
+  #         target-path: resources/
+
+  - name: coffeex-approuter
+    type: approuter.nodejs
+    path: approuter
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: coffeex  # this is your XSUAA service instance
+      - name: coffeex-srv-api  # ✅ Changed from coffeex-Destination to coffeex-srv-api
+      - name: srv-api
+        group: destinations
+        properties:
+          name: coffeex-srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+
 resources:
-  - name: coffeex-hana
+  - name: coffeex-backend-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        init_data:
+          subaccount:
+            existing_destinations_policy: update
+            destinations:
+              - Name: coffeex-backend
+                URL: ~{srv-api/srv-url}
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: NoAuthentication
+                forwardAuthToken: true
+    requires:
+      - name: srv-api
+      
+  - name: coffeex-hdi
     type: com.sap.xs.hdi-container
     parameters:
-      service: hana-cloud
-      service-plan: hana-free
+      service: hana
+      service-plan: hdi-shared
     properties:
       hdi-service-name: ${service-name}
       
-  # XSUAA Service - uncomment when available
-  # - name: coffeex-uaa
-  #   type: org.cloudfoundry.managed-service
-  #   parameters:
-  #     service: xsuaa
-  #     service-plan: application
-  #     config:
-  #       xsappname: coffeex-cap-${space}
-  #       tenant-mode: dedicated
-  #       role-templates:
-  #         - name: User
-  #           description: Coffee User
-  #           scope-references:
-  #             - $XSAPPNAME.User
-  #         - name: Admin
-  #           description: Coffee Admin
-  #           scope-references:
-  #             - $XSAPPNAME.Admin
-  #             - $XSAPPNAME.User
-  #       role-collections:
-  #         - name: CoffeeX_User_${space}
-  #           description: CoffeeX User Role Collection
-  #           role-template-references:
-  #             - $XSAPPNAME.User
-  #         - name: CoffeeX_Admin_${space}
-  #           description: CoffeeX Admin Role Collection
-  #           role-template-references:
-  #             - $XSAPPNAME.Admin
-              
+#Destination Service created by tutors
+  - name: coffeex-Destination
+    type: org.cloudfoundry.existing-service
+
+# Destination service with actual configuration
+  - name: coffeex-srv-api
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        init_data:
+          subaccount:
+            existing_destinations_policy: update
+            destinations:
+              - Name: coffeex-srv-api
+                URL: ~{srv-api/srv-url}
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: NoAuthentication
+                forwardAuthToken: true
+
+  - name: coffeex  # ✅ XSUAA service definition
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+
+# ❌ HTML5 REPO SERVICES DISABLED
+#  - name: coffeex-html5-repo-host
+#    type: org.cloudfoundry.managed-service
+#    parameters:
+#      service: html5-apps-repo
+#      service-plan: app-host
+
+#  - name: coffeex-html5-repo-rt
+#    type: org.cloudfoundry.managed-service
+#    parameters:
+#      service: html5-apps-repo
+#      service-plan: app-runtime
+
   # Event Mesh Service - uncomment when available
   # - name: coffeex-mesh
   #   type: org.cloudfoundry.managed-service
@@ -97,11 +198,12 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       service: alert-notification
-      service-plan: standard
+      service-plan: free
       
 parameters:
-  deploy_mode: html5-repo
+  # deploy_mode: html5-repo   ❌ REMOVE HTML5 REPO MODE
   enable-parallel-deployments: true
+  service-name: coffeex-hdi
   
 build-parameters:
   before-all:

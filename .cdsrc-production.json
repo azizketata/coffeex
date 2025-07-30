@@ -7,7 +7,7 @@
       "kind": "hana-cloud"
     },
     "auth": {
-      "kind": "mocked"
+      "kind": "xsuaa"
     },
     "messaging": {
       "impl": "./srv/mocks/scaleway-messaging.js",
@@ -20,4 +20,4 @@
   "features": {
     "serve_on_root": true
   }
-} 
+}

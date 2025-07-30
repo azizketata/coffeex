@@ -1,0 +1,15 @@
+<mvc:View
+    controllerName="coffeex.controller.user.Profile"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <Page title="My Profile" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox alignItems="Center" class="sapUiLargeMarginTop">
+                <Title text="Profile Page" level="H2"/>
+                <Text text="Coming soon..." class="sapUiMediumMarginTop"/>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View> 

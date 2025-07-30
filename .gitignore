@@ -35,4 +35,6 @@ coverage/
 
 # SQLite databases
 *.db
-*.sqlite
+*.sqlite/mta_archives/
+/node_modules/
+/resources/

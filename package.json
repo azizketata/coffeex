@@ -13,25 +13,62 @@
     "watch": "cds watch",
     "build": "cds build --profile production",
     "deploy:hana": "cds deploy --to hana",
-    "seed": "node scripts/seed-machines.js"
+    "seed": "node scripts/seed-machines.js",
+    "zip": "npx bestzip ./coffee-frontend-content.zip *",
+    "clean": "npx rimraf coffee-frontend-content.zip",
+    "build_old": "npm run clean  && npm run zip",
+    "start-local": "fiori run --config ./ui5-local.yaml --open \"test/flpSandbox.html?sap-ui-xx-viewCache=false#app-tile\"",
+    "start-noflp": "fiori run --open \"index.html?sap-ui-xx-viewCache=false\"",
+    "start-variants-management": "fiori run --open \"preview.html?sap-ui-xx-viewCache=false&fiori-tools-rta-mode=true&sap-ui-rta-skip-flex-validation=true#preview-app\"",
+    "deploy": "fiori verify",
+    "deploy-config": "fiori add deploy-config"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.844.0",
     "@sap/cds": "^8",
+    "@sap/hana-client": "^2.25.29",
     "@sap/xsenv": "^4",
     "@sap/xssec": "^3",
     "axios": "^1.6.0",
+    "dotenv": "^17.2.0",
     "express": "^4",
+    "sqlite3": "^5.1.7",
     "winston": "^3.11.0"
   },
   "devDependencies": {
     "@sap/cds-dk": "^7",
+    "@sap/ux-ui5-tooling": "1",
+    "@ui5/cli": "^3.0.0",
+    "bestzip": "2.1.4",
     "chai": "^4.3.10",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "rimraf": "3.0.2"
   },
   "cds": {
+    "profile": "production",
+    "requires": {
+      "db": {
+        "kind": "hana",
+        "vcap": {
+          "label": "hana",
+          "name": "coffeex-hdi"
+        }
+      },
+      "auth": {
+        "kind": "xsuaa"
+      }
+    },
     "hana": {
       "deploy-format": "hdbtable"
     }
-  }
+  },
+
+  "private": true,
+  "sapuxLayer": "CUSTOMER_BASE",
+  "keywords": [
+    "ui5",
+    "openui5",
+    "sapui5"
+  ],
+  "main": "webapp/index.html"
 }

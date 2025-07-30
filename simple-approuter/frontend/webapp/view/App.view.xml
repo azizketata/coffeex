@@ -1,0 +1,9 @@
+<mvc:View
+    controllerName="coffeex.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+    
+    <App id="app"/>
+    
+</mvc:View> 

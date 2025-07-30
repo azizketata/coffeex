@@ -1,0 +1,59 @@
+<mvc:View
+    controllerName="coffeex.controller.admin.Home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+
+    <Page title="CoffeeX Admin">
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Button icon="sap-icon://home" text="Home" press=".onNavHome" type="Transparent"/>
+                    <Button icon="sap-icon://bar-chart" text="Dashboard" press=".onNavDashboard" type="Transparent"/>
+                </contentLeft>
+                <contentMiddle>
+                    <Title text="Admin Portal" level="H4"/>
+                </contentMiddle>
+                <contentRight>
+                    <Button icon="sap-icon://log" text="Logout" press=".onLogout" type="Transparent"/>
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <VBox alignItems="Center" class="sapUiLargeMarginTop">
+                <core:Icon src="sap-icon://nutrition-activity" size="5rem" color="#6b3d00" class="sapUiLargeMarginBottom"/>
+                <Title text="Welcome to CoffeeX Admin Portal" level="H1" class="sapUiMediumMarginBottom"/>
+                <Text text="{= 'Hello, ' + ${user>/displayName} + '!'}" class="sapUiLargeText sapUiMediumMarginBottom"/>
+                
+                <VBox alignItems="Center" class="sapUiLargeMarginTop">
+                    <Text text="Quick Stats" class="sapUiMediumMarginBottom"/>
+                    <HBox>
+                        <VBox alignItems="Center" class="sapUiLargeMarginEnd">
+                            <ObjectNumber number="{/totalUsers}" unit="Users" state="Information"/>
+                            <Text text="Total Users"/>
+                        </VBox>
+                        <VBox alignItems="Center" class="sapUiLargeMarginEnd">
+                            <ObjectNumber number="{/totalMachines}" unit="Machines" state="Success"/>
+                            <Text text="Active Machines"/>
+                        </VBox>
+                        <VBox alignItems="Center">
+                            <ObjectNumber number="{/todaySales}" unit="€" state="Success"/>
+                            <Text text="Today's Sales"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <VBox alignItems="Center" class="sapUiLargeMarginTop">
+                    <Title text="Admin Actions" level="H3" class="sapUiMediumMarginBottom"/>
+                    <HBox>
+                        <Button text="Check Low Balances" icon="sap-icon://alert" press=".onCheckLowBalances" class="sapUiTinyMarginEnd"/>
+                        <Button text="Run Forecast" icon="sap-icon://line-chart" press=".onRunForecast" class="sapUiTinyMarginEnd"/>
+                        <Button text="Batch Payment" icon="sap-icon://batch-payments" press=".onBatchPayment"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View> 

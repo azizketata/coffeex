@@ -1,9 +1,11 @@
 const axios = require('axios')
+require('dotenv').config();
 
 // PayPal configuration
 const PAYPAL_API_URL = process.env.PAYPAL_API_URL || 'https://api-m.sandbox.paypal.com'
-const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || 'your-paypal-client-id'
-const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || 'your-paypal-client-secret'
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID 
+const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET
+const FRONTPORT = 8080 //idk yet
 
 // Cache for access token
 let accessToken = null
@@ -152,7 +154,67 @@ async function refund(captureId, amount) {
   }
 }
 
+async function createOrder(amount, referenceId) {
+  const token = await getAccessToken()
+
+  const response = await axios.post(
+    `${PAYPAL_API_URL}/v2/checkout/orders`,
+    {
+      intent: 'CAPTURE',
+      purchase_units: [{
+        reference_id: referenceId,
+        amount: {
+          currency_code: 'EUR',
+          value: amount.toString()
+        },
+        description: `Top-up ${referenceId}`
+      }],
+      application_context: {
+        return_url: `https://technische-universit-t-m-nchen-sap-hochschulkompetenzze3525cbaf.cfapps.us10-001.hana.ondemand.com/paypal/success?txId=${referenceId}`,
+        cancel_url: `https://localhost:${FRONTPORT}/topup/cancel`,
+        user_action: 'PAY_NOW'
+      }
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  return response.data.id
+}
+
+
+async function captureOrder(orderId) {
+  try {
+    const token = await getAccessToken()
+    
+    const captureResponse = await axios.post(
+      `${PAYPAL_API_URL}/v2/checkout/orders/${orderId}/capture`,
+      {}, // empty payload
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    console.log('Capture result:', captureResponse.data)
+
+    return captureResponse.data.status === 'COMPLETED'
+  } catch (error) {
+    console.error('Failed to capture PayPal order:', error.response?.data || error.message)
+    throw error
+  }
+}
+
+
 module.exports = {
   capture,
-  refund
+  refund,
+  createOrder,
+  captureOrder
 } 

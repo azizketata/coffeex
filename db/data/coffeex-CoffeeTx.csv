@@ -1,0 +1,3 @@
+txId,userId,machineId,price,paymentStatus
+a3b1f9f7-3245-4b3c-b88c-ea5e742d0a12,2f5b1e8e-7c6c-4d6e-91bb-71cf1aafe1c3,5bd4f91f-d9b4-4573-88df-11b2f14e7c78,2.50,CAPTURED
+c7f81432-67de-4b2c-bb8d-9e0fc62d2c24,3c1a8bd0-ec38-45d1-a6fa-fc926e78b789,5bd4f91f-d9b4-4573-88df-11b2f14e7c78,3.00,CAPTURED
