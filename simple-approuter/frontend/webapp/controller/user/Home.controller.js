@@ -8,7 +8,7 @@ sap.ui.define([
 
     return Controller.extend("coffeex.controller.user.Home", {
         onInit: function() {
-            // Get machine ID from component model or localStorage
+            // Get machine ID from component model (which includes URL params) or localStorage
             const machineModel = this.getOwnerComponent().getModel("machine");
             const machineId = machineModel ? machineModel.getProperty("/machineId") : localStorage.getItem("machineId");
 
@@ -30,12 +30,13 @@ sap.ui.define([
             this.loadTodayCount();
             this.checkMachineStatus();
             
-            // Load machine details if we have a machine ID
+            // Load machine details if we have a machine ID (from URL or localStorage)
             if (machineId) {
+                console.log("Machine ID detected on init:", machineId);
                 this.loadMachineDetails(machineId);
             }
 
-            // Listen for route pattern matched
+            // Listen for route pattern matched (for route-based machine selection)
             this.getOwnerComponent().getRouter().getRoute("userHomeWithMachine").attachPatternMatched(this._onMachineRouteMatched, this);
         },
 
@@ -143,6 +144,18 @@ sap.ui.define([
                     this.getView().getModel().setProperty("/machineLocation", data.location);
                     this.getView().getModel().setProperty("/beansLevel", Math.round((data.beanLevel / 1000) * 100)); // Convert grams to percentage
                     this.getView().getModel().setProperty("/machineStatus", "online");
+                    
+                    // Show success message if this came from NFC scan (URL param)
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get("machineId") === machineId) {
+                        MessageToast.show(`✅ Connected to machine at ${data.location}`);
+                        
+                        // Optional: Clean up URL without reloading the page
+                        if (window.history.replaceState) {
+                            const cleanUrl = window.location.pathname;
+                            window.history.replaceState({}, document.title, cleanUrl);
+                        }
+                    }
                 },
                 error: (xhr) => {
                     console.error("Failed to load machine details:", xhr);
