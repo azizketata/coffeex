@@ -64,9 +64,9 @@ sap.ui.define([
             tomorrow.setDate(tomorrow.getDate() + 1);
             const endOfDay = tomorrow.toISOString();
             
-            // Fetch today's coffee transactions that are CAPTURED (paid)
+            // Fetch today's coffee transactions (both OPEN and CAPTURED)
             jQuery.ajax({
-                url: `/backend/odata/v4/CoffeeTx?$filter=createdAt ge ${startOfDay} and createdAt lt ${endOfDay} and paymentStatus eq 'CAPTURED'`,
+                url: `/backend/odata/v4/CoffeeTx?$filter=createdAt ge ${startOfDay} and createdAt lt ${endOfDay} and (paymentStatus eq 'OPEN' or paymentStatus eq 'CAPTURED')`,
                 method: "GET",
                 success: (data) => {
                     const transactions = data.value || [];
