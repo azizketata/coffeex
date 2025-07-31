@@ -123,9 +123,45 @@
                 <VBox alignItems="Center" class="footer sapUiLargeMarginTop">
                     <Text text="Powered by SAP" class="sapUiTinyMarginBottom"/>
                     <Link text="Terms of Service" press=".onTerms"/>
+                    <!-- Debug toggle (triple-tap to enable) -->
+                    <Text text="" class="sapUiTinyMarginTop" press=".toggleDebugMode" />
                 </VBox>
 
             </VBox>
+            
+            <!-- Debug Panel -->
+            <Panel 
+                headerText="Debug Info" 
+                visible="{/debugMode}"
+                expandable="true"
+                expanded="true"
+                class="sapUiMediumMargin">
+                <VBox class="sapUiSmallMargin">
+                    <Text text="Debug Logs:" class="sapTextBold sapUiSmallMarginBottom"/>
+                    <List items="{/debugInfo}">
+                        <StandardListItem 
+                            title="{}"
+                            type="Inactive"/>
+                    </List>
+                    <HBox class="sapUiSmallMarginTop">
+                        <Text text="Machine ID: " class="sapTextBold"/>
+                        <Text text="{= ${/machineId} || 'None'}" />
+                    </HBox>
+                    <HBox>
+                        <Text text="Location: " class="sapTextBold"/>
+                        <Text text="{= ${/machineLocation} || 'None'}" />
+                    </HBox>
+                    <HBox>
+                        <Text text="User ID: " class="sapTextBold"/>
+                        <Text text="{user>/userId}" />
+                    </HBox>
+                    <HBox>
+                        <Text text="Balance: " class="sapTextBold"/>
+                        <Text text="€{user>/balance}" />
+                    </HBox>
+                </VBox>
+            </Panel>
+            
         </content>
     </Page>
 </mvc:View> 

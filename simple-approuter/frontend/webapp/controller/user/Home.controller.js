@@ -21,6 +21,8 @@ sap.ui.define([
                 machineLocation: null,
                 beansLevel: 75,
                 selectedSize: "single",
+                debugMode: false,
+                debugInfo: []
             });
 
             this.getView().setModel(viewModel);
@@ -38,6 +40,48 @@ sap.ui.define([
 
             // Listen for route pattern matched (for route-based machine selection)
             this.getOwnerComponent().getRouter().getRoute("userHomeWithMachine").attachPatternMatched(this._onMachineRouteMatched, this);
+            
+            // Enable debug mode if ?debug=true is in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("debug") === "true") {
+                this.enableDebugMode();
+            }
+            
+            // Log initial debug info
+            this.addDebugLog("App initialized");
+            this.addDebugLog(`URL: ${window.location.href}`);
+            this.addDebugLog(`Machine ID from URL: ${urlParams.get("machineId") || "none"}`);
+            this.addDebugLog(`Machine ID detected: ${machineId || "none"}`);
+            this.addDebugLog(`User Agent: ${navigator.userAgent}`);
+        },
+
+        addDebugLog: function(message) {
+            const viewModel = this.getView().getModel();
+            const debugInfo = viewModel.getProperty("/debugInfo") || [];
+            const timestamp = new Date().toISOString().substr(11, 8); // HH:MM:SS
+            debugInfo.push(`[${timestamp}] ${message}`);
+            
+            // Keep only last 20 messages
+            if (debugInfo.length > 20) {
+                debugInfo.shift();
+            }
+            
+            viewModel.setProperty("/debugInfo", debugInfo);
+            
+            // Also log to console for desktop debugging
+            console.log(`[DEBUG] ${message}`);
+        },
+
+        enableDebugMode: function() {
+            this.getView().getModel().setProperty("/debugMode", true);
+            MessageToast.show("Debug mode enabled");
+        },
+
+        toggleDebugMode: function() {
+            const viewModel = this.getView().getModel();
+            const currentMode = viewModel.getProperty("/debugMode");
+            viewModel.setProperty("/debugMode", !currentMode);
+            MessageToast.show(currentMode ? "Debug mode disabled" : "Debug mode enabled");
         },
 
         _onMachineRouteMatched: function(oEvent) {
@@ -137,10 +181,14 @@ sap.ui.define([
         },
 
         loadMachineDetails: function(machineId) {
+            this.addDebugLog(`Loading machine details for ID: ${machineId}`);
+            
             jQuery.ajax({
                 url: `/backend/odata/v4/Machines('${machineId}')`,
                 method: "GET",
                 success: (data) => {
+                    this.addDebugLog(`Machine loaded: ${data.location}, beans: ${data.beanLevel}g`);
+                    
                     this.getView().getModel().setProperty("/machineLocation", data.location);
                     this.getView().getModel().setProperty("/beansLevel", Math.round((data.beanLevel / 1000) * 100)); // Convert grams to percentage
                     this.getView().getModel().setProperty("/machineStatus", "online");
@@ -149,16 +197,20 @@ sap.ui.define([
                     const urlParams = new URLSearchParams(window.location.search);
                     if (urlParams.get("machineId") === machineId) {
                         MessageToast.show(`✅ Connected to machine at ${data.location}`);
+                        this.addDebugLog("NFC scan detected - machine auto-selected");
                         
                         // Optional: Clean up URL without reloading the page
                         if (window.history.replaceState) {
                             const cleanUrl = window.location.pathname;
                             window.history.replaceState({}, document.title, cleanUrl);
+                            this.addDebugLog("URL cleaned up");
                         }
                     }
                 },
                 error: (xhr) => {
+                    this.addDebugLog(`ERROR loading machine: ${xhr.status} ${xhr.statusText}`);
                     console.error("Failed to load machine details:", xhr);
+                    
                     // Clear machine selection if not found
                     this.getView().getModel().setProperty("/machineId", null);
                     this.getView().getModel().setProperty("/machineLocation", null);
