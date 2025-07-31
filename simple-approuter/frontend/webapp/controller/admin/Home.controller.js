@@ -50,9 +50,40 @@ sap.ui.define([
                 }
             });
 
-            // For now, show estimated sales
-            // TODO: Implement proper sales calculation when backend supports date filtering
-            this.getView().getModel().setProperty("/todaySales", "42.50");
+            // Load today's sales
+            this.loadTodaySales();
+        },
+
+        loadTodaySales: function() {
+            // Get start and end of today in UTC ISO format
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const startOfDay = today.toISOString();
+            
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const endOfDay = tomorrow.toISOString();
+            
+            // Fetch today's coffee transactions that are CAPTURED (paid)
+            jQuery.ajax({
+                url: `/backend/odata/v4/CoffeeTx?$filter=createdAt ge ${startOfDay} and createdAt lt ${endOfDay} and paymentStatus eq 'CAPTURED'`,
+                method: "GET",
+                success: (data) => {
+                    const transactions = data.value || [];
+                    
+                    // Calculate total sales for today
+                    const totalSales = transactions.reduce((sum, tx) => {
+                        return sum + parseFloat(tx.price || 0);
+                    }, 0);
+                    
+                    this.getView().getModel().setProperty("/todaySales", totalSales.toFixed(2));
+                },
+                error: (xhr) => {
+                    console.error("Failed to load today's sales:", xhr);
+                    // Set to 0 on error
+                    this.getView().getModel().setProperty("/todaySales", "0.00");
+                }
+            });
         },
 
         onNavHome: function() {

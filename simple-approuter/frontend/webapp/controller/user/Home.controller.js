@@ -87,13 +87,31 @@ sap.ui.define([
             
             if (!userId) return;
 
-            // For now, just set to 0 to avoid the error
-            // TODO: Implement proper coffee count when CoffeeTx filtering is fixed in backend
-            this.getView().getModel().setProperty("/todayCount", 0);
+            // Get start and end of today in UTC ISO format
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const startOfDay = today.toISOString();
             
-            // Note: The CoffeeTx entity might not support complex filtering
-            // or the timestamp field might have a different name
-            // Check with backend API documentation
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const endOfDay = tomorrow.toISOString();
+            
+            // Fetch today's coffee transactions for this user
+            jQuery.ajax({
+                url: `/backend/odata/v4/CoffeeTx?$filter=userId eq '${userId}' and createdAt ge ${startOfDay} and createdAt lt ${endOfDay}`,
+                method: "GET",
+                success: (data) => {
+                    const transactions = data.value || [];
+                    // Count today's coffees
+                    const todayCount = transactions.length;
+                    this.getView().getModel().setProperty("/todayCount", todayCount);
+                },
+                error: (xhr) => {
+                    console.error("Failed to load today's coffee count:", xhr);
+                    // Set to 0 on error
+                    this.getView().getModel().setProperty("/todayCount", 0);
+                }
+            });
         },
 
         checkMachineStatus: function() {
